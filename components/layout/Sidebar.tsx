@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircle } from "@fortawesome/free-solid-svg-icons";
 import { NAV, ICONS } from "@/lib/nav";
 import { useSidebar } from "./SidebarContext";
 
@@ -22,7 +24,9 @@ export function Sidebar() {
               className={`nav-item${it.slug === activeSlug ? " active" : ""}`}
               onClick={close}
             >
-              <span className="ic">{ICONS[it.slug] || "•"}</span>
+              <span className="ic">
+                <FontAwesomeIcon icon={ICONS[it.slug] || faCircle} />
+              </span>
               {it.title}
             </Link>
           ))}
