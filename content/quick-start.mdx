@@ -12,7 +12,7 @@ export const meta = {
 <div className="card-title">Create a plan and subscribe a test customer</div>
 <div className="card-desc">
 
-Sign up at the merchant dashboard, verify your email, and land in an empty plans screen. Create a plan — name, price, interval, optional trial — and grab your sandbox API key from Settings → API Keys.
+Sign up at the merchant dashboard, verify your email, and land in an empty plans screen. Create a plan, name, price, interval, optional trial, and grab your sandbox API key from Settings → API Keys.
 
 Then create a test customer and subscription against the sandbox:
 
@@ -46,7 +46,7 @@ curl -X POST https://api.nomba-subscriptions.com/subscriptions/sub_test_01/charg
   -H "Authorization: Bearer nse_sandbox_..."
 ```
 
-The subscription flips to `past_due`, a `PaymentFailed` event lands in the event store, and — if you've configured a sandbox WhatsApp or SMS number on the test customer — a recovery message fires within a minute. Reply, or hit the retry endpoint yourself, and watch the subscription return to `active`.
+The subscription flips to `past_due`, a `PaymentFailed` event lands in the event store, and, if you've configured a sandbox WhatsApp or SMS number on the test customer, a recovery message fires within a minute. Reply, or hit the retry endpoint yourself, and watch the subscription return to `active`.
 
 </div>
 </div>

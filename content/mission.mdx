@@ -4,7 +4,7 @@ export const meta = {
   lede: "Five business objectives. Six things deliberately left out of this release.",
 };
 
-<p>This page is the contract: what the platform commits to solving, and what it explicitly doesn't try to solve yet. Both halves matter — the second one is what keeps the first one honest.</p>
+<p>This page is the contract: what the platform commits to solving, and what it explicitly doesn't try to solve yet. Both halves matter, the second one is what keeps the first one honest.</p>
 
 <h2 id="h-objectives">The objectives</h2>
 <div className="card-grid cols-2">
@@ -14,7 +14,7 @@ export const meta = {
   <div className="card"><div className="card-icon">📊</div><div className="card-title">Give merchants operational visibility</div><div className="card-desc">Revenue, churn, and recovery performance, without a separate BI project.</div></div>
 </div>
 <div className="card-grid cols-1">
-  <div className="card"><div className="card-icon">📘</div><div className="card-title">Provide a stable, well-documented integration surface</div><div className="card-desc">Downstream developers should be able to integrate from documentation alone — no support ticket required for a standard integration.</div></div>
+  <div className="card"><div className="card-icon">📘</div><div className="card-title">Provide a stable, well-documented integration surface</div><div className="card-desc">Downstream developers should be able to integrate from documentation alone, no support ticket required for a standard integration.</div></div>
 </div>
 
 <h2 id="h-outofscope">Explicitly out of scope, this release</h2>
@@ -23,9 +23,9 @@ export const meta = {
   <tr><th>Not in scope</th><th>Why</th></tr>
   <tr><td>Full KYC / compliance workflows</td><td>Customers are assumed pre-verified via Nomba. This platform doesn't re-run identity verification.</td></tr>
   <tr><td>Tax calculation and invoicing compliance (VAT, WHT)</td><td>Left to the merchant's own accounting, for now.</td></tr>
-  <tr><td>Multi-currency settlement beyond NGN</td><td>Including FX-aware proration — a real problem, just not this release's problem.</td></tr>
+  <tr><td>Multi-currency settlement beyond NGN</td><td>Including FX-aware proration, a real problem, just not this release's problem.</td></tr>
   <tr><td>Native mobile apps</td><td>Web dashboard, web portal, USSD, and WhatsApp/SMS channels only.</td></tr>
-  <tr><td>Granular, per-feature role permissioning</td><td>Owner and Team Member is the whole permission model at v1 — no custom role builder yet.</td></tr>
+  <tr><td>Granular, per-feature role permissioning</td><td>Owner and Team Member is the whole permission model at v1, no custom role builder yet.</td></tr>
 </table>
 
 <div className="callout note"><div className="ic">ⓘ</div><p>None of these are "never." They're "not yet, and saying so beats pretending otherwise."</p></div>

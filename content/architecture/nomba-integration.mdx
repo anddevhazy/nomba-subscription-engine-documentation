@@ -4,19 +4,19 @@ export const meta = {
   lede: "Checkout, Tokenised Cards, Charge, Transfers. The four Nomba surfaces this engine is built on.",
 };
 
-<p>Every naira that moves through this platform moves through Nomba. The `payments` module is the only place that talks to Nomba directly — nothing else in the codebase holds a Nomba credential or constructs a Nomba request.</p>
+<p>Every naira that moves through this platform moves through Nomba. The `payments` module is the only place that talks to Nomba directly, nothing else in the codebase holds a Nomba credential or constructs a Nomba request.</p>
 
 <h2 id="h-surfaces">The four surfaces</h2>
 <table>
   <tr><th>Surface</th><th>Used for</th></tr>
   <tr><td><strong>Checkout API</strong></td><td>Initial card tokenisation at subscription signup, and portal-driven payment-method updates.</td></tr>
-  <tr><td><strong>Tokenised Cards</strong></td><td>The stored reference reused for every recurring charge — never the raw card number.</td></tr>
+  <tr><td><strong>Tokenised Cards</strong></td><td>The stored reference reused for every recurring charge, never the raw card number.</td></tr>
   <tr><td><strong>Charge API</strong></td><td>Executes every billing-cycle charge attempt and every dunning retry.</td></tr>
   <tr><td><strong>Transfers API</strong></td><td>Payout-side handling for platform fee splits, where applicable.</td></tr>
 </table>
 
 <h2 id="h-inbound">Inbound webhooks from Nomba</h2>
-<p>Nomba's own payment events land on `POST /webhooks/nomba` and trigger internal state transitions — a settled charge, a failed charge, a completed transfer — each of which is what actually writes the corresponding domain event to the <a href="/concepts/event-store">event store</a>. The billing engine doesn't guess at payment outcomes from a synchronous API response alone; it waits for and verifies the authoritative webhook.</p>
+<p>Nomba's own payment events land on `POST /webhooks/nomba` and trigger internal state transitions, a settled charge, a failed charge, a completed transfer, each of which is what actually writes the corresponding domain event to the <a href="/concepts/event-store">event store</a>. The billing engine doesn't guess at payment outcomes from a synchronous API response alone; it waits for and verifies the authoritative webhook.</p>
 
 <h2 id="h-shape">The shape of a charge attempt</h2>
 <div className="flow">
@@ -27,7 +27,7 @@ export const meta = {
 </div>
 
 <h2 id="h-why-webhook">Why the webhook is authoritative, not the initial response</h2>
-<p>A synchronous response from a charge API can be pending, ambiguous, or lost to a network blip on the way back. Treating Nomba's webhook — signed, and independently verifiable — as the source of truth for whether a charge actually succeeded is what keeps the subscription state machine honest even when a request/response pair doesn't complete cleanly.</p>
+<p>A synchronous response from a charge API can be pending, ambiguous, or lost to a network blip on the way back. Treating Nomba's webhook, signed, and independently verifiable, as the source of truth for whether a charge actually succeeded is what keeps the subscription state machine honest even when a request/response pair doesn't complete cleanly.</p>
 
 <h2 id="h-next">Next</h2>
 <div className="card-grid cols-2">

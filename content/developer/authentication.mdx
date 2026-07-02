@@ -15,10 +15,10 @@ curl https://api.nomba-subscriptions.com/subscriptions \
 <h2 id="h-format">Key format</h2>
 <table>
   <tr><th>Prefix</th><th>Environment</th></tr>
-  <tr><td>`nse_sandbox_<id>`</td><td>Sandbox — no real charges ever fire.</td></tr>
+  <tr><td>`nse_sandbox_<id>`</td><td>Sandbox, no real charges ever fire.</td></tr>
   <tr><td>`nse_live_<id>`</td><td>Production.</td></tr>
 </table>
-<p>A sandbox key against a production endpoint (or vice versa) fails with 401 — there's no accidental cross-environment traffic.</p>
+<p>A sandbox key against a production endpoint (or vice versa) fails with 401, there's no accidental cross-environment traffic.</p>
 
 <h2 id="h-getting">Getting a key</h2>
 <p>Dashboard → Settings → API Keys, once your merchant account is verified. The full secret is shown exactly once at creation.</p>
@@ -29,11 +29,11 @@ curl https://api.nomba-subscriptions.com/subscriptions \
   <div className="step"><div className="step-num">2</div><div className="step-body"><div className="step-title">Hash and look up</div><p>We store a hash of the secret, never the raw value. No match → `401 invalid_auth`.</p></div></div>
   <div className="step"><div className="step-num">3</div><div className="step-body"><div className="step-title">Status check</div><p>Revoked or expired keys fail here.</p></div></div>
   <div className="step"><div className="step-num">4</div><div className="step-body"><div className="step-title">Rate limit</div><p>Per-key token bucket. Exceeded → `429 rate_limited`. See <a href="/developer/rate-limits">Rate limits</a>.</p></div></div>
-  <div className="step"><div className="step-num">5</div><div className="step-body"><div className="step-title">Execute, scoped to your merchantId</div><p>Every resource you can read or write is scoped to your own merchant account — tenant isolation is enforced at this layer, not just in application logic.</p></div></div>
+  <div className="step"><div className="step-num">5</div><div className="step-body"><div className="step-title">Execute, scoped to your merchantId</div><p>Every resource you can read or write is scoped to your own merchant account, tenant isolation is enforced at this layer, not just in application logic.</p></div></div>
 </div>
 
 <h2 id="h-rotate">Rotating a key</h2>
-<p>Generate a new key, roll it out to your services, confirm the old key's usage has dropped to zero, then revoke it. If a key leaks, revoke it immediately and generate a fresh one — there's no "un-revoke."</p>
+<p>Generate a new key, roll it out to your services, confirm the old key's usage has dropped to zero, then revoke it. If a key leaks, revoke it immediately and generate a fresh one, there's no "un-revoke."</p>
 
 <h2 id="h-next">Next</h2>
 <div className="card-grid cols-2">

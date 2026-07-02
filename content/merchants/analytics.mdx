@@ -1,32 +1,32 @@
 export const meta = {
   eyebrow: "For merchants",
   title: "Analytics",
-  lede: "MRR, churn, recovery rate, and plan performance — computed on demand, always current.",
+  lede: "MRR, churn, recovery rate, and plan performance, computed on demand, always current.",
 };
 
-<p>Adaeze used to find out how Lumen was doing by exporting payments to a spreadsheet at month-end. By the time she had a number, it was already three weeks stale. Analytics on this platform is a live read over the same event store that powers webhooks — the number on screen right now reflects the payment that settled a minute ago, not last month's export.</p>
+<p>Adaeze used to find out how Lumen was doing by exporting payments to a spreadsheet at month-end. By the time she had a number, it was already three weeks stale. Analytics on this platform is a live read over the same event store that powers webhooks, the number on screen right now reflects the payment that settled a minute ago, not last month's export.</p>
 
 <h2 id="h-core">Core metrics</h2>
 <div className="card-grid cols-2">
   <div className="card"><div className="card-icon">💰</div><div className="card-title">MRR / ARR</div><div className="card-desc">Monthly and annualised recurring revenue, computed from active subscriptions at their current plan price.</div></div>
   <div className="card"><div className="card-icon">📉</div><div className="card-title">Churn rate</div><div className="card-desc">Share of subscribers who cancelled or lapsed into `expired` in the period.</div></div>
-  <div className="card"><div className="card-icon">🔁</div><div className="card-title">Recovery rate</div><div className="card-desc">Share of failed payments recovered within the grace period, broken down by channel — WhatsApp vs. SMS vs. USSD.</div></div>
+  <div className="card"><div className="card-icon">🔁</div><div className="card-title">Recovery rate</div><div className="card-desc">Share of failed payments recovered within the grace period, broken down by channel, WhatsApp vs. SMS vs. USSD.</div></div>
   <div className="card"><div className="card-icon">👤</div><div className="card-title">ARPU</div><div className="card-desc">Average revenue per active subscriber.</div></div>
 </div>
 
 <h2 id="h-endpoints">Where to read it</h2>
 <table>
   <tr><th>Endpoint</th><th>Returns</th></tr>
-  <tr><td>`GET /analytics/metrics`</td><td>The core snapshot — MRR, ARR, churn, recovery, ARPU, subscription counts.</td></tr>
-  <tr><td>`GET /analytics/overview`</td><td>The full dashboard payload — metrics plus payments, customers, dunning, webhooks, and plan breakdown.</td></tr>
+  <tr><td>`GET /analytics/metrics`</td><td>The core snapshot, MRR, ARR, churn, recovery, ARPU, subscription counts.</td></tr>
+  <tr><td>`GET /analytics/overview`</td><td>The full dashboard payload, metrics plus payments, customers, dunning, webhooks, and plan breakdown.</td></tr>
   <tr><td>`GET /analytics/revenue-trend`</td><td>Revenue over time, at day, week, or month granularity.</td></tr>
-  <tr><td>`GET /analytics/plans`</td><td>MRR and subscriber count per plan — which tier is actually carrying the business.</td></tr>
+  <tr><td>`GET /analytics/plans`</td><td>MRR and subscriber count per plan, which tier is actually carrying the business.</td></tr>
   <tr><td>`GET /analytics/dunning`</td><td>Past-due volume, grace-period volume, recovery rate, by channel.</td></tr>
   <tr><td>`GET /analytics/activity`</td><td>A paginated feed of recent events, sourced straight from the event store.</td></tr>
 </table>
 
 <h2 id="h-why-onread">Why this is computed on demand, not batched</h2>
-<p>The alternative — a nightly job that rolls up numbers into a separate reporting table — is exactly the kind of second data path that quietly drifts from reality. Because these metrics are read-models over the same <a href="/concepts/event-store">event store</a> that drives webhooks, there's no batch delay and no separate table to reconcile against reality when something looks off.</p>
+<p>The alternative, a nightly job that rolls up numbers into a separate reporting table, is exactly the kind of second data path that quietly drifts from reality. Because these metrics are read-models over the same <a href="/concepts/event-store">event store</a> that drives webhooks, there's no batch delay and no separate table to reconcile against reality when something looks off.</p>
 
 <h2 id="h-next">Next</h2>
 <div className="card-grid cols-2">

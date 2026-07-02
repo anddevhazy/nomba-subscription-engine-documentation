@@ -18,7 +18,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Nomba Subscription Engine — Docs",
+  title: "Nomba Subscription Engine | Docs",
   description: "Multi-tenant Subscription-as-a-Service, built on Nomba's payment rails.",
 };
 

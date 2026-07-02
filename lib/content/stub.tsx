@@ -14,7 +14,7 @@ export function stubMeta(slug: string): PageMeta {
 export function StubBody() {
   return (
     <>
-      <div className="stub-badge">Template page — content pending</div>
+      <div className="stub-badge">Template page, content pending</div>
       <p className="body-secondary">
         This page follows the same structure as the built-out pages (Introduction, How it works, Webhooks, Webhook
         signature verification). Draft it from{" "}

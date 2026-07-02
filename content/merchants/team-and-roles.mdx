@@ -8,12 +8,12 @@ export const meta = {
 
 <h2 id="h-roles">The two roles</h2>
 <div className="card-grid cols-2">
-  <div className="card"><div className="card-icon">👑</div><div className="card-title">Owner</div><div className="card-desc">Everything a Team Member can do, plus API key management, webhook configuration, and team membership — inviting, removing, and changing roles.</div></div>
-  <div className="card"><div className="card-icon">🧑‍💼</div><div className="card-title">Team Member</div><div className="card-desc">Day-to-day subscription and customer operations — plans, customers, invoices, manual retries, analytics. No account-level access.</div></div>
+  <div className="card"><div className="card-icon">👑</div><div className="card-title">Owner</div><div className="card-desc">Everything a Team Member can do, plus API key management, webhook configuration, and team membership, inviting, removing, and changing roles.</div></div>
+  <div className="card"><div className="card-icon">🧑‍💼</div><div className="card-title">Team Member</div><div className="card-desc">Day-to-day subscription and customer operations, plans, customers, invoices, manual retries, analytics. No account-level access.</div></div>
 </div>
 
 <h2 id="h-why">Why the line sits here</h2>
-<p>The split isn't about seniority, it's about blast radius. An API key or a webhook endpoint is infrastructure that, if misconfigured or leaked, can affect every customer on the account. Day-to-day subscription work — approving a manual retry, looking up why a customer's invoice is what it is — shouldn't require that level of access, and shouldn't be gated behind someone who has it.</p>
+<p>The split isn't about seniority, it's about blast radius. An API key or a webhook endpoint is infrastructure that, if misconfigured or leaked, can affect every customer on the account. Day-to-day subscription work, approving a manual retry, looking up why a customer's invoice is what it is, shouldn't require that level of access, and shouldn't be gated behind someone who has it.</p>
 
 <h2 id="h-manage">Managing your team</h2>
 <div className="steps">
@@ -23,13 +23,13 @@ export const meta = {
 </div>
 
 <h2 id="h-not-yet">What this doesn't do, yet</h2>
-<p>This is deliberately a two-role model, not a custom-permission builder — no "can view analytics but not customers" granularity at v1. If your team needs finer-grained access control than Owner/Team Member, that's a real gap worth telling us about, not a hidden setting.</p>
+<p>This is deliberately a two-role model, not a custom-permission builder, no "can view analytics but not customers" granularity at v1. If your team needs finer-grained access control than Owner/Team Member, that's a real gap worth telling us about, not a hidden setting.</p>
 
 <h2 id="h-audit">Every action, attributed</h2>
-<p>Plan changes, API key rotation, webhook configuration, and subscription overrides all write to the merchant's audit log with the acting user attached — so "who changed this" is always answerable, regardless of role.</p>
+<p>Plan changes, API key rotation, webhook configuration, and subscription overrides all write to the merchant's audit log with the acting user attached, so "who changed this" is always answerable, regardless of role.</p>
 
 <h2 id="h-next">Next</h2>
 <div className="card-grid cols-2">
-  <a className="card" href="/developer/authentication"><div className="card-icon">🔑</div><div className="card-title">Authentication</div><div className="card-desc">API keys are Owner-only — here's how they work.</div></a>
+  <a className="card" href="/developer/authentication"><div className="card-icon">🔑</div><div className="card-title">Authentication</div><div className="card-desc">API keys are Owner-only, here's how they work.</div></a>
   <a className="card" href="/merchants/analytics"><div className="card-icon">📊</div><div className="card-title">Analytics</div><div className="card-desc">What both roles see on the dashboard.</div></a>
 </div>

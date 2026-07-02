@@ -20,9 +20,9 @@ Content-Type: application/json
 <h2 id="h-verify">Verifying, step by step</h2>
 <div className="steps">
   <div className="step"><div className="step-num">1</div><div className="step-body"><div className="step-title">Extract t and v1</div><p>Split the header on `,` and parse the key=value pairs.</p></div></div>
-  <div className="step"><div className="step-num">2</div><div className="step-body"><div className="step-title">Check the timestamp</div><p>Reject if `t` is more than 5 minutes off your server's clock — this is replay protection.</p></div></div>
+  <div className="step"><div className="step-num">2</div><div className="step-body"><div className="step-title">Check the timestamp</div><p>Reject if `t` is more than 5 minutes off your server's clock, this is replay protection.</p></div></div>
   <div className="step"><div className="step-num">3</div><div className="step-body"><div className="step-title">Compute the expected signature</div><p>`HMAC_SHA256(secret, "{t}." + raw_body)`, hex-encoded.</p></div></div>
-  <div className="step"><div className="step-num">4</div><div className="step-body"><div className="step-title">Compare in constant time</div><p>`crypto.timingSafeEqual` in Node, `hmac.compare_digest` in Python, `hash_equals` in PHP, `CryptographicOperations.FixedTimeEquals` in C#, `MessageDigest.isEqual` in Java. Never plain string equality — timing differences leak information an attacker can use.</p></div></div>
+  <div className="step"><div className="step-num">4</div><div className="step-body"><div className="step-title">Compare in constant time</div><p>`crypto.timingSafeEqual` in Node, `hmac.compare_digest` in Python, `hash_equals` in PHP, `CryptographicOperations.FixedTimeEquals` in C#, `MessageDigest.isEqual` in Java. Never plain string equality, timing differences leak information an attacker can use.</p></div></div>
   <div className="step"><div className="step-num">5</div><div className="step-body"><div className="step-title">Process only on a match</div><p>Otherwise return 401 and log the event for investigation.</p></div></div>
 </div>
 
@@ -72,9 +72,9 @@ def verify(raw_body, header, secret):
 <ul>
   <li>✅ Verify the signature on every request. Reject on mismatch.</li>
   <li>✅ Reject events older than 5 minutes.</li>
-  <li>✅ Check idempotency using the event `id` — deliveries are at-least-once.</li>
+  <li>✅ Check idempotency using the event `id`, deliveries are at-least-once.</li>
   <li>✅ Return 2xx quickly. Push heavy processing to your own queue instead of doing it inline.</li>
-  <li>✅ Keep your webhook URL stable — update the subscription before changing DNS, not after.</li>
+  <li>✅ Keep your webhook URL stable, update the subscription before changing DNS, not after.</li>
 </ul>
 
 <h2 id="h-next">Next</h2>

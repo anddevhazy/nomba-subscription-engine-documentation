@@ -7,11 +7,11 @@ export const meta = {
 <p>A billing platform earns trust on the day a third-party provider has a bad hour. This page is what happens on that day.</p>
 
 <h2 id="h-principle">The operating principle</h2>
-<p>Nothing in the recovery or notification path fails silently. If WhatsApp or SMS is unreachable, the affected jobs are queued and retried — not dropped, not swallowed into a log line nobody reads. A merchant should never lose a recovery attempt because a provider had an outage; the job comes back and tries again once the provider does.</p>
+<p>Nothing in the recovery or notification path fails silently. If WhatsApp or SMS is unreachable, the affected jobs are queued and retried, not dropped, not swallowed into a log line nobody reads. A merchant should never lose a recovery attempt because a provider had an outage; the job comes back and tries again once the provider does.</p>
 
 <h2 id="h-layers">Where resilience lives</h2>
 <div className="card-grid cols-2">
-  <div className="card"><div className="card-icon">🔁</div><div className="card-title">Retry with backoff</div><div className="card-desc">Every async job — webhook delivery, notification send — retries on failure rather than failing once and giving up.</div></div>
+  <div className="card"><div className="card-icon">🔁</div><div className="card-title">Retry with backoff</div><div className="card-desc">Every async job, webhook delivery, notification send, retries on failure rather than failing once and giving up.</div></div>
   <div className="card"><div className="card-icon">📬</div><div className="card-title">Dead-letter handling</div><div className="card-desc">A webhook delivery that exhausts its retry window moves to a dead-letter state, visible to the merchant and replayable once their endpoint is fixed.</div></div>
   <div className="card"><div className="card-icon">🗝️</div><div className="card-title">Idempotency</div><div className="card-desc">Replayed webhooks and retried charges carry stable identifiers so reprocessing is always safe, never a duplicate side effect.</div></div>
   <div className="card"><div className="card-icon">📒</div><div className="card-title">The event store as ground truth</div><div className="card-desc">Even if a queue drains unexpectedly, the underlying facts are durable in the event store and can be re-dispatched.</div></div>
@@ -21,7 +21,7 @@ export const meta = {
 <table>
   <tr><th>Failure</th><th>What happens</th></tr>
   <tr><td>WhatsApp provider outage</td><td>Recovery messages queue and retry; once the outage clears, queued messages send, or the orchestration falls forward to SMS if the delay exceeds a threshold.</td></tr>
-  <tr><td>A merchant's webhook endpoint is down</td><td>Deliveries retry on the schedule in <a href="/developer/webhooks">Webhooks</a>, up to 14 days, then move to dead-letter — replayable, not lost.</td></tr>
+  <tr><td>A merchant's webhook endpoint is down</td><td>Deliveries retry on the schedule in <a href="/developer/webhooks">Webhooks</a>, up to 14 days, then move to dead-letter, replayable, not lost.</td></tr>
   <tr><td>Nomba's API is briefly unreachable</td><td>Charge attempts retry rather than being marked failed on a single transient error.</td></tr>
 </table>
 

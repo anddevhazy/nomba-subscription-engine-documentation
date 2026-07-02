@@ -4,7 +4,7 @@ export const meta = {
   lede: "Status codes, error codes, and what each one means for your retry logic.",
 };
 
-<p>Errors follow the same envelope everywhere in the API — a status code that tells your HTTP client what class of problem it is, and an `error_code` that tells your application code exactly what happened.</p>
+<p>Errors follow the same envelope everywhere in the API, a status code that tells your HTTP client what class of problem it is, and an `error_code` that tells your application code exactly what happened.</p>
 
 ```json
 {
@@ -19,11 +19,11 @@ export const meta = {
 <h2 id="h-table">Common error codes</h2>
 <table>
   <tr><th>HTTP</th><th>Code</th><th>Meaning</th><th>Retry?</th></tr>
-  <tr><td>400</td><td>`validation_failed`</td><td>Request body failed schema validation.</td><td>No — fix the request.</td></tr>
+  <tr><td>400</td><td>`validation_failed`</td><td>Request body failed schema validation.</td><td>No, fix the request.</td></tr>
   <tr><td>401</td><td>`invalid_auth`</td><td>Bad or revoked API key.</td><td>No.</td></tr>
   <tr><td>403</td><td>`forbidden`</td><td>Authenticated, but not permitted for this action (e.g. a Team Member key hitting an Owner-only endpoint).</td><td>No.</td></tr>
   <tr><td>404</td><td>`resource_not_found`</td><td>The ID doesn't exist, or doesn't belong to your merchant.</td><td>No.</td></tr>
-  <tr><td>409</td><td>`conflict`</td><td>The action doesn't make sense for the resource's current state (e.g. cancelling an already-cancelled subscription).</td><td>No — check state first.</td></tr>
+  <tr><td>409</td><td>`conflict`</td><td>The action doesn't make sense for the resource's current state (e.g. cancelling an already-cancelled subscription).</td><td>No, check state first.</td></tr>
   <tr><td>422</td><td>`invalid_state_transition`</td><td>The requested lifecycle transition isn't valid from the subscription's current state. See <a href="/concepts/subscription-lifecycle">Subscription lifecycle</a>.</td><td>No.</td></tr>
   <tr><td>429</td><td>`rate_limited`</td><td>Too many requests. Respect `Retry-After`.</td><td>Yes, with backoff.</td></tr>
   <tr><td>500</td><td>`internal_error`</td><td>Something broke on our side.</td><td>Yes, with backoff.</td></tr>
@@ -31,7 +31,7 @@ export const meta = {
 </table>
 
 <h2 id="h-retry-logic">A sane default retry policy</h2>
-<p>Retry on 429, 500, 502, 503, and network-level failures, with exponential backoff and jitter. Don't retry on 4xx codes other than 429 — those mean the request itself needs to change, not that trying again will help.</p>
+<p>Retry on 429, 500, 502, 503, and network-level failures, with exponential backoff and jitter. Don't retry on 4xx codes other than 429, those mean the request itself needs to change, not that trying again will help.</p>
 
 <h2 id="h-requestid">Always log the requestId</h2>
 <p>Every error response carries a `requestId`. If you need to escalate an issue, that ID is what lets us find the exact request in our own logs without you needing to reproduce the full payload.</p>

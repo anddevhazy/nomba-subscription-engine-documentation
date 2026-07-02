@@ -4,7 +4,7 @@ export const meta = {
   lede: "One NestJS API. Postgres for the ledger. Redis and BullMQ for everything that shouldn't block a response.",
 };
 
-<p>This is the altitude page — read it once, then drill into any chapter on the left.</p>
+<p>This is the altitude page, read it once, then drill into any chapter on the left.</p>
 
 <h2 id="h-stack">The stack</h2>
 <table>
@@ -12,13 +12,13 @@ export const meta = {
   <tr><td>Framework</td><td>NestJS 11, TypeScript</td></tr>
   <tr><td>Database</td><td>PostgreSQL + TypeORM</td></tr>
   <tr><td>Queue / async jobs</td><td>BullMQ + Redis</td></tr>
-  <tr><td>Auth</td><td>JWT — access + refresh tokens</td></tr>
+  <tr><td>Auth</td><td>JWT, access + refresh tokens</td></tr>
   <tr><td>Payments</td><td>Nomba API</td></tr>
   <tr><td>API docs</td><td>Swagger, served at `/docs`</td></tr>
 </table>
 
 <h2 id="h-shape">The shape of the system</h2>
-<p>One NestJS process, organised into modules by domain — not a microservice mesh. A request comes in through a controller, runs through service-layer domain logic, and reads or writes through a repository. Anything that shouldn't block the response — a webhook delivery, a dunning retry, invoice generation — goes onto a BullMQ queue backed by Redis instead of running inline.</p>
+<p>One NestJS process, organised into modules by domain, not a microservice mesh. A request comes in through a controller, runs through service-layer domain logic, and reads or writes through a repository. Anything that shouldn't block the response, a webhook delivery, a dunning retry, invoice generation, goes onto a BullMQ queue backed by Redis instead of running inline.</p>
 
 <div className="flow">
   <div className="flow-node">Merchant / Customer / Developer</div><div className="flow-arrow">→</div>
@@ -48,7 +48,7 @@ merchants
   └── event_store
 ```
 
-<p>Every business entity below `Merchant` carries a `merchantId` for tenant isolation, enforced at the data-access layer — not only in application code. See <a href="/architecture/modules">Modules</a> for what owns each part of this.</p>
+<p>Every business entity below `Merchant` carries a `merchantId` for tenant isolation, enforced at the data-access layer, not only in application code. See <a href="/architecture/modules">Modules</a> for what owns each part of this.</p>
 
 <h2 id="h-decisions">A few deliberate choices</h2>
 <table>

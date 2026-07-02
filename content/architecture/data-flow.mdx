@@ -1,10 +1,10 @@
 export const meta = {
   eyebrow: "Architecture",
   title: "Data flow",
-  lede: "How a single event — a payment failing, a subscription renewing — reaches webhooks, notifications, and analytics without three separate write paths.",
+  lede: "How a single event, a payment failing, a subscription renewing, reaches webhooks, notifications, and analytics without three separate write paths.",
 };
 
-<p>This is the engineering-level companion to <a href="/concepts/event-store">The event store</a> — same idea, closer to the code.</p>
+<p>This is the engineering-level companion to <a href="/concepts/event-store">The event store</a>, same idea, closer to the code.</p>
 
 <h2 id="h-path">One write, three reads</h2>
 <div className="flow">
@@ -25,16 +25,16 @@ export const meta = {
 </div>
 
 <h2 id="h-why-one">Why this isn't three separate write paths</h2>
-<p>The tempting shortcut is to have the subscriptions module call the notifications module directly on a failure, and separately increment an analytics counter, and separately queue a webhook. Three call sites, three chances for one of them to be missed on a future code change. Writing one event and letting three independent consumers read it means adding a fourth consumer later — a data warehouse export, say — doesn't require touching the subscriptions module at all.</p>
+<p>The tempting shortcut is to have the subscriptions module call the notifications module directly on a failure, and separately increment an analytics counter, and separately queue a webhook. Three call sites, three chances for one of them to be missed on a future code change. Writing one event and letting three independent consumers read it means adding a fourth consumer later, a data warehouse export, say, doesn't require touching the subscriptions module at all.</p>
 
 <h2 id="h-processor">The event processor</h2>
-<p>The `events` module's processor is what turns a written event into action for its consumers — it's the dispatcher, not the event store itself. It runs asynchronously via BullMQ (see <a href="/architecture/queues-and-async">Queues & async processing</a>), so writing an event and reacting to it are decoupled: a slow webhook delivery never blocks the request that triggered the underlying domain action.</p>
+<p>The `events` module's processor is what turns a written event into action for its consumers, it's the dispatcher, not the event store itself. It runs asynchronously via BullMQ (see <a href="/architecture/queues-and-async">Queues & async processing</a>), so writing an event and reacting to it are decoupled: a slow webhook delivery never blocks the request that triggered the underlying domain action.</p>
 
 <h2 id="h-consistency">What this buys, concretely</h2>
 <ul>
-  <li>A merchant's analytics dashboard and their webhook stream can never disagree about whether an event happened — they're reading the same rows.</li>
+  <li>A merchant's analytics dashboard and their webhook stream can never disagree about whether an event happened, they're reading the same rows.</li>
   <li>Adding a new webhook event type is a subscription change, not a new write path.</li>
-  <li>Replaying a webhook (<a href="/developer/webhooks">Webhooks</a>) is just re-running the dispatch step against an already-durable event — nothing about the underlying fact is reconstructed or guessed at.</li>
+  <li>Replaying a webhook (<a href="/developer/webhooks">Webhooks</a>) is just re-running the dispatch step against an already-durable event, nothing about the underlying fact is reconstructed or guessed at.</li>
 </ul>
 
 <h2 id="h-next">Next</h2>

@@ -4,7 +4,7 @@ export const meta = {
   lede: "Per-key throughput, burst headroom, and the headers that tell you exactly where you stand.",
 };
 
-<div className="callout note"><div className="ic">ⓘ</div><p>The specific numbers below are illustrative — the BRD commits to a 2-second response time under normal load (NFR-1) but doesn't fix exact throughput ceilings. Treat the shape of this page as final and the numbers as a starting point to confirm against your actual provisioning.</p></div>
+<div className="callout note"><div className="ic">ⓘ</div><p>The specific numbers below are illustrative, the BRD commits to a 2-second response time under normal load (NFR-1) but doesn't fix exact throughput ceilings. Treat the shape of this page as final and the numbers as a starting point to confirm against your actual provisioning.</p></div>
 
 <h2 id="h-numbers">Indicative limits</h2>
 <table>
@@ -12,7 +12,7 @@ export const meta = {
   <tr><td>Read endpoints (subscriptions, customers, invoices, analytics)</td><td>100 requests/second sustained, burst to 200 for 5 seconds</td></tr>
   <tr><td>Write endpoints (create/update subscription, create plan)</td><td>30 requests/second sustained, burst to 60</td></tr>
   <tr><td>Webhook subscription management</td><td>10 requests/second sustained</td></tr>
-  <tr><td>Inbound webhook delivery to you</td><td>Unlimited — you're receiving, not requesting</td></tr>
+  <tr><td>Inbound webhook delivery to you</td><td>Unlimited, you're receiving, not requesting</td></tr>
 </table>
 
 <h2 id="h-headers">Headers on every response</h2>
@@ -46,7 +46,7 @@ curl -X POST https://api.nomba-subscriptions.com/subscriptions \
 
 
 <h2 id="h-more">If you need more</h2>
-<p>Most integrations run well under these limits. If yours doesn't — a batch job re-syncing a large customer base, for instance — schedule it off-peak, or talk to us about a dedicated capacity tier.</p>
+<p>Most integrations run well under these limits. If yours doesn't, a batch job re-syncing a large customer base, for instance, schedule it off-peak, or talk to us about a dedicated capacity tier.</p>
 
 <h2 id="h-next">Next</h2>
 <div className="card-grid cols-2">

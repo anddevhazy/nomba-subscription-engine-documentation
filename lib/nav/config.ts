@@ -193,7 +193,7 @@ export const DESCRIPTIONS: Record<string, string> = {
   "the-team":
     "The people behind the Nomba Subscription Engine, and why recurring billing in Nigeria needed a second look.",
   "merchants/overview":
-    "Stop building billing logic in-house. Plans, customers, invoices, recovery, analytics — one API, one dashboard.",
+    "Stop building billing logic in-house. Plans, customers, invoices, recovery, analytics, one API, one dashboard.",
   "merchants/create-a-plan":
     "Name, price, interval, trial. From an idea for a pricing tier to something a customer can subscribe to.",
   "merchants/onboard-and-collect-payment":
@@ -203,7 +203,7 @@ export const DESCRIPTIONS: Record<string, string> = {
   "merchants/team-and-roles":
     "Owner and Team Member. Who can rotate an API key, and who just needs to handle today's support queue.",
   "merchants/analytics":
-    "MRR, churn, recovery rate, plan performance — computed from the same event store that powers your webhooks.",
+    "MRR, churn, recovery rate, plan performance, computed from the same event store that powers your webhooks.",
   "subscribers/overview":
     "View it. Pause it. Cancel it. Fix a failed card. Without emailing the merchant and waiting.",
   "subscribers/manage-your-subscription":
@@ -217,7 +217,7 @@ export const DESCRIPTIONS: Record<string, string> = {
   "concepts/recovery-orchestration":
     "One component decides which channel reaches a customer first, and what to do when that channel doesn't answer.",
   "channels/web":
-    "The API and docs site, the merchant dashboard, and the customer portal — three applications, one API underneath.",
+    "The API and docs site, the merchant dashboard, and the customer portal, three applications, one API underneath.",
   "channels/whatsapp":
     "Retry Now, Pause Subscription, Downgrade Plan. A failed charge, three buttons, no phone call.",
   "channels/sms":
@@ -237,7 +237,7 @@ export const DESCRIPTIONS: Record<string, string> = {
   "architecture/nomba-integration":
     "Checkout, Tokenised Cards, Charge, Transfers. The four Nomba surfaces this engine is built on.",
   "architecture/data-flow":
-    "How a single event — a payment failing, a subscription renewing — reaches webhooks, notifications, and analytics without three separate write paths.",
+    "How a single event, a payment failing, a subscription renewing, reaches webhooks, notifications, and analytics without three separate write paths.",
   "architecture/queues-and-async":
     "Dunning retries, webhook delivery, invoice generation. Why none of them happen inline on the request that triggered them.",
   "architecture/resilience":

@@ -4,7 +4,7 @@ export const meta = {
   lede: "Dunning retries, webhook delivery, invoice generation. Why none of them happen inline on the request that triggered them.",
 };
 
-<p>Anything that involves a third party — Nomba, WhatsApp, SMS, a merchant's own webhook endpoint — runs on a queue, not inline on the request that triggered it. BullMQ, backed by Redis, is the mechanism for all of it.</p>
+<p>Anything that involves a third party, Nomba, WhatsApp, SMS, a merchant's own webhook endpoint, runs on a queue, not inline on the request that triggered it. BullMQ, backed by Redis, is the mechanism for all of it.</p>
 
 <h2 id="h-what">What runs async</h2>
 <table>
@@ -12,18 +12,18 @@ export const meta = {
   <tr><td>Webhook delivery</td><td>A merchant's endpoint might be slow, down, or misconfigured. That should never hold open the request that created the underlying event.</td></tr>
   <tr><td>Dunning retries and recovery messages</td><td>Scheduled on a grace-period timer, not fired synchronously from the failed charge itself.</td></tr>
   <tr><td>Invoice generation on a billing cycle</td><td>Runs on a schedule, independent of any specific request.</td></tr>
-  <tr><td>WhatsApp / SMS / USSD notification delivery</td><td>Third-party providers with their own latency and occasional outages — see <a href="/architecture/resilience">Resilience & scale</a>.</td></tr>
+  <tr><td>WhatsApp / SMS / USSD notification delivery</td><td>Third-party providers with their own latency and occasional outages, see <a href="/architecture/resilience">Resilience & scale</a>.</td></tr>
 </table>
 
 <h2 id="h-shape">The shape of a queued job</h2>
 <div className="steps">
   <div className="step"><div className="step-num">1</div><div className="step-body"><div className="step-title">A domain action enqueues a job</div><p>E.g. a `PaymentFailed` event enqueues a recovery-orchestration job.</p></div></div>
   <div className="step"><div className="step-num">2</div><div className="step-body"><div className="step-title">A worker picks it up</div><p>Independently of the original HTTP request, which has already returned.</p></div></div>
-  <div className="step"><div className="step-num">3</div><div className="step-body"><div className="step-title">On failure, it retries with backoff</div><p>Rather than being dropped — see the retry table on <a href="/developer/webhooks">Webhooks</a> for the shape this takes on the delivery side specifically.</p></div></div>
+  <div className="step"><div className="step-num">3</div><div className="step-body"><div className="step-title">On failure, it retries with backoff</div><p>Rather than being dropped, see the retry table on <a href="/developer/webhooks">Webhooks</a> for the shape this takes on the delivery side specifically.</p></div></div>
 </div>
 
 <h2 id="h-why-redis">Why BullMQ on Redis, not a heavier message broker</h2>
-<p>The job shapes here — retry a delivery, send a notification, generate an invoice on schedule — don't need the durability or fan-out guarantees of a dedicated broker. BullMQ on Redis covers every queue use case at this platform's scale with far less operational surface to run.</p>
+<p>The job shapes here, retry a delivery, send a notification, generate an invoice on schedule, don't need the durability or fan-out guarantees of a dedicated broker. BullMQ on Redis covers every queue use case at this platform's scale with far less operational surface to run.</p>
 
 <h2 id="h-next">Next</h2>
 <div className="card-grid cols-2">

@@ -14,10 +14,10 @@ export const meta = {
 </div>
 
 <h2 id="h-tenant">Tenant isolation</h2>
-<p>Every business resource — plans, customers, subscriptions, invoices, payments, webhooks, API keys, audit logs — carries a `merchantId`, enforced at the data-access layer, not only in application-level checks. A bug in a controller can't accidentally leak one merchant's data into another's response if the query itself is scoped before it ever reaches application logic.</p>
+<p>Every business resource, plans, customers, subscriptions, invoices, payments, webhooks, API keys, audit logs, carries a `merchantId`, enforced at the data-access layer, not only in application-level checks. A bug in a controller can't accidentally leak one merchant's data into another's response if the query itself is scoped before it ever reaches application logic.</p>
 
 <h2 id="h-idempotent">Idempotency as a security property, not just a reliability one</h2>
-<p>Idempotency keys on writes and stable event IDs on webhook replay mean a retried or replayed request can never be turned into a duplicate charge or a duplicate side effect — whether the retry was benign (a network blip) or adversarial (someone replaying a captured request).</p>
+<p>Idempotency keys on writes and stable event IDs on webhook replay mean a retried or replayed request can never be turned into a duplicate charge or a duplicate side effect, whether the retry was benign (a network blip) or adversarial (someone replaying a captured request).</p>
 
 <h2 id="h-audit">Everything material is audited</h2>
 <p>Plan changes, API key rotation, webhook configuration, and subscription overrides all write to a per-merchant audit log, attributed to the acting user. "What changed, and who changed it" has one answer, queryable from the dashboard.</p>

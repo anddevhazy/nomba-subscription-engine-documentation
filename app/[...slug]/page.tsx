@@ -25,7 +25,7 @@ export async function generateMetadata({
   if (!resolved) return {};
   const { meta } = await getPage(resolved);
   return {
-    title: `${meta.title} — Nomba Subscription Engine`,
+    title: `${meta.title} | Nomba Subscription Engine`,
     description: meta.lede,
   };
 }
