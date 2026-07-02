@@ -25,7 +25,7 @@ export async function generateMetadata({
   if (!resolved) return {};
   const content = getPageContent(resolved);
   return {
-    title: `${content.title} — Guild Docs`,
+    title: `${content.title} — Nomba Subscription Engine`,
     description: content.lede,
   };
 }
@@ -54,7 +54,7 @@ export default async function DocPage({
           <p className="lede">{content.lede}</p>
           <div dangerouslySetInnerHTML={{ __html: content.body }} />
           <div className="page-footer">
-            <span>Guild Docs</span>
+            <span>Nomba Subscription Engine</span>
             <span>Edit this page on GitHub</span>
           </div>
         </main>

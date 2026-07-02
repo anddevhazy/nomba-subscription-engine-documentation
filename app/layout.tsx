@@ -18,8 +18,8 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Guild Docs — It starts with Musa.",
-  description: "Receipts for the people the banks forgot.",
+  title: "Nomba Subscription Engine — Docs",
+  description: "Multi-tenant Subscription-as-a-Service, built on Nomba's payment rails.",
 };
 
 export default function RootLayout({
