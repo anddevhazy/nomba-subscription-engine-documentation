@@ -87,19 +87,20 @@ export const NAV: NavGroup[] = [
     ],
   },
   {
-    group: "For merchants",
+    group: "Core concepts",
     items: [
-      { slug: "merchants/overview", title: "For merchants" },
-      { slug: "merchants/create-a-plan", title: "Create a plan" },
       {
-        slug: "merchants/onboard-and-collect-payment",
-        title: "Onboard a customer",
+        slug: "concepts/subscription-lifecycle",
+        title: "Subscription lifecycle",
       },
-      { slug: "merchants/billing-and-invoicing", title: "Billing & invoicing" },
-      { slug: "merchants/team-and-roles", title: "Team & roles" },
-      { slug: "merchants/analytics", title: "Analytics" },
+      { slug: "concepts/event-store", title: "The event store" },
+      {
+        slug: "concepts/recovery-orchestration",
+        title: "Recovery orchestration",
+      },
     ],
   },
+
   {
     group: "For subscribers",
     items: [
@@ -115,26 +116,17 @@ export const NAV: NavGroup[] = [
     ],
   },
   {
-    group: "Core concepts",
+    group: "For merchants",
     items: [
+      { slug: "merchants/overview", title: "For merchants" },
+      { slug: "merchants/create-a-plan", title: "Create a plan" },
       {
-        slug: "concepts/subscription-lifecycle",
-        title: "Subscription lifecycle",
+        slug: "merchants/onboard-and-collect-payment",
+        title: "Onboard a customer",
       },
-      { slug: "concepts/event-store", title: "The event store" },
-      {
-        slug: "concepts/recovery-orchestration",
-        title: "Recovery orchestration",
-      },
-    ],
-  },
-  {
-    group: "Channels",
-    items: [
-      { slug: "channels/web", title: "Web" },
-      { slug: "channels/whatsapp", title: "WhatsApp" },
-      { slug: "channels/sms", title: "SMS" },
-      { slug: "channels/ussd", title: "USSD" },
+      { slug: "merchants/billing-and-invoicing", title: "Billing & invoicing" },
+      { slug: "merchants/team-and-roles", title: "Team & roles" },
+      { slug: "merchants/analytics", title: "Analytics" },
     ],
   },
   {
@@ -143,6 +135,16 @@ export const NAV: NavGroup[] = [
       { slug: "developer/authentication", title: "Authentication" },
       { slug: "developer/webhooks", title: "Webhooks" },
       { slug: "developer/rate-limits", title: "Rate limits" },
+    ],
+  },
+
+  {
+    group: "Channels",
+    items: [
+      { slug: "channels/web", title: "Web" },
+      { slug: "channels/whatsapp", title: "WhatsApp" },
+      { slug: "channels/sms", title: "SMS" },
+      { slug: "channels/ussd", title: "USSD" },
     ],
   },
   {
