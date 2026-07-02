@@ -20,7 +20,7 @@ export function TopBar() {
           ☰
         </button>
         <Link className="brand" href="/introduction">
-          <span className="mark">N</span> Nomba Subscriptions
+          <img className="mark" src="/brand/nomba-icon-dark.svg" alt="Nomba" /> Nomba Subscriptions
         </Link>
         <div className="searchbox">
           🔎&nbsp; Search docs... <kbd>⌘K</kbd>

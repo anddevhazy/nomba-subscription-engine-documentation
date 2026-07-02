@@ -46,10 +46,8 @@ code, pre, .mono { font-family: var(--font-jetbrains-mono), ui-monospace, monosp
 }
 .brand { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 18px; white-space: nowrap; }
 .brand .mark {
-  width: 24px; height: 24px;
-  background: var(--text); color: #fff;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 13px; font-weight: 700; border-radius: 5px;
+  width: 22px; height: 26px;
+  display: block;
 }
 .menu-btn { display: none; background: none; border: none; font-size: 20px; cursor: pointer; color: var(--text); padding: 4px 6px; }
 .searchbox {

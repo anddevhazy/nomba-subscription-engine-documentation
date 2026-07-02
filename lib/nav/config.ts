@@ -172,15 +172,6 @@ export const NAV: NavGroup[] = [
       { slug: "security/data-protection", title: "Data & encryption posture" },
     ],
   },
-  {
-    group: "API reference",
-    items: [
-      { slug: "api-reference/introduction", title: "API Reference" },
-      { slug: "api-reference/authentication", title: "Authentication" },
-      { slug: "api-reference/errors", title: "Errors" },
-      { slug: "api-reference/webhook-events", title: "Webhook events" },
-    ],
-  },
 ];
 
 export const DESCRIPTIONS: Record<string, string> = {
