@@ -1,0 +1,35 @@
+export const meta = {
+  eyebrow: "Architecture",
+  title: "Resilience & scale",
+  lede: "Async by default, retried with backoff, degraded gracefully when WhatsApp or SMS goes down for an hour.",
+};
+
+<p>A billing platform earns trust on the day a third-party provider has a bad hour. This page is what happens on that day.</p>
+
+<h2 id="h-principle">The operating principle</h2>
+<p>Nothing in the recovery or notification path fails silently. If WhatsApp or SMS is unreachable, the affected jobs are queued and retried — not dropped, not swallowed into a log line nobody reads. A merchant should never lose a recovery attempt because a provider had an outage; the job comes back and tries again once the provider does.</p>
+
+<h2 id="h-layers">Where resilience lives</h2>
+<div className="card-grid cols-2">
+  <div className="card"><div className="card-icon">🔁</div><div className="card-title">Retry with backoff</div><div className="card-desc">Every async job — webhook delivery, notification send — retries on failure rather than failing once and giving up.</div></div>
+  <div className="card"><div className="card-icon">📬</div><div className="card-title">Dead-letter handling</div><div className="card-desc">A webhook delivery that exhausts its retry window moves to a dead-letter state, visible to the merchant and replayable once their endpoint is fixed.</div></div>
+  <div className="card"><div className="card-icon">🗝️</div><div className="card-title">Idempotency</div><div className="card-desc">Replayed webhooks and retried charges carry stable identifiers so reprocessing is always safe, never a duplicate side effect.</div></div>
+  <div className="card"><div className="card-icon">📒</div><div className="card-title">The event store as ground truth</div><div className="card-desc">Even if a queue drains unexpectedly, the underlying facts are durable in the event store and can be re-dispatched.</div></div>
+</div>
+
+<h2 id="h-degrade">Graceful degradation, concretely</h2>
+<table>
+  <tr><th>Failure</th><th>What happens</th></tr>
+  <tr><td>WhatsApp provider outage</td><td>Recovery messages queue and retry; once the outage clears, queued messages send, or the orchestration falls forward to SMS if the delay exceeds a threshold.</td></tr>
+  <tr><td>A merchant's webhook endpoint is down</td><td>Deliveries retry on the schedule in <a href="/developer/webhooks">Webhooks</a>, up to 14 days, then move to dead-letter — replayable, not lost.</td></tr>
+  <tr><td>Nomba's API is briefly unreachable</td><td>Charge attempts retry rather than being marked failed on a single transient error.</td></tr>
+</table>
+
+<h2 id="h-async-default">Why async-by-default is itself a resilience choice</h2>
+<p>Because nothing in the notification or webhook path runs inline on a request (see <a href="/architecture/queues-and-async">Queues & async processing</a>), a slow or failing third party degrades the async pipeline, not the API's response times for merchants and subscribers doing unrelated things at the same moment.</p>
+
+<h2 id="h-next">Next</h2>
+<div className="card-grid cols-2">
+  <a className="card" href="/architecture/queues-and-async"><div className="card-icon">🗂️</div><div className="card-title">Queues & async processing</div><div className="card-desc">The mechanism underneath this page.</div></a>
+  <a className="card" href="/security/overview"><div className="card-icon">🛡️</div><div className="card-title">Security overview</div><div className="card-desc">The defence-in-depth posture alongside resilience.</div></a>
+</div>

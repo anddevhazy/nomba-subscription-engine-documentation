@@ -1,0 +1,52 @@
+export const meta = {
+  eyebrow: "Core concepts",
+  title: "Subscription lifecycle",
+  lede: "Eight states. One state machine. Why past_due and grace_period are different states, not the same failure twice.",
+};
+
+<p>A subscription isn't just "active" or "not active." It moves through a defined state machine, and every transition is explicit — nothing about a subscription's status is inferred after the fact from a pile of payment records. This page is the whole machine.</p>
+
+<h2 id="h-states">The eight states</h2>
+<div className="flow">
+  <div className="flow-node accent">pending</div><div className="flow-arrow">→</div>
+  <div className="flow-node">trialing</div><div className="flow-arrow">→</div>
+  <div className="flow-node accent2">active</div><div className="flow-arrow">→</div>
+  <div className="flow-node">past_due</div><div className="flow-arrow">→</div>
+  <div className="flow-node">grace_period</div><div className="flow-arrow">→</div>
+  <div className="flow-node">suspended</div>
+</div>
+<p className="body-secondary">Plus two terminal states reachable from most points in the flow: `cancelled` (subscriber or merchant ends it) and `expired` (a fixed-term subscription runs its course).</p>
+
+<table>
+  <tr><th>State</th><th>What it means</th></tr>
+  <tr><td>`pending`</td><td>Created, not yet activated — usually waiting on card tokenisation to complete.</td></tr>
+  <tr><td>`trialing`</td><td>Inside the plan's trial window. No charge has fired yet.</td></tr>
+  <tr><td>`active`</td><td>Billing normally. The healthy state.</td></tr>
+  <tr><td>`past_due`</td><td>A charge just failed. The clock on the grace period starts here.</td></tr>
+  <tr><td>`grace_period`</td><td>Recovery is actively in progress — messages have gone out, retries are expected.</td></tr>
+  <tr><td>`suspended`</td><td>The grace period lapsed without recovery. Access is paused, but the subscription record and history are intact.</td></tr>
+  <tr><td>`cancelled`</td><td>Ended, by the subscriber or the merchant. Terminal.</td></tr>
+  <tr><td>`expired`</td><td>A fixed-term subscription reached its natural end. Terminal.</td></tr>
+</table>
+
+<h2 id="h-why-split">Why past_due and grace_period are separate states</h2>
+<p>It would be simpler to collapse these into one "payment failed" state. They're kept separate because they mean different things to a merchant reading the dashboard: `past_due` is a fact (a charge failed), `grace_period` is a process (recovery is actively running, with a defined end). A merchant scanning for subscriptions that need manual attention wants to see the ones where recovery has stalled, not every subscription that's ever had a single failed charge.</p>
+
+<h2 id="h-transitions">What triggers each transition</h2>
+<div className="card-grid cols-2">
+  <div className="card"><div className="card-icon">✅</div><div className="card-title">trialing → active</div><div className="card-desc">Trial window ends and the first charge succeeds.</div></div>
+  <div className="card"><div className="card-icon">❌</div><div className="card-title">active → past_due</div><div className="card-desc">A billing-cycle charge attempt fails.</div></div>
+  <div className="card"><div className="card-icon">🔁</div><div className="card-title">past_due → grace_period</div><div className="card-desc">Recovery orchestration picks up the failure and starts sending recovery messages.</div></div>
+  <div className="card"><div className="card-icon">🔄</div><div className="card-title">grace_period → active</div><div className="card-desc">A retried charge succeeds — recovery worked.</div></div>
+  <div className="card"><div className="card-icon">⛔</div><div className="card-title">grace_period → suspended</div><div className="card-desc">The grace period lapses with no successful retry.</div></div>
+  <div className="card"><div className="card-icon">🚪</div><div className="card-title">any → cancelled</div><div className="card-desc">Subscriber cancels from the portal, or a merchant cancels on their behalf.</div></div>
+</div>
+
+<h2 id="h-events">Every transition is an event</h2>
+<p>Each state change writes a domain event to the <a href="/concepts/event-store">event store</a> — `SubscriptionCreated`, `SubscriptionUpdated`, `SubscriptionRenewed`, `SubscriptionCancelled`, `PaymentFailed`, `PaymentRecovered`. This is what lets webhooks, notifications, and analytics all react to the same state change without needing to poll the subscription record for a diff.</p>
+
+<h2 id="h-next">Next</h2>
+<div className="card-grid cols-2">
+  <a className="card" href="/concepts/event-store"><div className="card-icon">📒</div><div className="card-title">The event store</div><div className="card-desc">Where every one of these transitions actually lands.</div></a>
+  <a className="card" href="/concepts/recovery-orchestration"><div className="card-icon">🧭</div><div className="card-title">Recovery orchestration</div><div className="card-desc">What happens during grace_period, specifically.</div></a>
+</div>

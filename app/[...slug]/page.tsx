@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { allSlugs } from "@/lib/nav";
-import { getPageContent, extractHeadings } from "@/lib/content";
-import { Toc } from "@/components/Toc";
+import { getPage, getHeadings } from "@/lib/content";
+import { Toc } from "@/components/docs/Toc";
 
 type Params = { slug: string[] };
 
@@ -23,10 +23,10 @@ export async function generateMetadata({
   const { slug } = await params;
   const resolved = slugFromParams(slug);
   if (!resolved) return {};
-  const content = getPageContent(resolved);
+  const { meta } = await getPage(resolved);
   return {
-    title: `${content.title} — Nomba Subscription Engine`,
-    description: content.lede,
+    title: `${meta.title} — Nomba Subscription Engine`,
+    description: meta.lede,
   };
 }
 
@@ -39,20 +39,20 @@ export default async function DocPage({
   const resolved = slugFromParams(slug);
   if (!resolved) notFound();
 
-  const content = getPageContent(resolved);
-  const headings = extractHeadings(content.body);
+  const { meta, Content } = await getPage(resolved);
+  const headings = getHeadings(resolved);
 
   return (
     <>
       <div className="content-col">
         <main>
-          <div className="eyebrow">{content.eyebrow}</div>
+          <div className="eyebrow">{meta.eyebrow}</div>
           <div className="title-row">
-            <h1>{content.title}</h1>
+            <h1>{meta.title}</h1>
             <div className="ask-ai-btn">☀️ Open in Claude ▾</div>
           </div>
-          <p className="lede">{content.lede}</p>
-          <div dangerouslySetInnerHTML={{ __html: content.body }} />
+          <p className="lede">{meta.lede}</p>
+          <Content />
           <div className="page-footer">
             <span>Nomba Subscription Engine</span>
             <span>Edit this page on GitHub</span>

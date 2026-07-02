@@ -1,0 +1,45 @@
+export const meta = {
+  eyebrow: "Architecture",
+  title: "Modules",
+  lede: "Sixteen modules, each owning one slice of the domain. What each one is responsible for, and who it talks to.",
+};
+
+<p>This is a NestJS monolith organised into modules by domain, not a fleet of microservices. Module boundaries give the same separation of ownership a service boundary would, without the deployment and network overhead — every module runs in the same process, talking to its neighbours through TypeScript imports rather than HTTP.</p>
+
+<h2 id="h-table">What each module owns</h2>
+<table>
+  <tr><th>Module</th><th>Owns</th></tr>
+  <tr><td>`auth`</td><td>Signup, login, JWT access/refresh issuance and rotation.</td></tr>
+  <tr><td>`merchants`</td><td>The merchant entity itself — the tenant root everything else scopes to.</td></tr>
+  <tr><td>`team`</td><td>Owner/Team Member roles and membership management.</td></tr>
+  <tr><td>`api-keys`</td><td>Live/test key issuance, rotation, revocation.</td></tr>
+  <tr><td>`plans`</td><td>Pricing plan CRUD and deactivation.</td></tr>
+  <tr><td>`customers`</td><td>Customer records, scoped per merchant.</td></tr>
+  <tr><td>`subscriptions`</td><td>The lifecycle state machine — create, pause, resume, cancel, reactivate, change plan.</td></tr>
+  <tr><td>`billing`</td><td>Invoice generation and proration math.</td></tr>
+  <tr><td>`invoices`</td><td>Invoice queries and line-item detail.</td></tr>
+  <tr><td>`payments`</td><td>Checkout, the Nomba integration, inbound webhooks, and transfers.</td></tr>
+  <tr><td>`dunning`</td><td>Failed-payment retry logic and grace-period tracking.</td></tr>
+  <tr><td>`notifications`</td><td>Email, SMS, WhatsApp, and USSD delivery — the channel layer recovery orchestration sits on top of.</td></tr>
+  <tr><td>`portal`</td><td>Customer-facing self-service — separate auth, separate surface, same underlying subscription data.</td></tr>
+  <tr><td>`webhooks`</td><td>Outbound event delivery, retry, dead-letter handling, and replay.</td></tr>
+  <tr><td>`events`</td><td>The event store and its processor — the substrate every other module's history reads from.</td></tr>
+  <tr><td>`analytics`</td><td>Merchant-facing metrics, computed as a read-model over `events`.</td></tr>
+  <tr><td>`audit`</td><td>Workspace action history — who did what, queryable per merchant.</td></tr>
+</table>
+
+<h2 id="h-shared">Shared infrastructure</h2>
+<table>
+  <tr><th>Module</th><th>Owns</th></tr>
+  <tr><td>`database`</td><td>TypeORM configuration and migrations.</td></tr>
+  <tr><td>`shared`</td><td>Enums and cross-cutting utilities used by more than one domain module.</td></tr>
+</table>
+
+<h2 id="h-discipline">Why the boundary matters even in one process</h2>
+<p>A module doesn't reach into another module's repository directly — it goes through that module's service layer, the same discipline a network boundary would force. This is what keeps the option open to peel a module out into its own service later, without a rewrite, if a specific one (payments, most likely) ever needs to scale or deploy independently of the rest.</p>
+
+<h2 id="h-next">Next</h2>
+<div className="card-grid cols-2">
+  <a className="card" href="/architecture/nomba-integration"><div className="card-icon">🔌</div><div className="card-title">Nomba integration</div><div className="card-desc">A closer look at what the payments module actually wraps.</div></a>
+  <a className="card" href="/architecture/data-flow"><div className="card-icon">🔄</div><div className="card-title">Data flow</div><div className="card-desc">How events and webhooks connect across module boundaries.</div></a>
+</div>

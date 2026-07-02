@@ -1,0 +1,41 @@
+export const meta = {
+  eyebrow: "For merchants",
+  title: "Onboard a customer",
+  lede: "Tokenise a card once via Nomba Checkout. Charge it automatically on every billing cycle after.",
+};
+
+<p>The point of tokenisation is that you ask a customer for their card exactly once. Everything after that — the first charge, the renewal three months later, a retry after a decline — reuses the same reference. Neither your servers nor the Subscription Engine's ever store or see the raw card number.</p>
+
+<h2 id="h-flow">How a customer gets tokenised</h2>
+<div className="steps">
+  <div className="step">
+<div className="step-num">1</div>
+<div className="step-body">
+<div className="step-title">Your app requests a Checkout session</div>
+
+```bash
+curl -X POST https://api.nomba-subscriptions.com/customers/cus_01.../checkout-session \
+  -H "Authorization: Bearer nse_live_..." \
+  -d '{"planId": "plan_lumen_monthly"}'
+```
+
+</div>
+</div>
+  <div className="step"><div className="step-num">2</div><div className="step-body"><div className="step-title">The customer completes card entry inside Nomba's hosted Checkout</div><p>Card number, expiry, CVV — entered directly into Nomba's session, never posted to your backend or ours.</p></div></div>
+  <div className="step"><div className="step-num">3</div><div className="step-body"><div className="step-title">Nomba tokenises the card and returns a reference</div><p>That token is what gets stored against the customer and reused for every future charge.</p></div></div>
+  <div className="step"><div className="step-num">4</div><div className="step-body"><div className="step-title">The subscription activates</div><p>Immediately if there's no trial; on the trial's end date otherwise. See <a href="/concepts/subscription-lifecycle">Subscription lifecycle</a>.</p></div></div>
+</div>
+
+<h2 id="h-recurring">Reusing the token</h2>
+<p>Every billing-cycle charge (<a href="/merchants/billing-and-invoicing">Billing & invoicing</a>) and every dunning retry (<a href="/concepts/recovery-orchestration">Recovery orchestration</a>) fires against the same stored token via Nomba's Charge API — the customer is never asked to re-enter their card unless the card itself changes.</p>
+
+<h2 id="h-update-card">When a card changes</h2>
+<p>A subscriber updates their payment method from the portal (<a href="/subscribers/manage-your-subscription">Manage your subscription</a>), which runs the same Checkout tokenisation flow and swaps the stored reference. The old token is discarded; nothing about the subscription's billing cycle or history changes.</p>
+
+<div className="callout note"><div className="ic">ⓘ</div><p>A merchant can also onboard a customer from the dashboard directly — useful for migrating an existing customer base onto the platform — by sending them a hosted Checkout link instead of building the flow into your own app first.</p></div>
+
+<h2 id="h-next">Next</h2>
+<div className="card-grid cols-2">
+  <a className="card" href="/merchants/billing-and-invoicing"><div className="card-icon">🧾</div><div className="card-title">Billing & invoicing</div><div className="card-desc">What happens on every cycle after onboarding.</div></a>
+  <a className="card" href="/architecture/nomba-integration"><div className="card-icon">🔌</div><div className="card-title">Nomba integration</div><div className="card-desc">Checkout, Tokenised Cards, and the other three surfaces.</div></a>
+</div>

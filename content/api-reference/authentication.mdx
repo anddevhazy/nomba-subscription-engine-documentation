@@ -1,0 +1,36 @@
+export const meta = {
+  eyebrow: "API reference",
+  title: "Authentication",
+  lede: "Bearer tokens, scoped to a merchant. Live and test environments, never crossed.",
+};
+
+<p>This is the reference-level version of <a href="/developer/authentication">Authentication</a> — same mechanism, formatted for lookup rather than a first read.</p>
+
+<h2 id="h-header">Required header</h2>
+
+```text
+Authorization: Bearer nse_live_01HKBZ...
+```
+
+
+<h2 id="h-envs">Environments</h2>
+<table>
+  <tr><th>Prefix</th><th>Base URL it's valid against</th></tr>
+  <tr><td>`nse_sandbox_*`</td><td>`api.sandbox.nomba-subscriptions.com`</td></tr>
+  <tr><td>`nse_live_*`</td><td>`api.nomba-subscriptions.com`</td></tr>
+</table>
+
+<h2 id="h-errors">Auth-specific error codes</h2>
+<table>
+  <tr><th>HTTP</th><th>Code</th><th>Meaning</th></tr>
+  <tr><td>401</td><td>`missing_auth`</td><td>No `Authorization` header present.</td></tr>
+  <tr><td>401</td><td>`invalid_auth`</td><td>Key not recognised, revoked, or expired.</td></tr>
+  <tr><td>401</td><td>`environment_mismatch`</td><td>Sandbox key against a production URL, or the reverse.</td></tr>
+  <tr><td>429</td><td>`rate_limited`</td><td>See <a href="/developer/rate-limits">Rate limits</a>.</td></tr>
+</table>
+
+<h2 id="h-next">Next</h2>
+<div className="card-grid cols-2">
+  <a className="card" href="/developer/authentication"><div className="card-icon">🔑</div><div className="card-title">Authentication (guide)</div><div className="card-desc">The narrative walkthrough, including key rotation.</div></a>
+  <a className="card" href="/api-reference/errors"><div className="card-icon">⚠️</div><div className="card-title">Errors</div><div className="card-desc">Every error code across the API, not just auth.</div></a>
+</div>

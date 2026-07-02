@@ -1,0 +1,32 @@
+export const meta = {
+  eyebrow: "Channels",
+  title: "WhatsApp",
+  lede: "Retry Now, Pause Subscription, Downgrade Plan. A failed charge, three buttons, no phone call.",
+};
+
+<p>WhatsApp is the primary recovery channel — the first one recovery orchestration reaches for after a failed charge, ahead of SMS. It's provisioned via Twilio, with production business verification in place.</p>
+
+<h2 id="h-what">What arrives on WhatsApp</h2>
+<p>A single scenario, deliberately: a failed-charge notification with three inline actions.</p>
+<blockquote>Your Lumen Monthly payment of ₦15,000 didn't go through.<br />[Retry Now] &nbsp; [Pause Subscription] &nbsp; [Downgrade Plan]</blockquote>
+<p>The subscriber's tap is read directly and routed to the matching action against the subscription — no additional login, no separate app.</p>
+
+<h2 id="h-actions">The three actions</h2>
+<table>
+  <tr><th>Action</th><th>What fires</th></tr>
+  <tr><td><strong>Retry Now</strong></td><td>Immediately re-attempts the charge against the card on file.</td></tr>
+  <tr><td><strong>Pause Subscription</strong></td><td>Moves the subscription to paused — billing stops, access can resume whenever the subscriber's ready.</td></tr>
+  <tr><td><strong>Downgrade Plan</strong></td><td>Switches to a lower-priced plan the merchant has configured as a downgrade path, and retries at the new price.</td></tr>
+</table>
+
+<h2 id="h-scope">What WhatsApp is, and isn't, used for</h2>
+<p>This channel is scoped to dunning — failed-charge notification and the actions above. It is not a general-purpose conversational interface for browsing plans, managing a team, or reading analytics; those live on the web dashboard and portal. Keeping the scope narrow keeps the failure modes narrow too.</p>
+
+<h2 id="h-fallback">When WhatsApp isn't available</h2>
+<p>If the subscriber doesn't have WhatsApp, or delivery fails, the same message falls back to <a href="/channels/sms">SMS</a> automatically — see <a href="/concepts/recovery-orchestration">Recovery orchestration</a> for exactly how that decision is made.</p>
+
+<h2 id="h-next">Next</h2>
+<div className="card-grid cols-2">
+  <a className="card" href="/channels/sms"><div className="card-icon">✉️</div><div className="card-title">SMS</div><div className="card-desc">The fallback channel, and where it's the primary one instead.</div></a>
+  <a className="card" href="/subscribers/when-a-payment-fails"><div className="card-icon">🔁</div><div className="card-title">When a payment fails</div><div className="card-desc">The same flow, from the subscriber's side.</div></a>
+</div>

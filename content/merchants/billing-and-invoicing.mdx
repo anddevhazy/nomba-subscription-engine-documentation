@@ -1,0 +1,31 @@
+export const meta = {
+  eyebrow: "For merchants",
+  title: "Billing & invoicing",
+  lede: "Invoices generate themselves. Charges fire themselves. Proration does the maths so you don't have to.",
+};
+
+<p>Here's the thing most new merchants are surprised by: after a subscription is created, you don't tap anything. The billing cycle runs on its own, an invoice generates itself with line-item detail, a charge fires against the stored card, and the outcome — paid or failed — writes to the event store automatically. Your job is to watch the dashboard, not operate it.</p>
+
+<h2 id="h-cycle">How a billing cycle runs</h2>
+<div className="steps">
+  <div className="step"><div className="step-num">1</div><div className="step-body"><div className="step-title">The cycle boundary arrives</div><p>Determined by the plan's interval and the subscription's anchor date — the date the subscription first went active.</p></div></div>
+  <div className="step"><div className="step-num">2</div><div className="step-body"><div className="step-title">An invoice generates</div><p>Line items reflect the plan price, plus any proration from a mid-cycle change (see below).</p></div></div>
+  <div className="step"><div className="step-num">3</div><div className="step-body"><div className="step-title">A charge attempt fires</div><p>Against the tokenised card on file, via Nomba's Charge API.</p></div></div>
+  <div className="step"><div className="step-num">4</div><div className="step-body"><div className="step-title">The outcome writes to the event store</div><p>Success → `InvoicePaid`. Failure → `PaymentFailed`, and the subscription moves to `past_due`. See <a href="/concepts/subscription-lifecycle">Subscription lifecycle</a>.</p></div></div>
+</div>
+
+<h2 id="h-proration">Proration on plan changes</h2>
+<p>A customer upgrades from "Lumen Monthly" to "Lumen Pro" halfway through a billing cycle. Rather than charging the full new price immediately or waiting until the next cycle, the engine prorates: credits the unused portion of the old plan, charges the prorated cost of the new one for the remainder of the current cycle, and the next full cycle bills at the new plan's full price.</p>
+<div className="callout note"><div className="ic">ⓘ</div><p>The same logic runs in reverse for a downgrade — the difference just shows up as a credit against the next invoice rather than an immediate charge.</p></div>
+
+<h2 id="h-attempts">Every attempt, tracked</h2>
+<p>Every charge attempt — successful or failed — is recorded as a payment attempt, linked to its invoice and its subscription. If a charge fails and later recovers through dunning, you see both attempts on the same invoice, in order, not just the final outcome. This is what makes a support conversation ("why was I charged twice") answerable from the dashboard instead of an escalation to engineering.</p>
+
+<h2 id="h-failure">When a charge fails</h2>
+<p>The subscription transitions to `past_due`, a grace period begins, and recovery starts on the subscriber's preferred channel. None of this requires you to do anything — it's the same mechanism covered in <a href="/how-it-works">How it works</a> and detailed in <a href="/concepts/recovery-orchestration">Recovery orchestration</a>.</p>
+
+<h2 id="h-next">Next</h2>
+<div className="card-grid cols-2">
+  <a className="card" href="/concepts/subscription-lifecycle"><div className="card-icon">🔄</div><div className="card-title">Subscription lifecycle</div><div className="card-desc">The full state machine, including grace periods and suspension.</div></a>
+  <a className="card" href="/merchants/analytics"><div className="card-icon">📊</div><div className="card-title">Analytics</div><div className="card-desc">How billing outcomes roll up into MRR, churn, and recovery rate.</div></a>
+</div>

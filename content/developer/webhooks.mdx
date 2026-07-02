@@ -1,0 +1,91 @@
+export const meta = {
+  eyebrow: "Developer",
+  title: "Webhooks",
+  lede: "Subscribe once. Every domain event, delivered with retry, dead-letter handling, and replay by subscription ID or time range.",
+};
+
+<p>Efe maintains the backend for a bookkeeping tool that resells access via the Subscription Engine — his product needs to know the moment a customer's subscription lapses, so it can gate a feature, and the moment it recovers, so it can un-gate it. Polling for that would mean a cron job hitting the API on a guess-and-check schedule. Webhooks mean his system reacts within moments of the event actually happening, and never has to guess.</p>
+
+<h2 id="h-events">Event types</h2>
+<table>
+  <tr><th>Event</th><th>Fires when</th></tr>
+  <tr><td>`subscription.created`</td><td>A new subscription is created.</td></tr>
+  <tr><td>`subscription.updated`</td><td>A plan change, pause, or resume.</td></tr>
+  <tr><td>`subscription.cancelled`</td><td>A subscription is cancelled.</td></tr>
+  <tr><td>`subscription.renewed`</td><td>A billing cycle completes successfully.</td></tr>
+  <tr><td>`invoice.paid`</td><td>An invoice is settled in full.</td></tr>
+  <tr><td>`payment.failed`</td><td>A billing-cycle charge attempt fails.</td></tr>
+  <tr><td>`payment.recovered`</td><td>A previously failed charge succeeds on retry.</td></tr>
+</table>
+
+<h2 id="h-subscribe">Subscribing</h2>
+
+```bash
+curl -X POST https://api.nomba-subscriptions.com/webhooks \
+  -H "Authorization: Bearer nse_live_..." \
+  -H "Content-Type: application/json" \
+  -d '{
+    "url": "https://efe-ledgerly.example.com/webhooks/nomba-subs",
+    "events": ["payment.failed", "payment.recovered", "subscription.cancelled"]
+  }'
+```
+
+<p>Response includes a `secret`, shown exactly once. Save it — it's what you'll use to verify every delivery. See <a href="/security/webhook-verification">Webhook signature verification</a>.</p>
+
+<h2 id="h-payload">Payload shape</h2>
+
+```json
+{
+  "id": "evt_01HMFB...",
+  "type": "payment.failed",
+  "createdAt": "2026-08-14T11:02:33Z",
+  "data": {
+    "subscriptionId": "sub_01HMFC...",
+    "customerId": "cus_01HMFD...",
+    "invoiceId": "inv_01HMFE...",
+    "amount": 1500000,
+    "currency": "NGN",
+    "failureReason": "card_declined"
+  },
+  "merchantId": "mrc_01HK...",
+  "apiVersion": "v1"
+}
+```
+
+
+<h2 id="h-retry">Delivery and retries</h2>
+<p>Order is not guaranteed across events for the same subscription — use `createdAt` if ordering matters to your handler. On a non-2xx response, we retry with exponential backoff:</p>
+<table>
+  <tr><th>Attempt</th><th>Delay since last</th></tr>
+  <tr><td>1</td><td>30 seconds</td></tr>
+  <tr><td>2</td><td>5 minutes</td></tr>
+  <tr><td>3</td><td>30 minutes</td></tr>
+  <tr><td>4</td><td>2 hours</td></tr>
+  <tr><td>5+</td><td>12–24 hours, up to 14 days total</td></tr>
+</table>
+<p>After 14 days of failed delivery, an event moves to a dead-letter state — visible in your dashboard, and replayable manually once your endpoint is healthy again.</p>
+
+<h2 id="h-replay">Replay</h2>
+<p>Request re-delivery of events by subscription ID or by time range — useful after your own outage, or when debugging a handler that silently dropped events during a bad deploy.</p>
+
+```bash
+curl -X POST https://api.nomba-subscriptions.com/webhooks/replay \
+  -H "Authorization: Bearer nse_live_..." \
+  -H "Content-Type: application/json" \
+  -d '{
+    "subscriptionId": "sub_01HMFC...",
+    "from": "2026-08-01T00:00:00Z",
+    "to": "2026-08-14T00:00:00Z"
+  }'
+```
+
+<p>Replayed deliveries carry the same event `id` as the original — your idempotency check (below) means reprocessing them is safe by construction, not by convention.</p>
+
+<h2 id="h-idempotency">Idempotency</h2>
+<p>Treat every webhook as at-least-once. Store the event `id` after successful processing; if you see it again, return 200 without reprocessing. A simple `events_processed(event_id PRIMARY KEY, received_at)` table covers almost every case.</p>
+
+<h2 id="h-next">Next</h2>
+<div className="card-grid cols-2">
+  <a className="card" href="/security/webhook-verification"><div className="card-icon">✔️</div><div className="card-title">Signature verification</div><div className="card-desc">How to confirm a delivery actually came from us.</div></a>
+  <a className="card" href="/developer/rate-limits"><div className="card-icon">⏱️</div><div className="card-title">Rate limits</div><div className="card-desc">Throughput on the API side, for when you're not just receiving.</div></a>
+</div>

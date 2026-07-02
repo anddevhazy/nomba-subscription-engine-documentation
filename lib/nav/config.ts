@@ -127,20 +127,3 @@ export const DESCRIPTIONS: Record<string, string> = {
   "api-reference/errors": "Status codes, error codes, and what each one means for your retry logic.",
   "api-reference/webhook-events": "Every event type we emit, with payload shape and the signature header that proves it came from us.",
 };
-
-export function titleFor(slug: string): string {
-  for (const g of NAV) {
-    for (const it of g.items) {
-      if (it.slug === slug) return it.title;
-    }
-  }
-  return slug;
-}
-
-export function groupFor(slug: string): NavGroup | undefined {
-  return NAV.find((g) => g.items.some((it) => it.slug === slug));
-}
-
-export function allSlugs(): string[] {
-  return NAV.flatMap((g) => g.items.map((it) => it.slug));
-}

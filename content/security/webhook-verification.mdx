@@ -1,0 +1,84 @@
+export const meta = {
+  eyebrow: "Security & trust",
+  title: "Webhook signature verification",
+  lede: "Every webhook we send is signed. Here's exactly how to verify one, in five languages.",
+};
+
+<p>Anyone who knows your webhook URL can POST to it. Signature verification is what lets you tell the difference between an event we actually sent and someone else's request pretending to be one.</p>
+
+<h2 id="h-headers">What arrives with every delivery</h2>
+
+```text
+X-Nomba-Subs-Signature: t=1755168153,v1=5d9c8...
+X-Nomba-Subs-Webhook-Id: whk_01HMFB...
+X-Nomba-Subs-Event-Id: evt_01HMFB...
+Content-Type: application/json
+```
+
+<p>The signature header carries two fields: `t`, the Unix timestamp when we signed the payload, and `v1`, the HMAC-SHA256 of `{timestamp}.{raw_body}` using your webhook secret.</p>
+
+<h2 id="h-verify">Verifying, step by step</h2>
+<div className="steps">
+  <div className="step"><div className="step-num">1</div><div className="step-body"><div className="step-title">Extract t and v1</div><p>Split the header on `,` and parse the key=value pairs.</p></div></div>
+  <div className="step"><div className="step-num">2</div><div className="step-body"><div className="step-title">Check the timestamp</div><p>Reject if `t` is more than 5 minutes off your server's clock — this is replay protection.</p></div></div>
+  <div className="step"><div className="step-num">3</div><div className="step-body"><div className="step-title">Compute the expected signature</div><p>`HMAC_SHA256(secret, "{t}." + raw_body)`, hex-encoded.</p></div></div>
+  <div className="step"><div className="step-num">4</div><div className="step-body"><div className="step-title">Compare in constant time</div><p>`crypto.timingSafeEqual` in Node, `hmac.compare_digest` in Python, `hash_equals` in PHP, `CryptographicOperations.FixedTimeEquals` in C#, `MessageDigest.isEqual` in Java. Never plain string equality — timing differences leak information an attacker can use.</p></div></div>
+  <div className="step"><div className="step-num">5</div><div className="step-body"><div className="step-title">Process only on a match</div><p>Otherwise return 401 and log the event for investigation.</p></div></div>
+</div>
+
+<h2 id="h-node">Node.js</h2>
+
+```js
+const crypto = require('crypto');
+
+function verify(rawBody, header, secret) {
+  const [tPart, vPart] = header.split(',');
+  const t = tPart.split('=')[1];
+  const v1 = vPart.split('=')[1];
+
+  if (Math.abs(Date.now() / 1000 - Number(t)) > 300) return false;
+
+  const expected = crypto
+    .createHmac('sha256', secret)
+    .update(`${t}.${rawBody}`)
+    .digest('hex');
+
+  return crypto.timingSafeEqual(Buffer.from(expected), Buffer.from(v1));
+}
+```
+
+
+<h2 id="h-python">Python</h2>
+
+```python
+import hmac, hashlib, time
+
+def verify(raw_body, header, secret):
+    parts = dict(p.split("=") for p in header.split(","))
+    t, v1 = parts["t"], parts["v1"]
+
+    if abs(time.time() - int(t)) > 300:
+        return False
+
+    expected = hmac.new(
+        secret.encode(), f"{t}.{raw_body}".encode(), hashlib.sha256
+    ).hexdigest()
+
+    return hmac.compare_digest(expected, v1)
+```
+
+
+<h2 id="h-checklist">Checklist</h2>
+<ul>
+  <li>✅ Verify the signature on every request. Reject on mismatch.</li>
+  <li>✅ Reject events older than 5 minutes.</li>
+  <li>✅ Check idempotency using the event `id` — deliveries are at-least-once.</li>
+  <li>✅ Return 2xx quickly. Push heavy processing to your own queue instead of doing it inline.</li>
+  <li>✅ Keep your webhook URL stable — update the subscription before changing DNS, not after.</li>
+</ul>
+
+<h2 id="h-next">Next</h2>
+<div className="card-grid cols-2">
+  <a className="card" href="/developer/webhooks"><div className="card-icon">🔔</div><div className="card-title">Webhooks</div><div className="card-desc">Event types, payload shape, retry behaviour.</div></a>
+  <a className="card" href="/security/data-protection"><div className="card-icon">🔐</div><div className="card-title">Data & encryption posture</div><div className="card-desc">What's encrypted at rest, and why.</div></a>
+</div>

@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
-import { SidebarProvider } from "@/components/SidebarContext";
-import { TopBar } from "@/components/TopBar";
-import { Sidebar } from "@/components/Sidebar";
+import { SidebarProvider } from "@/components/layout/SidebarContext";
+import { TopBar } from "@/components/layout/TopBar";
+import { Sidebar } from "@/components/layout/Sidebar";
 
 const inter = Inter({
   variable: "--font-inter",

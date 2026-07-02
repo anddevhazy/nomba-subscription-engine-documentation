@@ -1,0 +1,29 @@
+export const meta = {
+  eyebrow: "Security & trust",
+  title: "Security overview",
+  lede: "The defence-in-depth posture across authentication, webhook signing, and data at rest.",
+};
+
+<p>Three layers, each assuming the one below it might be bypassed.</p>
+
+<h2 id="h-layers">The layers</h2>
+<div className="card-grid cols-3">
+  <a className="card" href="/developer/authentication"><div className="card-icon">🔑</div><div className="card-title">Authentication</div><div className="card-desc">Bearer keys, hashed at rest, scoped per merchant, rate-limited, revocable instantly.</div></a>
+  <a className="card" href="/security/webhook-verification"><div className="card-icon">✔️</div><div className="card-title">Webhook signing</div><div className="card-desc">Every outbound webhook is HMAC-signed. Every signature is independently verifiable by you.</div></a>
+  <a className="card" href="/security/data-protection"><div className="card-icon">🔐</div><div className="card-title">Data at rest</div><div className="card-desc">Sensitive data, including stored payment references, is encrypted with AES-256-GCM.</div></a>
+</div>
+
+<h2 id="h-tenant">Tenant isolation</h2>
+<p>Every business resource — plans, customers, subscriptions, invoices, payments, webhooks, API keys, audit logs — carries a `merchantId`, enforced at the data-access layer, not only in application-level checks. A bug in a controller can't accidentally leak one merchant's data into another's response if the query itself is scoped before it ever reaches application logic.</p>
+
+<h2 id="h-idempotent">Idempotency as a security property, not just a reliability one</h2>
+<p>Idempotency keys on writes and stable event IDs on webhook replay mean a retried or replayed request can never be turned into a duplicate charge or a duplicate side effect — whether the retry was benign (a network blip) or adversarial (someone replaying a captured request).</p>
+
+<h2 id="h-audit">Everything material is audited</h2>
+<p>Plan changes, API key rotation, webhook configuration, and subscription overrides all write to a per-merchant audit log, attributed to the acting user. "What changed, and who changed it" has one answer, queryable from the dashboard.</p>
+
+<h2 id="h-next">Next</h2>
+<div className="card-grid cols-2">
+  <a className="card" href="/security/webhook-verification"><div className="card-icon">✔️</div><div className="card-title">Webhook signature verification</div><div className="card-desc">The exact steps, in five languages.</div></a>
+  <a className="card" href="/security/data-protection"><div className="card-icon">🔐</div><div className="card-title">Data & encryption posture</div><div className="card-desc">What's encrypted, and what deliberately isn't.</div></a>
+</div>
