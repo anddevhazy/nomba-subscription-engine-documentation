@@ -879,6 +879,697 @@ def verify(raw_body, header, secret):
 </div>
 `,
   },
+
+  "merchants/onboard-and-collect-payment": {
+    eyebrow: "For merchants",
+    title: "Onboard a customer",
+    lede: "Tokenise a card once via Nomba Checkout. Charge it automatically on every billing cycle after.",
+    body: `
+<p>The point of tokenisation is that you ask a customer for their card exactly once. Everything after that — the first charge, the renewal three months later, a retry after a decline — reuses the same reference. Neither your servers nor the Subscription Engine's ever store or see the raw card number.</p>
+
+<h2 id="h-flow">How a customer gets tokenised</h2>
+<div class="steps">
+  <div class="step"><div class="step-num">1</div><div class="step-body"><div class="step-title">Your app requests a Checkout session</div><p><pre><code>curl -X POST https://api.nomba-subscriptions.com/customers/cus_01.../checkout-session \\
+  -H "Authorization: Bearer nse_live_..." \\
+  -d '{"planId": "plan_lumen_monthly"}'</code></pre></p></div></div>
+  <div class="step"><div class="step-num">2</div><div class="step-body"><div class="step-title">The customer completes card entry inside Nomba's hosted Checkout</div><p>Card number, expiry, CVV — entered directly into Nomba's session, never posted to your backend or ours.</p></div></div>
+  <div class="step"><div class="step-num">3</div><div class="step-body"><div class="step-title">Nomba tokenises the card and returns a reference</div><p>That token is what gets stored against the customer and reused for every future charge.</p></div></div>
+  <div class="step"><div class="step-num">4</div><div class="step-body"><div class="step-title">The subscription activates</div><p>Immediately if there's no trial; on the trial's end date otherwise. See <a href="/concepts/subscription-lifecycle">Subscription lifecycle</a>.</p></div></div>
+</div>
+
+<h2 id="h-recurring">Reusing the token</h2>
+<p>Every billing-cycle charge (<a href="/merchants/billing-and-invoicing">Billing & invoicing</a>) and every dunning retry (<a href="/concepts/recovery-orchestration">Recovery orchestration</a>) fires against the same stored token via Nomba's Charge API — the customer is never asked to re-enter their card unless the card itself changes.</p>
+
+<h2 id="h-update-card">When a card changes</h2>
+<p>A subscriber updates their payment method from the portal (<a href="/subscribers/manage-your-subscription">Manage your subscription</a>), which runs the same Checkout tokenisation flow and swaps the stored reference. The old token is discarded; nothing about the subscription's billing cycle or history changes.</p>
+
+<div class="callout note"><div class="ic">ⓘ</div><p>A merchant can also onboard a customer from the dashboard directly — useful for migrating an existing customer base onto the platform — by sending them a hosted Checkout link instead of building the flow into your own app first.</p></div>
+
+<h2 id="h-next">Next</h2>
+<div class="card-grid cols-2">
+  <a class="card" href="/merchants/billing-and-invoicing"><div class="card-icon">🧾</div><div class="card-title">Billing & invoicing</div><div class="card-desc">What happens on every cycle after onboarding.</div></a>
+  <a class="card" href="/architecture/nomba-integration"><div class="card-icon">🔌</div><div class="card-title">Nomba integration</div><div class="card-desc">Checkout, Tokenised Cards, and the other three surfaces.</div></a>
+</div>
+`,
+  },
+
+  "merchants/team-and-roles": {
+    eyebrow: "For merchants",
+    title: "Team & roles",
+    lede: "Owner and Team Member. Who can rotate an API key, and who just needs to handle today's support queue.",
+    body: `
+<p>A merchant account isn't necessarily one person. The platform supports multiple users per merchant, with two roles that draw a clear line between running the business and running today's support queue.</p>
+
+<h2 id="h-roles">The two roles</h2>
+<div class="card-grid cols-2">
+  <div class="card"><div class="card-icon">👑</div><div class="card-title">Owner</div><div class="card-desc">Everything a Team Member can do, plus API key management, webhook configuration, and team membership — inviting, removing, and changing roles.</div></div>
+  <div class="card"><div class="card-icon">🧑‍💼</div><div class="card-title">Team Member</div><div class="card-desc">Day-to-day subscription and customer operations — plans, customers, invoices, manual retries, analytics. No account-level access.</div></div>
+</div>
+
+<h2 id="h-why">Why the line sits here</h2>
+<p>The split isn't about seniority, it's about blast radius. An API key or a webhook endpoint is infrastructure that, if misconfigured or leaked, can affect every customer on the account. Day-to-day subscription work — approving a manual retry, looking up why a customer's invoice is what it is — shouldn't require that level of access, and shouldn't be gated behind someone who has it.</p>
+
+<h2 id="h-manage">Managing your team</h2>
+<div class="steps">
+  <div class="step"><div class="step-num">1</div><div class="step-body"><div class="step-title">Invite</div><p>Dashboard → Team → Invite. Enter an email, pick a role. They get an invite link.</p></div></div>
+  <div class="step"><div class="step-num">2</div><div class="step-body"><div class="step-title">Change a role</div><p>Owner-only. Promote a Team Member to Owner, or the reverse.</p></div></div>
+  <div class="step"><div class="step-num">3</div><div class="step-body"><div class="step-title">Remove</div><p>Revokes their session and access immediately. Their past actions stay in the audit log under their name.</p></div></div>
+</div>
+
+<h2 id="h-not-yet">What this doesn't do, yet</h2>
+<p>This is deliberately a two-role model, not a custom-permission builder — no "can view analytics but not customers" granularity at v1. If your team needs finer-grained access control than Owner/Team Member, that's a real gap worth telling us about, not a hidden setting.</p>
+
+<h2 id="h-audit">Every action, attributed</h2>
+<p>Plan changes, API key rotation, webhook configuration, and subscription overrides all write to the merchant's audit log with the acting user attached — so "who changed this" is always answerable, regardless of role.</p>
+
+<h2 id="h-next">Next</h2>
+<div class="card-grid cols-2">
+  <a class="card" href="/developer/authentication"><div class="card-icon">🔑</div><div class="card-title">Authentication</div><div class="card-desc">API keys are Owner-only — here's how they work.</div></a>
+  <a class="card" href="/merchants/analytics"><div class="card-icon">📊</div><div class="card-title">Analytics</div><div class="card-desc">What both roles see on the dashboard.</div></a>
+</div>
+`,
+  },
+
+  "merchants/analytics": {
+    eyebrow: "For merchants",
+    title: "Analytics",
+    lede: "MRR, churn, recovery rate, and plan performance — computed on demand, always current.",
+    body: `
+<p>Adaeze used to find out how Lumen was doing by exporting payments to a spreadsheet at month-end. By the time she had a number, it was already three weeks stale. Analytics on this platform is a live read over the same event store that powers webhooks — the number on screen right now reflects the payment that settled a minute ago, not last month's export.</p>
+
+<h2 id="h-core">Core metrics</h2>
+<div class="card-grid cols-2">
+  <div class="card"><div class="card-icon">💰</div><div class="card-title">MRR / ARR</div><div class="card-desc">Monthly and annualised recurring revenue, computed from active subscriptions at their current plan price.</div></div>
+  <div class="card"><div class="card-icon">📉</div><div class="card-title">Churn rate</div><div class="card-desc">Share of subscribers who cancelled or lapsed into <code class="inline">expired</code> in the period.</div></div>
+  <div class="card"><div class="card-icon">🔁</div><div class="card-title">Recovery rate</div><div class="card-desc">Share of failed payments recovered within the grace period, broken down by channel — WhatsApp vs. SMS vs. USSD.</div></div>
+  <div class="card"><div class="card-icon">👤</div><div class="card-title">ARPU</div><div class="card-desc">Average revenue per active subscriber.</div></div>
+</div>
+
+<h2 id="h-endpoints">Where to read it</h2>
+<table>
+  <tr><th>Endpoint</th><th>Returns</th></tr>
+  <tr><td><code class="inline">GET /analytics/metrics</code></td><td>The core snapshot — MRR, ARR, churn, recovery, ARPU, subscription counts.</td></tr>
+  <tr><td><code class="inline">GET /analytics/overview</code></td><td>The full dashboard payload — metrics plus payments, customers, dunning, webhooks, and plan breakdown.</td></tr>
+  <tr><td><code class="inline">GET /analytics/revenue-trend</code></td><td>Revenue over time, at day, week, or month granularity.</td></tr>
+  <tr><td><code class="inline">GET /analytics/plans</code></td><td>MRR and subscriber count per plan — which tier is actually carrying the business.</td></tr>
+  <tr><td><code class="inline">GET /analytics/dunning</code></td><td>Past-due volume, grace-period volume, recovery rate, by channel.</td></tr>
+  <tr><td><code class="inline">GET /analytics/activity</code></td><td>A paginated feed of recent events, sourced straight from the event store.</td></tr>
+</table>
+
+<h2 id="h-why-onread">Why this is computed on demand, not batched</h2>
+<p>The alternative — a nightly job that rolls up numbers into a separate reporting table — is exactly the kind of second data path that quietly drifts from reality. Because these metrics are read-models over the same <a href="/concepts/event-store">event store</a> that drives webhooks, there's no batch delay and no separate table to reconcile against reality when something looks off.</p>
+
+<h2 id="h-next">Next</h2>
+<div class="card-grid cols-2">
+  <a class="card" href="/concepts/event-store"><div class="card-icon">📒</div><div class="card-title">The event store</div><div class="card-desc">Where every number on this page actually comes from.</div></a>
+  <a class="card" href="/concepts/recovery-orchestration"><div class="card-icon">🧭</div><div class="card-title">Recovery orchestration</div><div class="card-desc">What feeds the dunning metrics specifically.</div></a>
+</div>
+`,
+  },
+
+  "channels/web": {
+    eyebrow: "Channels",
+    title: "Web",
+    lede: "The API and docs site, the merchant dashboard, and the customer portal — three applications, one API underneath.",
+    body: `
+<p>Everything on this platform is reachable from a browser, split across three separate applications that all sit on top of the same API.</p>
+
+<h2 id="h-three">The three applications</h2>
+<div class="card-grid cols-3">
+  <div class="card"><div class="card-icon">📘</div><div class="card-title">API & docs</div><div class="card-desc">This site, plus the interactive Swagger reference at <code class="inline">/docs</code> on the API itself. For developers integrating the platform into their own product.</div></div>
+  <div class="card"><div class="card-icon">🏬</div><div class="card-title">Merchant dashboard</div><div class="card-desc">Plans, customers, invoices, analytics, webhooks, API keys, team management. Where a merchant runs the business day to day.</div></div>
+  <div class="card"><div class="card-icon">🙋</div><div class="card-title">Customer portal</div><div class="card-desc">Where a subscriber views and manages their own subscription — authenticated separately from the merchant's account.</div></div>
+</div>
+
+<h2 id="h-auth">How sign-in differs across them</h2>
+<table>
+  <tr><th>App</th><th>Auth</th></tr>
+  <tr><td>Merchant dashboard</td><td>Email + password, JWT access and refresh tokens. Scoped to a merchant and a role (Owner or Team Member).</td></tr>
+  <tr><td>Customer portal</td><td>Phone or email plus a one-time code. Scoped to a single subscriber identity, with no path into merchant data.</td></tr>
+  <tr><td>API</td><td>Bearer key, scoped to a merchant. See <a href="/developer/authentication">Authentication</a>.</td></tr>
+</table>
+
+<h2 id="h-separation">Why the separation matters</h2>
+<p>A subscriber's login has nothing to do with a merchant's account, and can't reach merchant data even by accident — no shared session, no shared token type. This is what makes the customer portal a genuinely self-service surface rather than a "customer view" bolted onto the merchant dashboard with a different permission check.</p>
+
+<h2 id="h-next">Next</h2>
+<div class="card-grid cols-2">
+  <a class="card" href="/merchants/overview"><div class="card-icon">🏬</div><div class="card-title">For merchants</div><div class="card-desc">What the dashboard actually does.</div></a>
+  <a class="card" href="/subscribers/overview"><div class="card-icon">🙋</div><div class="card-title">For subscribers</div><div class="card-desc">What the portal actually does.</div></a>
+</div>
+`,
+  },
+
+  "channels/sms": {
+    eyebrow: "Channels",
+    title: "SMS",
+    lede: "Reply YES to retry. The rail that works when a customer has neither an app nor a smartphone worth the name.",
+    body: `
+<p>SMS is the fallback recovery channel — where <a href="/channels/whatsapp">WhatsApp</a> can't reach a subscriber, SMS does. It's also, for some merchants' customer bases, the primary channel by default: not every subscriber has WhatsApp, but nearly all of them can receive a text.</p>
+
+<h2 id="h-what">What arrives by SMS</h2>
+<blockquote>Lumen: payment of ₦15,000 failed. Reply YES to retry.</blockquote>
+<p>The subscriber replies <strong>YES</strong>, and the retry fires against the stored card — the same action as tapping Retry Now on WhatsApp, just over a rail that works on any handset.</p>
+
+<h2 id="h-scope">One job, done reliably</h2>
+<p>Unlike WhatsApp's three inline actions, SMS carries one clear instruction, because the interaction model is more limited by design — a short reply-driven exchange, not a menu. A subscriber who needs to pause or downgrade rather than retry is directed to the customer portal or USSD instead of trying to cram those options into a text exchange.</p>
+
+<table>
+  <tr><th>Message</th><th>What it does</th></tr>
+  <tr><td>Failed-charge alert</td><td>Outbound. Prompts a reply of YES to retry.</td></tr>
+  <tr><td><code class="inline">YES</code> reply</td><td>Inbound. Triggers a retry against the stored card, same as WhatsApp's Retry Now.</td></tr>
+</table>
+
+<h2 id="h-when">When SMS is the primary channel, not the fallback</h2>
+<p>For a subscriber with no WhatsApp presence, recovery orchestration goes straight to SMS as the first attempt — see <a href="/concepts/recovery-orchestration">Recovery orchestration</a> for exactly how that channel preference resolves.</p>
+
+<h2 id="h-next">Next</h2>
+<div class="card-grid cols-2">
+  <a class="card" href="/channels/ussd"><div class="card-icon">☎️</div><div class="card-title">USSD</div><div class="card-desc">Full self-service, no data connection at all.</div></a>
+  <a class="card" href="/subscribers/when-a-payment-fails"><div class="card-icon">🔁</div><div class="card-title">When a payment fails</div><div class="card-desc">The recovery flow, from the subscriber's side.</div></a>
+</div>
+`,
+  },
+
+  "channels/ussd": {
+    eyebrow: "Channels",
+    title: "USSD",
+    lede: "Dial a short code, check your status, pause or cancel. No data connection required, ever.",
+    body: `
+<p>USSD is the channel for a subscriber with no data connection at all — no app, no WhatsApp, sometimes no SMS reply flow they trust. Dialling a short code opens a menu session that works on the most basic handset, over the same signal that carries a phone call.</p>
+
+<h2 id="h-menu">The menu</h2>
+<div class="flow">
+  <div class="flow-node accent">Dial short code</div><div class="flow-arrow">→</div>
+  <div class="flow-node">1. Check status</div>
+</div>
+<div class="flow" style="margin-top:8px;">
+  <div class="flow-node accent">Dial short code</div><div class="flow-arrow">→</div>
+  <div class="flow-node">2. Pause subscription</div>
+</div>
+<div class="flow" style="margin-top:8px;">
+  <div class="flow-node accent">Dial short code</div><div class="flow-arrow">→</div>
+  <div class="flow-node">3. Cancel subscription</div>
+</div>
+
+<table>
+  <tr><th>Option</th><th>What it shows or does</th></tr>
+  <tr><td><strong>1. Check status</strong></td><td>Current plan, price, next billing date, and whether the subscription is active, past due, or in a grace period.</td></tr>
+  <tr><td><strong>2. Pause subscription</strong></td><td>Same effect as pausing from the portal — billing stops, resumable any time.</td></tr>
+  <tr><td><strong>3. Cancel subscription</strong></td><td>Ends the subscription, same as cancelling from the portal.</td></tr>
+</table>
+
+<h2 id="h-why">Why this exists as its own channel</h2>
+<p>USSD is provisioned through a telco or aggregator short-code arrangement — not something the platform runs itself, the way it might a webhook receiver. It has its own lead time to stand up, independent of engineering effort, which is why it's sequenced after WhatsApp and SMS rather than shipped alongside them. But it closes a real gap: a subscriber on a feature phone, or simply out of data for the day, still has a way to manage their subscription rather than just losing access silently.</p>
+
+<h2 id="h-limits">What USSD doesn't do</h2>
+<p>Updating a payment method isn't available over USSD — entering card details through a USSD session isn't a safe pattern, and doing it well would mean building a menu flow around a redirect to the portal, which defeats the purpose of a no-data channel. A subscriber who needs to fix a card gets directed to the web portal for that one step; everything else — status, pause, cancel — works entirely within the USSD session.</p>
+
+<h2 id="h-next">Next</h2>
+<div class="card-grid cols-2">
+  <a class="card" href="/subscribers/manage-your-subscription"><div class="card-icon">⚙️</div><div class="card-title">Manage your subscription</div><div class="card-desc">The full-featured equivalent, from the portal.</div></a>
+  <a class="card" href="/concepts/recovery-orchestration"><div class="card-icon">🧭</div><div class="card-title">Recovery orchestration</div><div class="card-desc">Where USSD fits as a fallback, not just a self-serve channel.</div></a>
+</div>
+`,
+  },
+
+  "developer/rate-limits": {
+    eyebrow: "Developer",
+    title: "Rate limits",
+    lede: "Per-key throughput, burst headroom, and the headers that tell you exactly where you stand.",
+    body: `
+<div class="callout note"><div class="ic">ⓘ</div><p>The specific numbers below are illustrative — the BRD commits to a 2-second response time under normal load (NFR-1) but doesn't fix exact throughput ceilings. Treat the shape of this page as final and the numbers as a starting point to confirm against your actual provisioning.</p></div>
+
+<h2 id="h-numbers">Indicative limits</h2>
+<table>
+  <tr><th>Resource</th><th>Per-key limit</th></tr>
+  <tr><td>Read endpoints (subscriptions, customers, invoices, analytics)</td><td>100 requests/second sustained, burst to 200 for 5 seconds</td></tr>
+  <tr><td>Write endpoints (create/update subscription, create plan)</td><td>30 requests/second sustained, burst to 60</td></tr>
+  <tr><td>Webhook subscription management</td><td>10 requests/second sustained</td></tr>
+  <tr><td>Inbound webhook delivery to you</td><td>Unlimited — you're receiving, not requesting</td></tr>
+</table>
+
+<h2 id="h-headers">Headers on every response</h2>
+<table>
+  <tr><th>Header</th><th>Meaning</th></tr>
+  <tr><td><code class="inline">X-RateLimit-Limit</code></td><td>The current limit for this resource.</td></tr>
+  <tr><td><code class="inline">X-RateLimit-Remaining</code></td><td>Requests left in the current window.</td></tr>
+  <tr><td><code class="inline">X-RateLimit-Reset</code></td><td>Unix timestamp when the bucket refills.</td></tr>
+</table>
+<p>Exceeding the limit returns:</p>
+<pre><code>HTTP/1.1 429 Too Many Requests
+Retry-After: 3
+X-RateLimit-Limit: 100
+X-RateLimit-Remaining: 0
+
+{"error_code":"rate_limited","message":"Rate limit exceeded. Retry in 3 seconds."}</code></pre>
+
+<h2 id="h-idempotency">Idempotency keys don't cost you a request</h2>
+<p>For write operations, pass an <code class="inline">Idempotency-Key</code> header. Retrying the same key after a 5xx replays the original outcome rather than double-processing, and doesn't consume a fresh rate-limit token.</p>
+<pre><code>curl -X POST https://api.nomba-subscriptions.com/subscriptions \\
+  -H "Authorization: Bearer nse_live_..." \\
+  -H "Idempotency-Key: $(uuidgen)" \\
+  -d '{"customerId": "cus_01...", "planId": "plan_lumen_monthly"}'</code></pre>
+
+<h2 id="h-more">If you need more</h2>
+<p>Most integrations run well under these limits. If yours doesn't — a batch job re-syncing a large customer base, for instance — schedule it off-peak, or talk to us about a dedicated capacity tier.</p>
+
+<h2 id="h-next">Next</h2>
+<div class="card-grid cols-2">
+  <a class="card" href="/developer/authentication"><div class="card-icon">🔑</div><div class="card-title">Authentication</div><div class="card-desc">How a key is scoped in the first place.</div></a>
+  <a class="card" href="/api-reference/errors"><div class="card-icon">⚠️</div><div class="card-title">Errors</div><div class="card-desc">What every error code, including 429, means for your retry logic.</div></a>
+</div>
+`,
+  },
+
+  "architecture/modules": {
+    eyebrow: "Architecture",
+    title: "Modules",
+    lede: "Sixteen modules, each owning one slice of the domain. What each one is responsible for, and who it talks to.",
+    body: `
+<p>This is a NestJS monolith organised into modules by domain, not a fleet of microservices. Module boundaries give the same separation of ownership a service boundary would, without the deployment and network overhead — every module runs in the same process, talking to its neighbours through TypeScript imports rather than HTTP.</p>
+
+<h2 id="h-table">What each module owns</h2>
+<table>
+  <tr><th>Module</th><th>Owns</th></tr>
+  <tr><td><code class="inline">auth</code></td><td>Signup, login, JWT access/refresh issuance and rotation.</td></tr>
+  <tr><td><code class="inline">merchants</code></td><td>The merchant entity itself — the tenant root everything else scopes to.</td></tr>
+  <tr><td><code class="inline">team</code></td><td>Owner/Team Member roles and membership management.</td></tr>
+  <tr><td><code class="inline">api-keys</code></td><td>Live/test key issuance, rotation, revocation.</td></tr>
+  <tr><td><code class="inline">plans</code></td><td>Pricing plan CRUD and deactivation.</td></tr>
+  <tr><td><code class="inline">customers</code></td><td>Customer records, scoped per merchant.</td></tr>
+  <tr><td><code class="inline">subscriptions</code></td><td>The lifecycle state machine — create, pause, resume, cancel, reactivate, change plan.</td></tr>
+  <tr><td><code class="inline">billing</code></td><td>Invoice generation and proration math.</td></tr>
+  <tr><td><code class="inline">invoices</code></td><td>Invoice queries and line-item detail.</td></tr>
+  <tr><td><code class="inline">payments</code></td><td>Checkout, the Nomba integration, inbound webhooks, and transfers.</td></tr>
+  <tr><td><code class="inline">dunning</code></td><td>Failed-payment retry logic and grace-period tracking.</td></tr>
+  <tr><td><code class="inline">notifications</code></td><td>Email, SMS, WhatsApp, and USSD delivery — the channel layer recovery orchestration sits on top of.</td></tr>
+  <tr><td><code class="inline">portal</code></td><td>Customer-facing self-service — separate auth, separate surface, same underlying subscription data.</td></tr>
+  <tr><td><code class="inline">webhooks</code></td><td>Outbound event delivery, retry, dead-letter handling, and replay.</td></tr>
+  <tr><td><code class="inline">events</code></td><td>The event store and its processor — the substrate every other module's history reads from.</td></tr>
+  <tr><td><code class="inline">analytics</code></td><td>Merchant-facing metrics, computed as a read-model over <code class="inline">events</code>.</td></tr>
+  <tr><td><code class="inline">audit</code></td><td>Workspace action history — who did what, queryable per merchant.</td></tr>
+</table>
+
+<h2 id="h-shared">Shared infrastructure</h2>
+<table>
+  <tr><th>Module</th><th>Owns</th></tr>
+  <tr><td><code class="inline">database</code></td><td>TypeORM configuration and migrations.</td></tr>
+  <tr><td><code class="inline">shared</code></td><td>Enums and cross-cutting utilities used by more than one domain module.</td></tr>
+</table>
+
+<h2 id="h-discipline">Why the boundary matters even in one process</h2>
+<p>A module doesn't reach into another module's repository directly — it goes through that module's service layer, the same discipline a network boundary would force. This is what keeps the option open to peel a module out into its own service later, without a rewrite, if a specific one (payments, most likely) ever needs to scale or deploy independently of the rest.</p>
+
+<h2 id="h-next">Next</h2>
+<div class="card-grid cols-2">
+  <a class="card" href="/architecture/nomba-integration"><div class="card-icon">🔌</div><div class="card-title">Nomba integration</div><div class="card-desc">A closer look at what the payments module actually wraps.</div></a>
+  <a class="card" href="/architecture/data-flow"><div class="card-icon">🔄</div><div class="card-title">Data flow</div><div class="card-desc">How events and webhooks connect across module boundaries.</div></a>
+</div>
+`,
+  },
+
+  "architecture/nomba-integration": {
+    eyebrow: "Architecture",
+    title: "Nomba integration",
+    lede: "Checkout, Tokenised Cards, Charge, Transfers. The four Nomba surfaces this engine is built on.",
+    body: `
+<p>Every naira that moves through this platform moves through Nomba. The <code class="inline">payments</code> module is the only place that talks to Nomba directly — nothing else in the codebase holds a Nomba credential or constructs a Nomba request.</p>
+
+<h2 id="h-surfaces">The four surfaces</h2>
+<table>
+  <tr><th>Surface</th><th>Used for</th></tr>
+  <tr><td><strong>Checkout API</strong></td><td>Initial card tokenisation at subscription signup, and portal-driven payment-method updates.</td></tr>
+  <tr><td><strong>Tokenised Cards</strong></td><td>The stored reference reused for every recurring charge — never the raw card number.</td></tr>
+  <tr><td><strong>Charge API</strong></td><td>Executes every billing-cycle charge attempt and every dunning retry.</td></tr>
+  <tr><td><strong>Transfers API</strong></td><td>Payout-side handling for platform fee splits, where applicable.</td></tr>
+</table>
+
+<h2 id="h-inbound">Inbound webhooks from Nomba</h2>
+<p>Nomba's own payment events land on <code class="inline">POST /webhooks/nomba</code> and trigger internal state transitions — a settled charge, a failed charge, a completed transfer — each of which is what actually writes the corresponding domain event to the <a href="/concepts/event-store">event store</a>. The billing engine doesn't guess at payment outcomes from a synchronous API response alone; it waits for and verifies the authoritative webhook.</p>
+
+<h2 id="h-shape">The shape of a charge attempt</h2>
+<div class="flow">
+  <div class="flow-node accent">Billing cycle fires</div><div class="flow-arrow">→</div>
+  <div class="flow-node">Charge API call</div><div class="flow-arrow">→</div>
+  <div class="flow-node">Nomba webhook confirms outcome</div><div class="flow-arrow">→</div>
+  <div class="flow-node accent2">Event written · subscription updated</div>
+</div>
+
+<h2 id="h-why-webhook">Why the webhook is authoritative, not the initial response</h2>
+<p>A synchronous response from a charge API can be pending, ambiguous, or lost to a network blip on the way back. Treating Nomba's webhook — signed, and independently verifiable — as the source of truth for whether a charge actually succeeded is what keeps the subscription state machine honest even when a request/response pair doesn't complete cleanly.</p>
+
+<h2 id="h-next">Next</h2>
+<div class="card-grid cols-2">
+  <a class="card" href="/merchants/onboard-and-collect-payment"><div class="card-icon">💳</div><div class="card-title">Onboard a customer</div><div class="card-desc">Checkout and tokenisation, from the merchant's side.</div></a>
+  <a class="card" href="/security/data-protection"><div class="card-icon">🔐</div><div class="card-title">Data & encryption posture</div><div class="card-desc">How stored payment references are protected.</div></a>
+</div>
+`,
+  },
+
+  "architecture/data-flow": {
+    eyebrow: "Architecture",
+    title: "Data flow",
+    lede: "How a single event — a payment failing, a subscription renewing — reaches webhooks, notifications, and analytics without three separate write paths.",
+    body: `
+<p>This is the engineering-level companion to <a href="/concepts/event-store">The event store</a> — same idea, closer to the code.</p>
+
+<h2 id="h-path">One write, three reads</h2>
+<div class="flow">
+  <div class="flow-node accent">Domain action<br>(e.g. charge fails)</div><div class="flow-arrow">→</div>
+  <div class="flow-node accent2">Event written to event store</div>
+</div>
+<div class="flow" style="margin-top:12px;">
+  <div class="flow-node accent2">Event store</div><div class="flow-arrow">→</div>
+  <div class="flow-node">webhooks module<br>(delivers to subscribers)</div>
+</div>
+<div class="flow" style="margin-top:8px;">
+  <div class="flow-node accent2">Event store</div><div class="flow-arrow">→</div>
+  <div class="flow-node">dunning module<br>(triggers recovery orchestration)</div>
+</div>
+<div class="flow" style="margin-top:8px;">
+  <div class="flow-node accent2">Event store</div><div class="flow-arrow">→</div>
+  <div class="flow-node">analytics module<br>(read-model aggregation)</div>
+</div>
+
+<h2 id="h-why-one">Why this isn't three separate write paths</h2>
+<p>The tempting shortcut is to have the subscriptions module call the notifications module directly on a failure, and separately increment an analytics counter, and separately queue a webhook. Three call sites, three chances for one of them to be missed on a future code change. Writing one event and letting three independent consumers read it means adding a fourth consumer later — a data warehouse export, say — doesn't require touching the subscriptions module at all.</p>
+
+<h2 id="h-processor">The event processor</h2>
+<p>The <code class="inline">events</code> module's processor is what turns a written event into action for its consumers — it's the dispatcher, not the event store itself. It runs asynchronously via BullMQ (see <a href="/architecture/queues-and-async">Queues & async processing</a>), so writing an event and reacting to it are decoupled: a slow webhook delivery never blocks the request that triggered the underlying domain action.</p>
+
+<h2 id="h-consistency">What this buys, concretely</h2>
+<ul>
+  <li>A merchant's analytics dashboard and their webhook stream can never disagree about whether an event happened — they're reading the same rows.</li>
+  <li>Adding a new webhook event type is a subscription change, not a new write path.</li>
+  <li>Replaying a webhook (<a href="/developer/webhooks">Webhooks</a>) is just re-running the dispatch step against an already-durable event — nothing about the underlying fact is reconstructed or guessed at.</li>
+</ul>
+
+<h2 id="h-next">Next</h2>
+<div class="card-grid cols-2">
+  <a class="card" href="/concepts/event-store"><div class="card-icon">📒</div><div class="card-title">The event store</div><div class="card-desc">The conceptual version of this page.</div></a>
+  <a class="card" href="/architecture/queues-and-async"><div class="card-icon">🗂️</div><div class="card-title">Queues & async processing</div><div class="card-desc">How the dispatch step actually runs.</div></a>
+</div>
+`,
+  },
+
+  "architecture/queues-and-async": {
+    eyebrow: "Architecture",
+    title: "Queues & async processing",
+    lede: "Dunning retries, webhook delivery, invoice generation. Why none of them happen inline on the request that triggered them.",
+    body: `
+<p>Anything that involves a third party — Nomba, WhatsApp, SMS, a merchant's own webhook endpoint — runs on a queue, not inline on the request that triggered it. BullMQ, backed by Redis, is the mechanism for all of it.</p>
+
+<h2 id="h-what">What runs async</h2>
+<table>
+  <tr><th>Job</th><th>Why it's queued, not inline</th></tr>
+  <tr><td>Webhook delivery</td><td>A merchant's endpoint might be slow, down, or misconfigured. That should never hold open the request that created the underlying event.</td></tr>
+  <tr><td>Dunning retries and recovery messages</td><td>Scheduled on a grace-period timer, not fired synchronously from the failed charge itself.</td></tr>
+  <tr><td>Invoice generation on a billing cycle</td><td>Runs on a schedule, independent of any specific request.</td></tr>
+  <tr><td>WhatsApp / SMS / USSD notification delivery</td><td>Third-party providers with their own latency and occasional outages — see <a href="/architecture/resilience">Resilience & scale</a>.</td></tr>
+</table>
+
+<h2 id="h-shape">The shape of a queued job</h2>
+<div class="steps">
+  <div class="step"><div class="step-num">1</div><div class="step-body"><div class="step-title">A domain action enqueues a job</div><p>E.g. a <code class="inline">PaymentFailed</code> event enqueues a recovery-orchestration job.</p></div></div>
+  <div class="step"><div class="step-num">2</div><div class="step-body"><div class="step-title">A worker picks it up</div><p>Independently of the original HTTP request, which has already returned.</p></div></div>
+  <div class="step"><div class="step-num">3</div><div class="step-body"><div class="step-title">On failure, it retries with backoff</div><p>Rather than being dropped — see the retry table on <a href="/developer/webhooks">Webhooks</a> for the shape this takes on the delivery side specifically.</p></div></div>
+</div>
+
+<h2 id="h-why-redis">Why BullMQ on Redis, not a heavier message broker</h2>
+<p>The job shapes here — retry a delivery, send a notification, generate an invoice on schedule — don't need the durability or fan-out guarantees of a dedicated broker. BullMQ on Redis covers every queue use case at this platform's scale with far less operational surface to run.</p>
+
+<h2 id="h-next">Next</h2>
+<div class="card-grid cols-2">
+  <a class="card" href="/architecture/resilience"><div class="card-icon">🧱</div><div class="card-title">Resilience & scale</div><div class="card-desc">What happens when a queued job's target is unreachable.</div></a>
+  <a class="card" href="/concepts/recovery-orchestration"><div class="card-icon">🧭</div><div class="card-title">Recovery orchestration</div><div class="card-desc">The specific job type this infrastructure was built to run reliably.</div></a>
+</div>
+`,
+  },
+
+  "architecture/resilience": {
+    eyebrow: "Architecture",
+    title: "Resilience & scale",
+    lede: "Async by default, retried with backoff, degraded gracefully when WhatsApp or SMS goes down for an hour.",
+    body: `
+<p>A billing platform earns trust on the day a third-party provider has a bad hour. This page is what happens on that day.</p>
+
+<h2 id="h-principle">The operating principle</h2>
+<p>Nothing in the recovery or notification path fails silently. If WhatsApp or SMS is unreachable, the affected jobs are queued and retried — not dropped, not swallowed into a log line nobody reads. A merchant should never lose a recovery attempt because a provider had an outage; the job comes back and tries again once the provider does.</p>
+
+<h2 id="h-layers">Where resilience lives</h2>
+<div class="card-grid cols-2">
+  <div class="card"><div class="card-icon">🔁</div><div class="card-title">Retry with backoff</div><div class="card-desc">Every async job — webhook delivery, notification send — retries on failure rather than failing once and giving up.</div></div>
+  <div class="card"><div class="card-icon">📬</div><div class="card-title">Dead-letter handling</div><div class="card-desc">A webhook delivery that exhausts its retry window moves to a dead-letter state, visible to the merchant and replayable once their endpoint is fixed.</div></div>
+  <div class="card"><div class="card-icon">🗝️</div><div class="card-title">Idempotency</div><div class="card-desc">Replayed webhooks and retried charges carry stable identifiers so reprocessing is always safe, never a duplicate side effect.</div></div>
+  <div class="card"><div class="card-icon">📒</div><div class="card-title">The event store as ground truth</div><div class="card-desc">Even if a queue drains unexpectedly, the underlying facts are durable in the event store and can be re-dispatched.</div></div>
+</div>
+
+<h2 id="h-degrade">Graceful degradation, concretely</h2>
+<table>
+  <tr><th>Failure</th><th>What happens</th></tr>
+  <tr><td>WhatsApp provider outage</td><td>Recovery messages queue and retry; once the outage clears, queued messages send, or the orchestration falls forward to SMS if the delay exceeds a threshold.</td></tr>
+  <tr><td>A merchant's webhook endpoint is down</td><td>Deliveries retry on the schedule in <a href="/developer/webhooks">Webhooks</a>, up to 14 days, then move to dead-letter — replayable, not lost.</td></tr>
+  <tr><td>Nomba's API is briefly unreachable</td><td>Charge attempts retry rather than being marked failed on a single transient error.</td></tr>
+</table>
+
+<h2 id="h-async-default">Why async-by-default is itself a resilience choice</h2>
+<p>Because nothing in the notification or webhook path runs inline on a request (see <a href="/architecture/queues-and-async">Queues & async processing</a>), a slow or failing third party degrades the async pipeline, not the API's response times for merchants and subscribers doing unrelated things at the same moment.</p>
+
+<h2 id="h-next">Next</h2>
+<div class="card-grid cols-2">
+  <a class="card" href="/architecture/queues-and-async"><div class="card-icon">🗂️</div><div class="card-title">Queues & async processing</div><div class="card-desc">The mechanism underneath this page.</div></a>
+  <a class="card" href="/security/overview"><div class="card-icon">🛡️</div><div class="card-title">Security overview</div><div class="card-desc">The defence-in-depth posture alongside resilience.</div></a>
+</div>
+`,
+  },
+
+  "security/overview": {
+    eyebrow: "Security & trust",
+    title: "Security overview",
+    lede: "The defence-in-depth posture across authentication, webhook signing, and data at rest.",
+    body: `
+<p>Three layers, each assuming the one below it might be bypassed.</p>
+
+<h2 id="h-layers">The layers</h2>
+<div class="card-grid cols-3">
+  <a class="card" href="/developer/authentication"><div class="card-icon">🔑</div><div class="card-title">Authentication</div><div class="card-desc">Bearer keys, hashed at rest, scoped per merchant, rate-limited, revocable instantly.</div></a>
+  <a class="card" href="/security/webhook-verification"><div class="card-icon">✔️</div><div class="card-title">Webhook signing</div><div class="card-desc">Every outbound webhook is HMAC-signed. Every signature is independently verifiable by you.</div></a>
+  <a class="card" href="/security/data-protection"><div class="card-icon">🔐</div><div class="card-title">Data at rest</div><div class="card-desc">Sensitive data, including stored payment references, is encrypted with AES-256-GCM.</div></a>
+</div>
+
+<h2 id="h-tenant">Tenant isolation</h2>
+<p>Every business resource — plans, customers, subscriptions, invoices, payments, webhooks, API keys, audit logs — carries a <code class="inline">merchantId</code>, enforced at the data-access layer, not only in application-level checks. A bug in a controller can't accidentally leak one merchant's data into another's response if the query itself is scoped before it ever reaches application logic.</p>
+
+<h2 id="h-idempotent">Idempotency as a security property, not just a reliability one</h2>
+<p>Idempotency keys on writes and stable event IDs on webhook replay mean a retried or replayed request can never be turned into a duplicate charge or a duplicate side effect — whether the retry was benign (a network blip) or adversarial (someone replaying a captured request).</p>
+
+<h2 id="h-audit">Everything material is audited</h2>
+<p>Plan changes, API key rotation, webhook configuration, and subscription overrides all write to a per-merchant audit log, attributed to the acting user. "What changed, and who changed it" has one answer, queryable from the dashboard.</p>
+
+<h2 id="h-next">Next</h2>
+<div class="card-grid cols-2">
+  <a class="card" href="/security/webhook-verification"><div class="card-icon">✔️</div><div class="card-title">Webhook signature verification</div><div class="card-desc">The exact steps, in five languages.</div></a>
+  <a class="card" href="/security/data-protection"><div class="card-icon">🔐</div><div class="card-title">Data & encryption posture</div><div class="card-desc">What's encrypted, and what deliberately isn't.</div></a>
+</div>
+`,
+  },
+
+  "security/data-protection": {
+    eyebrow: "Security & trust",
+    title: "Data & encryption posture",
+    lede: "AES-256-GCM at rest for anything sensitive. What's encrypted, what isn't, and why.",
+    body: `
+<p>Sensitive data — stored payment references chief among it — is encrypted at rest with AES-256-GCM. This page is what that covers, and, just as importantly, what it doesn't claim to cover.</p>
+
+<h2 id="h-what">What's encrypted</h2>
+<table>
+  <tr><th>Data</th><th>Protection</th></tr>
+  <tr><td>Stored payment references (Nomba tokens)</td><td>AES-256-GCM at rest.</td></tr>
+  <tr><td>API key secrets</td><td>Hashed, not encrypted — we never store or need the raw value back. A lookup match, not a decrypt.</td></tr>
+  <tr><td>Webhook secrets</td><td>Encrypted at rest; used only to sign outbound payloads.</td></tr>
+</table>
+
+<h2 id="h-what-not">What's deliberately not covered by full KYC/identity encryption</h2>
+<p>This platform assumes customers are pre-verified via Nomba — it does not run its own KYC or identity-verification workflow, and consequently doesn't hold the kind of BVN/NIN-grade identity data that would require its own dedicated envelope-encryption scheme the way a lending or identity platform would. What it holds and protects is narrower and payments-specific: tokenised card references, not raw card numbers or identity documents.</p>
+
+<div class="callout note"><div class="ic">ⓘ</div><p>This page reflects what the BRD commits to (NFR-4: sensitive data, including stored payment references, encrypted at rest). It intentionally doesn't claim a broader compliance posture — like a full NDPR rights workflow — that isn't in scope for this release. If that's needed, it belongs on this page as a deliberate addition, not an assumed one.</p></div>
+
+<h2 id="h-transit">In transit</h2>
+<p>All API traffic, webhook deliveries, and dashboard/portal sessions run over TLS. Raw card numbers never transit our servers at all — they go directly from the customer's browser into Nomba's hosted Checkout session, tokenised before we ever see a reference to them.</p>
+
+<h2 id="h-access">Who can decrypt what</h2>
+<p>Decryption of a stored payment reference happens only at the point of initiating a charge or a refund — never surfaced in a list view, a report, or a support tool. There's no "show me the token" endpoint; the reference is used, not displayed.</p>
+
+<h2 id="h-next">Next</h2>
+<div class="card-grid cols-2">
+  <a class="card" href="/security/webhook-verification"><div class="card-icon">✔️</div><div class="card-title">Webhook signature verification</div><div class="card-desc">The other half of the trust story — outbound, not at rest.</div></a>
+  <a class="card" href="/architecture/nomba-integration"><div class="card-icon">🔌</div><div class="card-title">Nomba integration</div><div class="card-desc">Where the tokenised reference actually comes from.</div></a>
+</div>
+`,
+  },
+
+  "api-reference/introduction": {
+    eyebrow: "API reference",
+    title: "API Reference",
+    lede: "The formal reference for the Subscription Engine API. Authentication, resources, errors, webhooks.",
+    body: `
+<p>This section is the endpoint-level reference. For the narrative version of how the API fits together, start with <a href="/how-it-works">How it works</a> instead — come back here once you're ready to integrate.</p>
+
+<h2 id="h-base">Base URLs</h2>
+<table>
+  <tr><th>Environment</th><th>Base URL</th></tr>
+  <tr><td>Sandbox</td><td><code class="inline">https://api.sandbox.nomba-subscriptions.com</code></td></tr>
+  <tr><td>Production</td><td><code class="inline">https://api.nomba-subscriptions.com</code></td></tr>
+</table>
+<p>An interactive Swagger reference is also served directly from the API at <code class="inline">/docs</code> on either environment — useful for trying a request without leaving your browser.</p>
+
+<h2 id="h-format">Response format</h2>
+<p>Successful responses are wrapped consistently:</p>
+<pre><code>{
+  "status": "success",
+  "message": "Request successful",
+  "data": {}
+}</code></pre>
+<p>Paginated list endpoints return <code class="inline">{ data: [], total: number }</code> inside <code class="inline">data</code>.</p>
+
+<h2 id="h-resources">Core resources</h2>
+<table>
+  <tr><th>Resource</th><th>Endpoints</th></tr>
+  <tr><td>Plans</td><td><code class="inline">POST/GET/PATCH/DELETE /plans</code></td></tr>
+  <tr><td>Customers</td><td><code class="inline">POST/GET/PATCH /customers</code></td></tr>
+  <tr><td>Subscriptions</td><td><code class="inline">POST/GET /subscriptions</code>, plus lifecycle actions on <code class="inline">/subscriptions/:id</code></td></tr>
+  <tr><td>Invoices</td><td><code class="inline">GET /invoices</code>, <code class="inline">GET /invoices/:id</code></td></tr>
+  <tr><td>Payments</td><td><code class="inline">POST /payments/checkout</code>, <code class="inline">GET /payments</code></td></tr>
+  <tr><td>Webhooks</td><td><code class="inline">POST/GET /webhooks</code>, <code class="inline">GET /webhooks/:id/deliveries</code></td></tr>
+  <tr><td>Analytics</td><td><code class="inline">GET /analytics/*</code> — see <a href="/merchants/analytics">Analytics</a></td></tr>
+</table>
+
+<h2 id="h-next">Next</h2>
+<div class="card-grid cols-2">
+  <a class="card" href="/api-reference/authentication"><div class="card-icon">🔐</div><div class="card-title">Authentication</div><div class="card-desc">Bearer tokens and environment scoping.</div></a>
+  <a class="card" href="/api-reference/errors"><div class="card-icon">⚠️</div><div class="card-title">Errors</div><div class="card-desc">Status codes and error codes.</div></a>
+</div>
+`,
+  },
+
+  "api-reference/authentication": {
+    eyebrow: "API reference",
+    title: "Authentication",
+    lede: "Bearer tokens, scoped to a merchant. Live and test environments, never crossed.",
+    body: `
+<p>This is the reference-level version of <a href="/developer/authentication">Authentication</a> — same mechanism, formatted for lookup rather than a first read.</p>
+
+<h2 id="h-header">Required header</h2>
+<pre><code>Authorization: Bearer nse_live_01HKBZ...</code></pre>
+
+<h2 id="h-envs">Environments</h2>
+<table>
+  <tr><th>Prefix</th><th>Base URL it's valid against</th></tr>
+  <tr><td><code class="inline">nse_sandbox_*</code></td><td><code class="inline">api.sandbox.nomba-subscriptions.com</code></td></tr>
+  <tr><td><code class="inline">nse_live_*</code></td><td><code class="inline">api.nomba-subscriptions.com</code></td></tr>
+</table>
+
+<h2 id="h-errors">Auth-specific error codes</h2>
+<table>
+  <tr><th>HTTP</th><th>Code</th><th>Meaning</th></tr>
+  <tr><td>401</td><td><code class="inline">missing_auth</code></td><td>No <code class="inline">Authorization</code> header present.</td></tr>
+  <tr><td>401</td><td><code class="inline">invalid_auth</code></td><td>Key not recognised, revoked, or expired.</td></tr>
+  <tr><td>401</td><td><code class="inline">environment_mismatch</code></td><td>Sandbox key against a production URL, or the reverse.</td></tr>
+  <tr><td>429</td><td><code class="inline">rate_limited</code></td><td>See <a href="/developer/rate-limits">Rate limits</a>.</td></tr>
+</table>
+
+<h2 id="h-next">Next</h2>
+<div class="card-grid cols-2">
+  <a class="card" href="/developer/authentication"><div class="card-icon">🔑</div><div class="card-title">Authentication (guide)</div><div class="card-desc">The narrative walkthrough, including key rotation.</div></a>
+  <a class="card" href="/api-reference/errors"><div class="card-icon">⚠️</div><div class="card-title">Errors</div><div class="card-desc">Every error code across the API, not just auth.</div></a>
+</div>
+`,
+  },
+
+  "api-reference/errors": {
+    eyebrow: "API reference",
+    title: "Errors",
+    lede: "Status codes, error codes, and what each one means for your retry logic.",
+    body: `
+<p>Errors follow the same envelope everywhere in the API — a status code that tells your HTTP client what class of problem it is, and an <code class="inline">error_code</code> that tells your application code exactly what happened.</p>
+<pre><code>{
+  "status": "error",
+  "error_code": "resource_not_found",
+  "message": "Subscription sub_01... was not found.",
+  "requestId": "req_01HMFB..."
+}</code></pre>
+
+<h2 id="h-table">Common error codes</h2>
+<table>
+  <tr><th>HTTP</th><th>Code</th><th>Meaning</th><th>Retry?</th></tr>
+  <tr><td>400</td><td><code class="inline">validation_failed</code></td><td>Request body failed schema validation.</td><td>No — fix the request.</td></tr>
+  <tr><td>401</td><td><code class="inline">invalid_auth</code></td><td>Bad or revoked API key.</td><td>No.</td></tr>
+  <tr><td>403</td><td><code class="inline">forbidden</code></td><td>Authenticated, but not permitted for this action (e.g. a Team Member key hitting an Owner-only endpoint).</td><td>No.</td></tr>
+  <tr><td>404</td><td><code class="inline">resource_not_found</code></td><td>The ID doesn't exist, or doesn't belong to your merchant.</td><td>No.</td></tr>
+  <tr><td>409</td><td><code class="inline">conflict</code></td><td>The action doesn't make sense for the resource's current state (e.g. cancelling an already-cancelled subscription).</td><td>No — check state first.</td></tr>
+  <tr><td>422</td><td><code class="inline">invalid_state_transition</code></td><td>The requested lifecycle transition isn't valid from the subscription's current state. See <a href="/concepts/subscription-lifecycle">Subscription lifecycle</a>.</td><td>No.</td></tr>
+  <tr><td>429</td><td><code class="inline">rate_limited</code></td><td>Too many requests. Respect <code class="inline">Retry-After</code>.</td><td>Yes, with backoff.</td></tr>
+  <tr><td>500</td><td><code class="inline">internal_error</code></td><td>Something broke on our side.</td><td>Yes, with backoff.</td></tr>
+  <tr><td>503</td><td><code class="inline">upstream_unavailable</code></td><td>Nomba or another upstream dependency is temporarily unreachable.</td><td>Yes, with backoff.</td></tr>
+</table>
+
+<h2 id="h-retry-logic">A sane default retry policy</h2>
+<p>Retry on 429, 500, 502, 503, and network-level failures, with exponential backoff and jitter. Don't retry on 4xx codes other than 429 — those mean the request itself needs to change, not that trying again will help.</p>
+
+<h2 id="h-requestid">Always log the requestId</h2>
+<p>Every error response carries a <code class="inline">requestId</code>. If you need to escalate an issue, that ID is what lets us find the exact request in our own logs without you needing to reproduce the full payload.</p>
+
+<h2 id="h-next">Next</h2>
+<div class="card-grid cols-2">
+  <a class="card" href="/api-reference/webhook-events"><div class="card-icon">🔔</div><div class="card-title">Webhook events</div><div class="card-desc">The same error discipline, applied to what we send you.</div></a>
+  <a class="card" href="/developer/rate-limits"><div class="card-icon">⏱️</div><div class="card-title">Rate limits</div><div class="card-desc">The specifics behind every 429.</div></a>
+</div>
+`,
+  },
+
+  "api-reference/webhook-events": {
+    eyebrow: "API reference",
+    title: "Webhook events",
+    lede: "Every event type we emit, with payload shape and the signature header that proves it came from us.",
+    body: `
+<p>This is the reference table for every event type — for the delivery mechanics (retry, dead-letter, replay), see <a href="/developer/webhooks">Webhooks</a>. For verifying the signature on any of these, see <a href="/security/webhook-verification">Webhook signature verification</a>.</p>
+
+<h2 id="h-events">Event catalogue</h2>
+<table>
+  <tr><th>Event</th><th><code class="inline">data</code> shape</th></tr>
+  <tr><td><code class="inline">subscription.created</code></td><td><code class="inline">{ subscriptionId, customerId, planId, status }</code></td></tr>
+  <tr><td><code class="inline">subscription.updated</code></td><td><code class="inline">{ subscriptionId, changes: { field: { from, to } } }</code></td></tr>
+  <tr><td><code class="inline">subscription.cancelled</code></td><td><code class="inline">{ subscriptionId, cancelledBy: "merchant" | "subscriber", effectiveAt }</code></td></tr>
+  <tr><td><code class="inline">subscription.renewed</code></td><td><code class="inline">{ subscriptionId, cycleStart, cycleEnd }</code></td></tr>
+  <tr><td><code class="inline">invoice.paid</code></td><td><code class="inline">{ invoiceId, subscriptionId, amount, currency }</code></td></tr>
+  <tr><td><code class="inline">payment.failed</code></td><td><code class="inline">{ subscriptionId, invoiceId, amount, currency, failureReason }</code></td></tr>
+  <tr><td><code class="inline">payment.recovered</code></td><td><code class="inline">{ subscriptionId, invoiceId, amount, currency, recoveredVia: "whatsapp" | "sms" | "ussd" | "portal" }</code></td></tr>
+</table>
+
+<h2 id="h-envelope">The envelope every event shares</h2>
+<pre><code>{
+  "id": "evt_01HMFB...",
+  "type": "payment.recovered",
+  "createdAt": "2026-08-14T11:04:02Z",
+  "data": { /* event-specific, see table above */ },
+  "merchantId": "mrc_01HK...",
+  "apiVersion": "v1"
+}</code></pre>
+
+<h2 id="h-headers">Delivery headers</h2>
+<pre><code>X-Nomba-Subs-Signature: t=1755168153,v1=5d9c8...
+X-Nomba-Subs-Webhook-Id: whk_01HMFB...
+X-Nomba-Subs-Event-Id: evt_01HMFB...</code></pre>
+<p>See <a href="/security/webhook-verification">Webhook signature verification</a> for exactly how to check the <code class="inline">X-Nomba-Subs-Signature</code> header.</p>
+
+<h2 id="h-next">Next</h2>
+<div class="card-grid cols-2">
+  <a class="card" href="/developer/webhooks"><div class="card-icon">🔔</div><div class="card-title">Webhooks (guide)</div><div class="card-desc">Subscribing, retries, dead-letter, and replay.</div></a>
+  <a class="card" href="/security/webhook-verification"><div class="card-icon">✔️</div><div class="card-title">Signature verification</div><div class="card-desc">Code in five languages.</div></a>
+</div>
+`,
+  },
 };
 
 function stubPage(slug: string): PageContent {
