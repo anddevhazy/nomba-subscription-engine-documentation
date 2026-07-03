@@ -1,103 +1,391 @@
 export const meta = {
   eyebrow: "Get started",
   title: "The mission",
-  lede: "Nomba Hackathon 2026. Infrastructure Track — Subscriptions Engine. How the Nomba Subscription Engine maps to the brief.",
+  lede: "The Nomba Hackathon, Infrastructure Track: Subscriptions Engine. How this platform maps to the brief.",
 };
 
-<p>This page exists so anyone evaluating this build can verify the alignment in two minutes.</p>
+This page exists so anyone evaluating this submission for the Nomba Hackathon can verify the
+alignment in two minutes.
 
-<h2 id="h-problem">The problem we set out to solve</h2>
+<h2 id="h-track">The track</h2>
 
-<div className="callout note"><div className="ic">ⓘ</div><p>Nomba exposes payment primitives but does not ship a managed subscriptions layer, so teams repeatedly rebuild this capability from scratch.</p></div>
+Two track categories, five focus areas. This submission targets the Infrastructure Track,
+under the focus area named, precisely, <strong>Subscriptions Engine</strong>.
 
-That's the brief's own framing of the gap, and it's a narrower, sharper claim than it first sounds. Nomba already has the primitives a subscriptions product needs, Checkout, tokenised cards, a Charge API, Transfers. What's missing isn't payment capability. It's everything <em>around</em> the charge: the state machine that knows a subscription is <code>past_due</code> and not just <code>failed</code>, the recovery workflow that knows to retry before it suspends, the invoice that knows how to prorate a mid-cycle upgrade, the webhook that a downstream team can trust enough to build on.
+<blockquote>
+  Build a managed recurring-billing layer on top of Nomba's checkout and
+  tokenised-card primitives for downstream product teams.
+</blockquote>
 
-Every team that wants recurring billing on Nomba today either builds that layer themselves, badly, on a deadline, once per team, or reaches for a subscriptions tool that wasn't built for how Nigerian subscribers actually pay and communicate: cards decline more often than global averages, and a meaningful share of customers are more reachable by SMS or USSD than by an app push notification or an email that lands in a folder nobody opens.
+And the stated reason it's on the catalogue at all:
 
-This build is that missing layer, built once, so other teams don't have to build it again.
+<blockquote>
+  Nomba exposes payment primitives but does not ship a managed subscriptions
+  layer, so teams repeatedly rebuild this capability from scratch.
+</blockquote>
 
-<h2 id="h-required">The six things the brief required, built</h2>
+That's the whole thesis. A Checkout API and a Charge API are primitives, not a product. Every
+team that wants recurring billing on Nomba rails currently has to invent a subscription state
+machine, a proration formula, a dunning sequence, and a self-service portal on their own, and
+most of them get the unhappy paths wrong the first time because nobody budgets real time for a
+card that fails on a Friday. This is the layer that means the next team doesn't have to.
 
-<p>The track catalogue lists a "Must Include" set. Each one is a real, working surface in the API today, not a stub.</p>
+<h2 id="h-must-include">The six things the brief requires</h2>
 
-<table>
-  <thead>
-    <tr><th>Required</th><th>What's actually built</th></tr>
-  </thead>
-  <tbody>
-    <tr><td>Plan management</td><td>Create, update, and retire pricing plans across monthly, quarterly, yearly, and custom intervals, with trial-period support</td></tr>
-    <tr><td>Billing cycles (monthly, annual, custom)</td><td>Automated invoice generation with line-item detail on every cycle boundary, driven off the plan's interval</td></tr>
-    <tr><td>Proration</td><td>Calculated and applied automatically when a customer upgrades or downgrades mid-cycle, not a flat switch-and-forget</td></tr>
-    <tr><td>Dunning and failed-payment recovery</td><td>A charge failure moves the subscription to <code>past_due</code>, opens a grace period, and triggers recovery across WhatsApp, SMS, USSD, and email, not a single retry-and-give-up email</td></tr>
-    <tr><td>Customer self-service portal</td><td>A separately authenticated portal where a customer can view, pause, resume, cancel, or update their own payment method, with zero merchant involvement</td></tr>
-    <tr><td>Webhooks for downstream systems</td><td>Merchant-configured endpoints with signed payloads, retry, dead-letter handling, and on-demand replay by subscription ID or time range</td></tr>
-  </tbody>
-</table>
+The Infrastructure Track listing is specific about what "managed recurring-billing layer"
+has to include. Each one is a real, working surface in this submission today.
 
-<div className="callout note"><div className="ic">ⓘ</div><p>Nothing on this list is "coming soon." If it's in the table above, it has a working endpoint behind it today.</p></div>
-
-<h2 id="h-apis">Key APIs, brief vs. build</h2>
-
-<table>
-  <thead>
-    <tr><th>API (per brief)</th><th>Where it's used</th></tr>
-  </thead>
-  <tbody>
-    <tr><td>Checkout API</td><td>Initial card tokenisation at signup, and portal-driven payment-method updates</td></tr>
-    <tr><td>Tokenised cards</td><td>The stored payment method reused for every recurring charge</td></tr>
-    <tr><td>Charge API</td><td>Executes the actual charge attempt on each billing cycle</td></tr>
-    <tr><td>Transfers</td><td>Payout-side handling for platform fee splits, where a merchant's fee structure requires it</td></tr>
-  </tbody>
-</table>
-
-<h2 id="h-criteria">How we hit each judging criterion</h2>
-
-<p>The track is judged on four things. Here's where each one surfaces in the system, not just in this document.</p>
-
-<p><strong>State-machine completeness</strong><br />
-The subscription lifecycle is an explicit, enforced state machine, <code>pending → trialing → active → past_due → grace_period → suspended → cancelled / expired</code>, not a status string set ad hoc from scattered call sites. Every transition is a domain event (<code>SubscriptionCreated</code>, <code>SubscriptionUpdated</code>, <code>SubscriptionCancelled</code>, <code>SubscriptionRenewed</code>, <code>PaymentFailed</code>, <code>PaymentRecovered</code>, <code>InvoicePaid</code>) persisted to an append-only event store, which is also what the webhook system and analytics read from, one system of record, not three.</p>
-
-<p><strong>Dunning sophistication</strong><br />
-A failed charge doesn't just retry on a timer. It opens a grace period and reaches the customer on whichever channel they're actually on: a WhatsApp message with inline Retry / Pause / Downgrade actions, processed straight from the reply; SMS as the guaranteed fallback if WhatsApp isn't available for that customer; USSD for feature-phone and low-data customers who can check status, pause, or cancel from a menu with no data connection at all. Every channel a customer's action arrives on is logged, which is what makes channel-level recovery-rate reporting possible instead of a single blended number.</p>
-
-<p><strong>Multi-tenant cleanliness</strong><br />
-Every business entity, plans, customers, subscriptions, invoices, payments, webhooks, API keys, audit logs, carries a <code>merchantId</code> inherited from a shared base entity, enforced at the data-access layer rather than trusted to application-level filtering. Two merchants running simultaneously never see a row that isn't theirs, by construction, not by convention.</p>
-
-<p><strong>API ergonomics for downstream developers</strong><br />
-Every authenticated endpoint takes a Bearer token; JWT payloads carry the <code>merchantId</code> that scopes everything downstream of login. Responses follow one consistent envelope. Webhook payloads are signed so an integrator can verify authenticity without a support call, replayed deliveries are idempotent so reprocessing never duplicates a side effect, and the full API surface is documented and testable directly through Swagger, a developer unfamiliar with the system should be able to complete a standard integration from the docs alone.</p>
-
-<h2 id="h-objectives">The five business objectives</h2>
 <div className="card-grid cols-2">
-  <div className="card"><div className="card-icon">🧱</div><div className="card-title">Remove the need to build billing in-house</div><div className="card-desc">A merchant should never need to write their own recurring-charge cron job, invoice generator, or proration logic.</div></div>
-  <div className="card"><div className="card-icon">🔁</div><div className="card-title">Reduce revenue lost to failed payments</div><div className="card-desc">Structured, multi-channel recovery instead of a single retry-and-forget email.</div></div>
-  <div className="card"><div className="card-icon">📱</div><div className="card-title">Reach subscribers where they actually are</div><div className="card-desc">Web and app aren't the only channels that matter. SMS and USSD keep working when data doesn't.</div></div>
-  <div className="card"><div className="card-icon">📊</div><div className="card-title">Give merchants operational visibility</div><div className="card-desc">Revenue, churn, and recovery performance, without a separate BI project.</div></div>
-</div>
-<div className="card-grid cols-1">
-  <div className="card"><div className="card-icon">📘</div><div className="card-title">Provide a stable, well-documented integration surface</div><div className="card-desc">Downstream developers should be able to integrate from documentation alone, no support ticket required for a standard integration.</div></div>
+  <div className="card">
+    <div className="card-icon">📝</div>
+    <div className="card-title">Plan management</div>
+    <div className="card-desc">
+      Name, price, interval, and optional trial, created through the API or the
+      merchant dashboard, live the moment they're submitted. See{" "}
+      <a href="/merchants/create-a-plan">Create a plan</a>.
+    </div>
+  </div>
+  <div className="card">
+    <div className="card-icon">🔄</div>
+    <div className="card-title">Billing cycles</div>
+    <div className="card-desc">
+      Monthly, quarterly, yearly, and custom intervals, with trial support built
+      into the subscription lifecycle rather than bolted on as a flag. See{" "}
+      <a href="/concepts/subscription-lifecycle">Subscription lifecycle</a>.
+    </div>
+  </div>
+  <div className="card">
+    <div className="card-icon">➗</div>
+    <div className="card-title">Proration</div>
+    <div className="card-desc">
+      A mid-cycle upgrade credits the unused portion of the old plan and charges
+      the prorated remainder of the new one, in the same motion. See{" "}
+      <a href="/merchants/billing-and-invoicing">Billing & invoicing</a>.
+    </div>
+  </div>
+  <div className="card">
+    <div className="card-icon">🔁</div>
+    <div className="card-title">Dunning & failed-payment recovery</div>
+    <div className="card-desc">
+      A failed charge starts a recovery sequence on WhatsApp, SMS, or USSD
+      within minutes, not a daily batch job that catches it a day late. See{" "}
+      <a href="/concepts/recovery-orchestration">Recovery orchestration</a>.
+    </div>
+  </div>
+  <div className="card">
+    <div className="card-icon">🙋</div>
+    <div className="card-title">Customer self-service portal</div>
+    <div className="card-desc">
+      View, pause, resume, cancel, and update a payment method, authenticated
+      separately from the merchant's own account. See{" "}
+      <a href="/subscribers/manage-your-subscription">
+        Manage your subscription
+      </a>
+      .
+    </div>
+  </div>
+  <div className="card">
+    <div className="card-icon">🔔</div>
+    <div className="card-title">Webhooks for downstream systems</div>
+    <div className="card-desc">
+      Every domain event, signed, retried with backoff, dead-lettered on
+      exhaustion, and replayable by subscription ID or time range. See{" "}
+      <a href="/developer/webhooks">Webhooks</a>.
+    </div>
+  </div>
 </div>
 
-<h2 id="h-outofscope">Explicitly out of scope, this release</h2>
-<p>Each of these was a deliberate line, not an oversight.</p>
+<h2 id="h-key-apis">The Nomba primitives underneath</h2>
+
+The brief names four Nomba surfaces as the foundation. All four are wired in, and none of
+them are used decoratively.
+
 <table>
   <thead>
-    <tr><th>Not in scope</th><th>Why</th></tr>
+    <tr>
+      <th>API</th>
+      <th>What it does in this system</th>
+    </tr>
   </thead>
   <tbody>
-    <tr><td>Full KYC / compliance workflows</td><td>Customers are assumed pre-verified via Nomba. This platform doesn't re-run identity verification.</td></tr>
-    <tr><td>Tax calculation and invoicing compliance (VAT, WHT)</td><td>Left to the merchant's own accounting, for now.</td></tr>
-    <tr><td>Multi-currency settlement beyond NGN</td><td>Including FX-aware proration, a real problem, just not this release's problem.</td></tr>
-    <tr><td>Native mobile apps</td><td>Web dashboard, web portal, USSD, and WhatsApp/SMS channels only.</td></tr>
-    <tr><td>Granular, per-feature role permissioning</td><td>Owner and Team Member is the whole permission model at v1, no custom role builder yet.</td></tr>
+    <tr>
+      <td>Checkout API</td>
+      <td>
+        Hosted card entry at subscription signup, and at every payment-method
+        update from the portal. The raw card number never touches our servers.
+      </td>
+    </tr>
+    <tr>
+      <td>Tokenised cards</td>
+      <td>
+        The stored reference reused for every billing-cycle charge and every
+        dunning retry, so a subscriber enters a card once and never again unless
+        it changes.
+      </td>
+    </tr>
+    <tr>
+      <td>Charge API</td>
+      <td>
+        Executes every recurring charge attempt. Its outcome, confirmed by
+        webhook, is what drives the subscription state machine forward or into
+        recovery.
+      </td>
+    </tr>
+    <tr>
+      <td>Transfers API</td>
+      <td>
+        Payout-side handling for platform fee splits, where a merchant's plan
+        calls for one.
+      </td>
+    </tr>
   </tbody>
 </table>
 
-<div className="callout note"><div className="ic">ⓘ</div><p>None of these are "never." They're "not yet, and saying so beats pretending otherwise."</p></div>
+Full detail: <a href="/architecture/nomba-integration">Nomba integration</a>.
+
+<h2 id="h-judged-on">How we address each judging criterion</h2>
+<p>
+  The catalogue names four things this track is judged on. Here's where each one
+  lives.
+</p>
+
+<div className="card-grid cols-2">
+  <div className="card">
+    <div className="card-icon">🧭</div>
+    <div className="card-title">State-machine completeness</div>
+    <div className="card-desc">
+      Eight explicit states, not a boolean and a hope: pending, trialing,
+      active, past_due, grace_period, suspended, cancelled, expired. Every
+      transition writes an immutable domain event rather than being inferred
+      after the fact from a pile of payment rows. See{" "}
+      <a href="/concepts/subscription-lifecycle">Subscription lifecycle</a>.
+    </div>
+  </div>
+  <div className="card">
+    <div className="card-icon">🔁</div>
+    <div className="card-title">Dunning sophistication</div>
+    <div className="card-desc">
+      Not a single retry-and-forget email. A centralized recovery-orchestration
+      component picks the channel most likely to reach a subscriber, WhatsApp
+      first with three inline actions, SMS as an automatic fallback, USSD
+      available regardless, and degrades gracefully, queuing and retrying rather
+      than dropping a notification, if a provider has an outage. See{" "}
+      <a href="/concepts/recovery-orchestration">Recovery orchestration</a>.
+    </div>
+  </div>
+  <div className="card">
+    <div className="card-icon">🏢</div>
+    <div className="card-title">Multi-tenant cleanliness</div>
+    <div className="card-desc">
+      Every business entity below the merchant carries a merchantId, enforced at
+      the data-access layer, not only in application-level checks. Owner and
+      Team Member roles keep account-level actions, API keys, webhook
+      configuration, team membership, separate from day-to-day operations. See{" "}
+      <a href="/architecture/overview">Architecture</a>.
+    </div>
+  </div>
+  <div className="card">
+    <div className="card-icon">🧩</div>
+    <div className="card-title">API ergonomics for downstream developers</div>
+    <div className="card-desc">
+      A documented resource model, signed and replayable webhooks, idempotency
+      keys on writes, and an interactive Swagger reference served straight from
+      the API. A developer should be able to integrate from documentation alone.
+      See <a href="/developer/webhooks">Webhooks</a> and{" "}
+      <a href="/api-reference/introduction">API Reference</a>.
+    </div>
+  </div>
+</div>
+
+<h2 id="h-unhappy-paths">Where the unhappy paths actually live</h2>
+
+The Checkout, Recurring build track (the sibling track for merchant-facing subscription
+products built on top of a layer like this one) is explicit that judging weighs "unhappy-path
+depth: card decline, insufficient funds, expired card, pause or cancel handling, not only the
+happy path." That bar applies just as much to the infrastructure underneath it, arguably more,
+since every unhandled edge case here becomes every downstream team's bug.
+
+<table>
+  <thead>
+    <tr>
+      <th>Unhappy path</th>
+      <th>How it's handled</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Card decline on a billing cycle</td>
+      <td>
+        Subscription moves to <code>past_due</code>, a grace period starts,
+        recovery fires within minutes. See{" "}
+        <a href="/how-it-works">How it works</a>.
+      </td>
+    </tr>
+    <tr>
+      <td>Expired card nobody noticed</td>
+      <td>
+        The most common real-world failure mode, and the reason WhatsApp
+        recovery leads with Retry Now, Pause, and Downgrade rather than a bare
+        "payment failed" notice. See{" "}
+        <a href="/subscribers/when-a-payment-fails">When a payment fails</a>.
+      </td>
+    </tr>
+    <tr>
+      <td>Grace period lapses with no recovery</td>
+      <td>
+        Subscription moves to <code>suspended</code>, not straight to cancelled,
+        so a subscriber can still self-serve their way back without
+        re-onboarding as a new signup.
+      </td>
+    </tr>
+    <tr>
+      <td>A merchant's webhook endpoint is down</td>
+      <td>
+        Deliveries retry with backoff for up to fourteen days, then dead-letter,
+        then replay on demand once the endpoint is fixed. See{" "}
+        <a href="/developer/webhooks">Webhooks</a>.
+      </td>
+    </tr>
+    <tr>
+      <td>A subscriber wants to pause, not cancel</td>
+      <td>
+        A first-class action in the portal, on WhatsApp, and over USSD, not a
+        support ticket. See{" "}
+        <a href="/subscribers/manage-your-subscription">
+          Manage your subscription
+        </a>
+        .
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="h-scale">
+  From hackathon demo to something a real merchant could depend on
+</h2>
+
+A hackathon build has to prove a concept in a weekend. Judged well, it also has to show it
+wasn't built to fall over the moment it left the demo.
+
+<table>
+  <thead>
+    <tr>
+      <th>Concern</th>
+      <th>How this is positioned for it</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>More merchants, more subscribers</td>
+      <td>
+        Tenant isolation is enforced at the data-access layer, not bolted on
+        with an application-side filter that a future query could forget.
+        Onboarding a new merchant is a signup, not a schema change.
+      </td>
+    </tr>
+    <tr>
+      <td>More events, more webhooks, more notifications</td>
+      <td>
+        Nothing in the recovery or delivery path runs inline on a request.
+        BullMQ on Redis carries every webhook delivery, every dunning retry,
+        every notification send, so throughput scales by adding workers, not by
+        the API getting slower under load. See{" "}
+        <a href="/architecture/queues-and-async">Queues & async processing</a>.
+      </td>
+    </tr>
+    <tr>
+      <td>A provider outage</td>
+      <td>
+        WhatsApp, SMS, and Nomba itself can all have a bad hour without a lost
+        recovery attempt or a lost charge, jobs queue and retry instead of
+        failing silently. See{" "}
+        <a href="/architecture/resilience">Resilience & scale</a>.
+      </td>
+    </tr>
+    <tr>
+      <td>A second consumer of the same data</td>
+      <td>
+        Analytics, notifications, and webhooks all read the same event store
+        rather than three separately maintained paths that can quietly drift
+        from each other. Adding a fourth consumer later is a subscription, not a
+        rewrite. See <a href="/concepts/event-store">The event store</a>.
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="h-commitments">Three commitments the brief implicitly assumes</h2>
+
+A recurring-billing layer sits on top of somebody else's money and somebody else's customer
+relationship. That earns a few commitments the brief doesn't spell out but clearly expects.
+
+<table>
+  <thead>
+    <tr>
+      <th>Commitment</th>
+      <th>What it means here</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Every webhook we send is provably ours.</td>
+      <td>
+        HMAC-SHA256 signatures on every delivery, verifiable independently by
+        the receiving service, with replay protection on the timestamp. See{" "}
+        <a href="/security/webhook-verification">
+          Webhook signature verification
+        </a>
+        .
+      </td>
+    </tr>
+    <tr>
+      <td>A retried or replayed request never becomes a duplicate charge.</td>
+      <td>
+        Idempotency keys on writes, stable event IDs on replay. Reprocessing is
+        always safe by construction, not by convention.
+      </td>
+    </tr>
+    <tr>
+      <td>Sensitive data is encrypted, and access to it is narrow.</td>
+      <td>
+        Stored payment references are encrypted at rest with AES-256-GCM, and
+        there's no endpoint or dashboard view that surfaces a raw reference,
+        only the ability to use it. See{" "}
+        <a href="/security/data-protection">Data & encryption posture</a>.
+      </td>
+    </tr>
+  </tbody>
+</table>
 
 <h2 id="h-next">What to read next</h2>
 <div className="card-grid cols-2">
-  <a className="card" href="/how-it-works"><div className="card-icon">🧭</div><div className="card-title">How it works</div><div className="card-desc">A charge fails, a grace period opens, a WhatsApp message goes out, a customer replies, the state machine updates. Walk through the whole arc end to end.</div></a>
-  <a className="card" href="/architecture/overview"><div className="card-icon">🖥️</div><div className="card-title">Architecture</div><div className="card-desc">Modules, the event store, and where the webhook and analytics systems read from a single source of truth.</div></a>
-  <a className="card" href="/api-reference/introduction"><div className="card-icon">⌨️</div><div className="card-title">API reference</div><div className="card-desc">The full Swagger surface, every resource, every webhook event, every response schema.</div></a>
-  <a className="card" href="/the-team"><div className="card-icon">👥</div><div className="card-title">The team</div><div className="card-desc">Who's building this and why.</div></a>
+  <a className="card" href="/introduction">
+    <div className="card-icon">🚪</div>
+    <div className="card-title">Introduction</div>
+    <div className="card-desc">
+      Adaeze's story. The thesis. The four channels.
+    </div>
+  </a>
+  <a className="card" href="/how-it-works">
+    <div className="card-icon">🧭</div>
+    <div className="card-title">How it works</div>
+    <div className="card-desc">
+      A merchant creates a plan. A customer subscribes. A charge fails. Recovery
+      closes the loop.
+    </div>
+  </a>
+  <a className="card" href="/architecture/overview">
+    <div className="card-icon">🏗️</div>
+    <div className="card-title">Architecture</div>
+    <div className="card-desc">
+      The stack, the module boundaries, the deliberate choices.
+    </div>
+  </a>
+  <a className="card" href="/developer/webhooks">
+    <div className="card-icon">🔔</div>
+    <div className="card-title">Webhooks</div>
+    <div className="card-desc">
+      The API ergonomics story, for the downstream developer reading this.
+    </div>
+  </a>
 </div>
