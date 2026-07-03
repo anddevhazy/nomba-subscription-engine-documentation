@@ -37,6 +37,7 @@ export type NavGroup = { group: string; items: NavItem[] };
 
 export const ICONS: Record<string, IconDefinition> = {
   introduction: faHandshake,
+  "introduction-tolu": faHandshake,
   "how-it-works": faCompass,
   "quick-start": faBolt,
   mission: faBullseye,
@@ -80,6 +81,7 @@ export const NAV: NavGroup[] = [
     group: "Get started",
     items: [
       { slug: "introduction", title: "Introduction" },
+      { slug: "introduction-tolu", title: "Introduction (Tolu draft)" },
       { slug: "mission", title: "The mission" },
       { slug: "how-it-works", title: "How it works" },
       { slug: "the-team", title: "The team" },
@@ -175,6 +177,8 @@ export const NAV: NavGroup[] = [
 ];
 
 export const DESCRIPTIONS: Record<string, string> = {
+  "introduction-tolu":
+    "Draft B. Tolu almost loses a course subscription to a badly timed decline; Adaeze almost loses the revenue. Compare against Introduction.",
   "how-it-works":
     "A merchant creates a plan. A customer subscribes. Nomba collects the charge. If it fails, recovery kicks in. The whole arc, end to end, in one page.",
   "quick-start":
