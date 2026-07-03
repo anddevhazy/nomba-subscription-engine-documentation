@@ -31,6 +31,12 @@ import {
   faCircleCheck,
   faTriangleExclamation,
   faCommentSms,
+  faDoorOpen,
+  faToggleOn,
+  faCode,
+  faSliders,
+  faLink,
+  faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 
 export type NavItem = { slug: string; title: string };
@@ -49,6 +55,12 @@ export const ICONS: Record<string, IconDefinition> = {
   "merchants/billing-and-invoicing": faReceipt,
   "merchants/team-and-roles": faLock,
   "merchants/analytics": faChartLine,
+  "merchants/customer-portal/overview": faDoorOpen,
+  "merchants/customer-portal/no-code-setup": faToggleOn,
+  "merchants/customer-portal/api-setup": faCode,
+  "merchants/customer-portal/configure": faSliders,
+  "merchants/customer-portal/deep-links-and-flows": faLink,
+  "merchants/customer-portal/cancellation-page": faXmark,
   "subscribers/overview": faHand,
   "subscribers/manage-your-subscription": faGear,
   "subscribers/when-a-payment-fails": faRotate,
@@ -134,6 +146,32 @@ export const NAV: NavGroup[] = [
     ],
   },
   {
+    group: "Customer portal",
+    items: [
+      { slug: "merchants/customer-portal/overview", title: "Customer portal" },
+      {
+        slug: "merchants/customer-portal/no-code-setup",
+        title: "Set up the no-code customer portal",
+      },
+      {
+        slug: "merchants/customer-portal/api-setup",
+        title: "Set up the customer portal with the API",
+      },
+      {
+        slug: "merchants/customer-portal/configure",
+        title: "Configure the customer portal",
+      },
+      {
+        slug: "merchants/customer-portal/deep-links-and-flows",
+        title: "Deep links and flows",
+      },
+      {
+        slug: "merchants/customer-portal/cancellation-page",
+        title: "Add a cancellation page",
+      },
+    ],
+  },
+  {
     group: "Developer",
     items: [
       { slug: "developer/authentication", title: "Authentication" },
@@ -202,6 +240,18 @@ export const DESCRIPTIONS: Record<string, string> = {
     "Owner and Team Member. Who can rotate an API key, and who just needs to handle today's support queue.",
   "merchants/analytics":
     "MRR, churn, recovery rate, plan performance, computed from the same event store that powers your webhooks.",
+  "merchants/customer-portal/overview":
+    "Let your subscribers manage their own account. View, pause, resume, cancel, update payment method, no support ticket required.",
+  "merchants/customer-portal/no-code-setup":
+    "There's nothing to activate. Here's what you actually configure, in the Dashboard, without writing a line of code.",
+  "merchants/customer-portal/api-setup":
+    "Generate a portal link server-side, redirect your customer, listen for what they change.",
+  "merchants/customer-portal/configure":
+    "Which actions are on, which are off, and what a subscriber is actually allowed to touch.",
+  "merchants/customer-portal/deep-links-and-flows":
+    "A signed, single-use link into exactly one action. The same primitive that already powers our recovery messages.",
+  "merchants/customer-portal/cancellation-page":
+    "Cancellation is on by default. Here's how to learn why it happened, and what to offer before it does.",
   "subscribers/overview":
     "View it. Pause it. Cancel it. Fix a failed card. Without emailing the merchant and waiting.",
   "subscribers/manage-your-subscription":

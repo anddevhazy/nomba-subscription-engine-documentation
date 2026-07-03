@@ -1,0 +1,68 @@
+export const meta = {
+  eyebrow: "Customer portal",
+  title: "Set up the customer portal with the API",
+  lede: "Generate a portal link server-side, redirect your customer, listen for what they change.",
+};
+
+<p>Efe's bookkeeping tool resells access via the Subscription Engine, and his own product has a "Manage billing" button inside its own settings page. He doesn't want that button to dump a customer into a generic login screen, he wants it to drop them straight into the portal, already identified, ready to act. That's what this page covers.</p>
+
+<h2 id="h-roadmap">The integration, in four steps</h2>
+<div className="steps">
+  <div className="step"><div className="step-num">1</div><div className="step-body"><div className="step-title">Configure the portal</div><p>In the Dashboard or via the API, decide what subscribers can do. See <a href="/merchants/customer-portal/configure">Configure the customer portal</a>.</p></div></div>
+  <div className="step"><div className="step-num">2</div><div className="step-body"><div className="step-title">Implement a redirect</div><p>Generate a portal link server-side, send your customer to it.</p></div></div>
+  <div className="step"><div className="step-num">3</div><div className="step-body"><div className="step-title">Listen to webhooks</div><p>Know when a subscriber changes something without polling for it.</p></div></div>
+  <div className="step"><div className="step-num">4</div><div className="step-body"><div className="step-title">Launch</div><p>Flip from sandbox to live keys, confirm your live webhook endpoint is registered.</p></div></div>
+</div>
+
+<h2 id="h-configure">A common mistake</h2>
+<p>Every portal link is generated against a `customerId`. That customer belongs to exactly one merchant, scoped by `merchantId` at the data-access layer, the same tenant isolation covered in <a href="/architecture/overview">Architecture</a>. Requesting a link for a customer ID that isn't yours doesn't leak that customer's data, it fails outright:</p>
+<pre><code>{`{ "error_code": "resource_not_found", "message": "Customer cus_01... was not found." }`}</code></pre>
+<p>If you see this and you're confident the customer exists, you're almost certainly authenticated as the wrong merchant, check which API key you're using before assuming the customer record is missing.</p>
+
+<h2 id="h-plans">Which plans a subscriber can switch to</h2>
+<p>If you've enabled plan switching (see <a href="/merchants/customer-portal/configure">Configure</a>), you can optionally restrict the portal to a specific list of plans a subscriber is allowed to move between, rather than every active plan on your account. This matters if you sell plans that aren't meant to be self-serve, an enterprise tier sold manually, for instance. Leave the list empty and every active plan is eligible.</p>
+
+<h2 id="h-test">Preview and test</h2>
+<p>Generate portal links against your sandbox key (`nse_sandbox_*`) and a sandbox customer before going live. Sandbox charges never touch Nomba's real rails, so you can walk through pause, resume, cancel, and payment-method update without risk.</p>
+
+<h2 id="h-redirect">Implement a redirect</h2>
+<p>On your site, add a button that requests a portal link and redirects:</p>
+<pre><code>{`<form method="POST" action="/create-portal-link">
+  <button type="submit">Manage billing</button>
+</form>`}</code></pre>
+<p>Server-side, request the link and redirect your customer to the URL you get back:</p>
+<pre><code>{`curl -X POST https://api.nomba-subscriptions.com/portal/links \\
+  -H "Authorization: Bearer nse_live_..." \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "customerId": "cus_01HMFD...",
+    "redirectUrl": "https://efe-ledgerly.example.com/settings"
+  }'`}</code></pre>
+<p>Response:</p>
+<pre><code>{`{
+  "url": "https://portal.nomba-subscriptions.com/l/plnk_01HMFF...",
+  "expiresAt": "2026-08-14T11:17:00Z"
+}`}</code></pre>
+<p>The link is single-use and short-lived. A customer who opens it lands in the full portal, already identified, no OTP required, this is the general-access version of the same primitive covered in depth in <a href="/merchants/customer-portal/deep-links-and-flows">Deep links and flows</a>.</p>
+
+<h2 id="h-webhooks">Listen to webhooks</h2>
+<p>Portal-driven changes fire through the same event catalogue as everything else on the platform, there's no separate webhook system for the portal. The subset that matters here:</p>
+<table>
+  <tr><th>Event</th><th>Fires when</th></tr>
+  <tr><td>`subscription.updated`</td><td>A subscriber pauses, resumes, or changes plan from the portal.</td></tr>
+  <tr><td>`subscription.cancelled`</td><td>A subscriber cancels, with a `cancellationReason` field if you've enabled reason capture, see <a href="/merchants/customer-portal/cancellation-page">Add a cancellation page</a>.</td></tr>
+</table>
+<p>There's no dedicated event for a payment-method update; the next successful charge against the new card is your confirmation it worked. Full event reference: <a href="/developer/webhooks">Webhooks</a> and <a href="/api-reference/webhook-events">Webhook events</a>.</p>
+
+<h2 id="h-launch">Launch the portal</h2>
+<ul>
+  <li>Switch from `nse_sandbox_*` to `nse_live_*` keys.</li>
+  <li>Confirm your production webhook endpoint is registered and returning 2xx.</li>
+  <li>Generate one live portal link against a real customer and walk the full flow yourself before you ship the button.</li>
+</ul>
+
+<h2 id="h-next">Next</h2>
+<div className="card-grid cols-2">
+  <a className="card" href="/merchants/customer-portal/deep-links-and-flows"><div className="card-icon">🔗</div><div className="card-title">Deep links and flows</div><div className="card-desc">Scope a link to exactly one action instead of the general portal.</div></a>
+  <a className="card" href="/developer/webhooks"><div className="card-icon">🔔</div><div className="card-title">Webhooks</div><div className="card-desc">The full event catalogue, retry, and replay.</div></a>
+</div>

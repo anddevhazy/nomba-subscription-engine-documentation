@@ -11,12 +11,13 @@ export const meta = {
   <tr><th>Event</th><th>`data` shape</th></tr>
   <tr><td>`subscription.created`</td><td>`{ subscriptionId, customerId, planId, status }`</td></tr>
   <tr><td>`subscription.updated`</td><td>`{ subscriptionId, changes: { field: { from, to } } }`</td></tr>
-  <tr><td>`subscription.cancelled`</td><td>`{ subscriptionId, cancelledBy: "merchant" | "subscriber", effectiveAt }`</td></tr>
+  <tr><td>`subscription.cancelled`</td><td>`{ subscriptionId, cancelledBy: "merchant" | "subscriber", effectiveAt, cancellationReason? }`</td></tr>
   <tr><td>`subscription.renewed`</td><td>`{ subscriptionId, cycleStart, cycleEnd }`</td></tr>
   <tr><td>`invoice.paid`</td><td>`{ invoiceId, subscriptionId, amount, currency }`</td></tr>
   <tr><td>`payment.failed`</td><td>`{ subscriptionId, invoiceId, amount, currency, failureReason }`</td></tr>
   <tr><td>`payment.recovered`</td><td>`{ subscriptionId, invoiceId, amount, currency, recoveredVia: "whatsapp" | "sms" | "email" | "ussd" | "portal" }`</td></tr>
 </table>
+<p className="body-secondary">`cancellationReason` is only present on `subscription.cancelled` when a merchant has enabled reason capture in the portal, see <a href="/merchants/customer-portal/cancellation-page">Add a cancellation page</a>.</p>
 
 <h2 id="h-envelope">The envelope every event shares</h2>
 
