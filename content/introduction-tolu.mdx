@@ -115,7 +115,7 @@ export const meta = {
       The merchant's end customers. They get a self-service portal to pause,
       cancel, or update payment methods on their own terms, and, when a charge
       fails, a recovery message on whichever channel they actually check:
-      WhatsApp, SMS, or USSD.
+      email, WhatsApp, SMS, or USSD.
     </div>
   </div>
 </div>
@@ -156,6 +156,15 @@ export const meta = {
       subscription management, analytics, API keys, and webhooks. A separately
       authenticated customer portal for self-service pause, resume, cancel, and
       payment-method updates.
+    </div>
+  </a>
+  <a className="card" href="/channels/email">
+    <div className="card-icon">✉️</div>
+    <div className="card-title">Email</div>
+    <div className="card-desc">
+      <strong>For subscribers, always.</strong> The durable baseline. Fires on
+      every recovery attempt with the same Retry Now / Pause / Downgrade
+      links, whether or not WhatsApp or SMS also reach them.
     </div>
   </a>
   <a className="card" href="/channels/whatsapp">

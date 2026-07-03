@@ -46,7 +46,7 @@ curl -X POST https://api.nomba-subscriptions.com/subscriptions/sub_test_01/charg
   -H "Authorization: Bearer nse_sandbox_..."
 ```
 
-The subscription flips to `past_due`, a `PaymentFailed` event lands in the event store, and, if you've configured a sandbox WhatsApp or SMS number on the test customer, a recovery message fires within a minute. Reply, or hit the retry endpoint yourself, and watch the subscription return to `active`.
+The subscription flips to `past_due`, a `PaymentFailed` event lands in the event store, and a recovery email fires within a minute regardless of what else is configured. If you've also set a sandbox WhatsApp or SMS number on the test customer, those fire too. Reply, or hit the retry endpoint yourself, and watch the subscription return to `active`.
 
 </div>
 </div>

@@ -4,7 +4,7 @@ export const meta = {
   lede: "Dunning retries, webhook delivery, invoice generation. Why none of them happen inline on the request that triggered them.",
 };
 
-<p>Anything that involves a third party, Nomba, WhatsApp, SMS, a merchant's own webhook endpoint, runs on a queue, not inline on the request that triggered it. BullMQ, backed by Redis, is the mechanism for all of it.</p>
+<p>Anything that involves a third party, Nomba, WhatsApp, SMS, email, a merchant's own webhook endpoint, runs on a queue, not inline on the request that triggered it. BullMQ, backed by Redis, is the mechanism for all of it.</p>
 
 <h2 id="h-what">What runs async</h2>
 <table>
@@ -12,7 +12,7 @@ export const meta = {
   <tr><td>Webhook delivery</td><td>A merchant's endpoint might be slow, down, or misconfigured. That should never hold open the request that created the underlying event.</td></tr>
   <tr><td>Dunning retries and recovery messages</td><td>Scheduled on a grace-period timer, not fired synchronously from the failed charge itself.</td></tr>
   <tr><td>Invoice generation on a billing cycle</td><td>Runs on a schedule, independent of any specific request.</td></tr>
-  <tr><td>WhatsApp / SMS / USSD notification delivery</td><td>Third-party providers with their own latency and occasional outages, see <a href="/architecture/resilience">Resilience & scale</a>.</td></tr>
+  <tr><td>Email / WhatsApp / SMS / USSD notification delivery</td><td>Third-party providers with their own latency and occasional outages, see <a href="/architecture/resilience">Resilience & scale</a>.</td></tr>
 </table>
 
 <h2 id="h-shape">The shape of a queued job</h2>

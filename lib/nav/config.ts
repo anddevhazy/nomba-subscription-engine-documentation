@@ -30,6 +30,7 @@ import {
   faShieldHalved,
   faCircleCheck,
   faTriangleExclamation,
+  faCommentSms,
 } from "@fortawesome/free-solid-svg-icons";
 
 export type NavItem = { slug: string; title: string };
@@ -55,8 +56,9 @@ export const ICONS: Record<string, IconDefinition> = {
   "concepts/event-store": faBook,
   "concepts/recovery-orchestration": faCompass,
   "channels/web": faDesktop,
+  "channels/email": faEnvelope,
   "channels/whatsapp": faComment,
-  "channels/sms": faEnvelope,
+  "channels/sms": faCommentSms,
   "channels/ussd": faPhone,
   "developer/authentication": faKey,
   "developer/webhooks": faBell,
@@ -144,6 +146,7 @@ export const NAV: NavGroup[] = [
     group: "Channels",
     items: [
       { slug: "channels/web", title: "Web" },
+      { slug: "channels/email", title: "Email" },
       { slug: "channels/whatsapp", title: "WhatsApp" },
       { slug: "channels/sms", title: "SMS" },
       { slug: "channels/ussd", title: "USSD" },
@@ -213,6 +216,8 @@ export const DESCRIPTIONS: Record<string, string> = {
     "One component decides which channel reaches a customer first, and what to do when that channel doesn't answer.",
   "channels/web":
     "The API and docs site, the merchant dashboard, and the customer portal, three applications, one API underneath.",
+  "channels/email":
+    "The baseline channel. Every recovery sequence sends one, whether or not WhatsApp or SMS also fire.",
   "channels/whatsapp":
     "Retry Now, Pause Subscription, Downgrade Plan. A failed charge, three buttons, no phone call.",
   "channels/sms":

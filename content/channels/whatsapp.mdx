@@ -4,7 +4,7 @@ export const meta = {
   lede: "Retry Now, Pause Subscription, Downgrade Plan. A failed charge, three buttons, no phone call.",
 };
 
-<p>WhatsApp is the primary recovery channel, the first one recovery orchestration reaches for after a failed charge, ahead of SMS. It's provisioned via Twilio, with production business verification in place.</p>
+<p>WhatsApp is the primary push channel, the first one recovery orchestration reaches for after a failed charge, ahead of SMS. An email with the same notice goes out in parallel every time, regardless of what happens here; see <a href="/channels/email">Email</a>. WhatsApp itself is provisioned via Twilio, with production business verification in place.</p>
 
 <h2 id="h-what">What arrives on WhatsApp</h2>
 <p>A single scenario, deliberately: a failed-charge notification with three inline actions.</p>
@@ -26,7 +26,8 @@ export const meta = {
 <p>If the subscriber doesn't have WhatsApp, or delivery fails, the same message falls back to <a href="/channels/sms">SMS</a> automatically, see <a href="/concepts/recovery-orchestration">Recovery orchestration</a> for exactly how that decision is made.</p>
 
 <h2 id="h-next">Next</h2>
-<div className="card-grid cols-2">
-  <a className="card" href="/channels/sms"><div className="card-icon">✉️</div><div className="card-title">SMS</div><div className="card-desc">The fallback channel, and where it's the primary one instead.</div></a>
+<div className="card-grid cols-3">
+  <a className="card" href="/channels/sms"><div className="card-icon">📱</div><div className="card-title">SMS</div><div className="card-desc">The fallback channel, and where it's the primary one instead.</div></a>
+  <a className="card" href="/channels/email"><div className="card-icon">✉️</div><div className="card-title">Email</div><div className="card-desc">The channel that fires no matter what happens here.</div></a>
   <a className="card" href="/subscribers/when-a-payment-fails"><div className="card-icon">🔁</div><div className="card-title">When a payment fails</div><div className="card-desc">The same flow, from the subscriber's side.</div></a>
 </div>

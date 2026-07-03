@@ -4,28 +4,30 @@ export const meta = {
   lede: "One component decides which channel reaches a customer first, and what to do when that channel doesn't answer.",
 };
 
-<p>Every channel, WhatsApp, SMS, USSD, has its own provider, its own delivery quirks, and its own failure modes. Without a single place that owns the decision of "who gets contacted, how, and in what order," that logic ends up duplicated across every place a failed payment needs to trigger a message. Recovery orchestration is that single place.</p>
+<p>Every channel, email, WhatsApp, SMS, USSD, has its own provider, its own delivery quirks, and its own failure modes. Without a single place that owns the decision of "who gets contacted, how, and in what order," that logic ends up duplicated across every place a failed payment needs to trigger a message. Recovery orchestration is that single place.</p>
 
 <h2 id="h-why-centralized">Why this is centralized, not per-channel</h2>
-<p>As recovery channels scale, and WhatsApp, SMS, and USSD are unlikely to be the last three, duplicating fallback logic across each integration point is exactly the kind of thing that quietly rots. One component owning channel selection and fallback means adding a fourth channel later is a change in one place, not a hunt across the codebase for every spot that assumed there were three.</p>
+<p>As recovery channels scale, and email, WhatsApp, SMS, and USSD are unlikely to be the last four, duplicating fallback logic across each integration point is exactly the kind of thing that quietly rots. One component owning channel selection and fallback means adding a fifth channel later is a change in one place, not a hunt across the codebase for every spot that assumed there were four.</p>
 
 <h2 id="h-decision">The decision, step by step</h2>
 <div className="steps">
   <div className="step"><div className="step-num">1</div><div className="step-body"><div className="step-title">A PaymentFailed event lands</div><p>Recovery orchestration picks it up from the event store the moment it's written.</p></div></div>
-  <div className="step"><div className="step-num">2</div><div className="step-body"><div className="step-title">The subscriber's channel preference resolves</div><p>WhatsApp if they're reachable there; SMS otherwise. USSD stays available as a subscriber-initiated fallback regardless.</p></div></div>
-  <div className="step"><div className="step-num">3</div><div className="step-body"><div className="step-title">A recovery message fires</div><p>Retry Now / Pause Subscription / Downgrade Plan on WhatsApp; a reply-YES-to-retry prompt on SMS.</p></div></div>
-  <div className="step"><div className="step-num">4</div><div className="step-body"><div className="step-title">If WhatsApp delivery fails or goes unanswered</div><p>The same message falls back to SMS automatically, the subscriber doesn't need to have done anything differently for this to work.</p></div></div>
-  <div className="step"><div className="step-num">5</div><div className="step-body"><div className="step-title">The outcome is logged as a channel event</div><p>Which channel reached the subscriber, and what action they took, feeds directly into recovery-rate reporting broken down by channel.</p></div></div>
+  <div className="step"><div className="step-num">2</div><div className="step-body"><div className="step-title">Email always sends</div><p>The durable baseline. Every subscriber has an address on file from checkout, so this fires on every recovery attempt regardless of what else does.</p></div></div>
+  <div className="step"><div className="step-num">3</div><div className="step-body"><div className="step-title">The subscriber's push-channel preference resolves</div><p>WhatsApp if they're reachable there; SMS otherwise. USSD stays available as a subscriber-initiated pull regardless.</p></div></div>
+  <div className="step"><div className="step-num">4</div><div className="step-body"><div className="step-title">A recovery message fires</div><p>Retry Now / Pause Subscription / Downgrade Plan as inline actions on WhatsApp, or as links in the email; a reply-YES-to-retry prompt on SMS.</p></div></div>
+  <div className="step"><div className="step-num">5</div><div className="step-body"><div className="step-title">If WhatsApp delivery fails or goes unanswered</div><p>The same message falls back to SMS automatically. Email has already gone out in parallel either way, so recovery never depends on a single channel being read.</p></div></div>
+  <div className="step"><div className="step-num">6</div><div className="step-body"><div className="step-title">The outcome is logged as a channel event</div><p>Which channel recovered the subscriber, and what action they took, feeds directly into recovery-rate reporting broken down by channel.</p></div></div>
 </div>
 
 <h2 id="h-degrade">Degrading gracefully</h2>
-<p>If WhatsApp or SMS is unreachable, a provider outage, not a subscriber issue, the affected notification jobs are queued and retried rather than failing silently. A merchant should never lose a recovery attempt because a third-party provider had a bad hour; the job comes back and tries again.</p>
+<p>If WhatsApp, SMS, or the email provider is unreachable, a provider outage, not a subscriber issue, the affected notification jobs are queued and retried rather than failing silently. A merchant should never lose a recovery attempt because a third-party provider had a bad hour; the job comes back and tries again.</p>
 
 <h2 id="h-reporting">What this feeds</h2>
 <p>Every recovery attempt, channel used, action taken, outcome, rolls up into the dunning metrics on a merchant's analytics: past-due volume, grace-period volume, recovery rate, and a breakdown by channel showing which one is actually converting for a given customer base.</p>
 
 <h2 id="h-next">Next</h2>
-<div className="card-grid cols-2">
-  <a className="card" href="/channels/whatsapp"><div className="card-icon">💬</div><div className="card-title">WhatsApp</div><div className="card-desc">The primary recovery channel, in detail.</div></a>
+<div className="card-grid cols-3">
+  <a className="card" href="/channels/email"><div className="card-icon">✉️</div><div className="card-title">Email</div><div className="card-desc">The always-on baseline, in detail.</div></a>
+  <a className="card" href="/channels/whatsapp"><div className="card-icon">💬</div><div className="card-title">WhatsApp</div><div className="card-desc">The primary push channel, in detail.</div></a>
   <a className="card" href="/architecture/queues-and-async"><div className="card-icon">🗂️</div><div className="card-title">Queues & async processing</div><div className="card-desc">How retries and fallbacks are actually scheduled.</div></a>
 </div>

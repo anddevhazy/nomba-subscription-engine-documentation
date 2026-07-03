@@ -4,7 +4,7 @@ export const meta = {
   lede: "Reply YES to retry. The rail that works when a customer has neither an app nor a smartphone worth the name.",
 };
 
-<p>SMS is the fallback recovery channel, where <a href="/channels/whatsapp">WhatsApp</a> can't reach a subscriber, SMS does. It's also, for some merchants' customer bases, the primary channel by default: not every subscriber has WhatsApp, but nearly all of them can receive a text.</p>
+<p>SMS is the fallback push channel, where <a href="/channels/whatsapp">WhatsApp</a> can't reach a subscriber, SMS does. It's also, for some merchants' customer bases, the primary push channel by default: not every subscriber has WhatsApp, but nearly all of them can receive a text. An <a href="/channels/email">email</a> with the same notice goes out in parallel regardless of how SMS resolves.</p>
 
 <h2 id="h-what">What arrives by SMS</h2>
 <blockquote>Lumen: payment of ₦15,000 failed. Reply YES to retry.</blockquote>
@@ -23,7 +23,8 @@ export const meta = {
 <p>For a subscriber with no WhatsApp presence, recovery orchestration goes straight to SMS as the first attempt, see <a href="/concepts/recovery-orchestration">Recovery orchestration</a> for exactly how that channel preference resolves.</p>
 
 <h2 id="h-next">Next</h2>
-<div className="card-grid cols-2">
+<div className="card-grid cols-3">
+  <a className="card" href="/channels/email"><div className="card-icon">✉️</div><div className="card-title">Email</div><div className="card-desc">The channel that fires no matter what happens here.</div></a>
   <a className="card" href="/channels/ussd"><div className="card-icon">☎️</div><div className="card-title">USSD</div><div className="card-desc">Full self-service, no data connection at all.</div></a>
   <a className="card" href="/subscribers/when-a-payment-fails"><div className="card-icon">🔁</div><div className="card-title">When a payment fails</div><div className="card-desc">The recovery flow, from the subscriber's side.</div></a>
 </div>

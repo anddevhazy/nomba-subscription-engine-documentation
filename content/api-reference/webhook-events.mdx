@@ -15,7 +15,7 @@ export const meta = {
   <tr><td>`subscription.renewed`</td><td>`{ subscriptionId, cycleStart, cycleEnd }`</td></tr>
   <tr><td>`invoice.paid`</td><td>`{ invoiceId, subscriptionId, amount, currency }`</td></tr>
   <tr><td>`payment.failed`</td><td>`{ subscriptionId, invoiceId, amount, currency, failureReason }`</td></tr>
-  <tr><td>`payment.recovered`</td><td>`{ subscriptionId, invoiceId, amount, currency, recoveredVia: "whatsapp" | "sms" | "ussd" | "portal" }`</td></tr>
+  <tr><td>`payment.recovered`</td><td>`{ subscriptionId, invoiceId, amount, currency, recoveredVia: "whatsapp" | "sms" | "email" | "ussd" | "portal" }`</td></tr>
 </table>
 
 <h2 id="h-envelope">The envelope every event shares</h2>

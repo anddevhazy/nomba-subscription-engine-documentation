@@ -39,10 +39,10 @@ millions of subscribers.
 
 The Nomba Subscription Engine is built for exactly that gap. Plans, customers,
 and subscriptions have a real lifecycle. A lapsed or failed payment doesn't
-wait for someone to notice, it starts a recovery sequence on WhatsApp, SMS, or
-USSD within minutes, on whichever rail the subscriber actually uses. Every
-event is written once, to one place, and read by webhooks, notifications, and
-analytics alike.
+wait for someone to notice, it starts a recovery sequence on email, WhatsApp,
+SMS, or USSD within minutes, on whichever rail the subscriber actually uses.
+Every event is written once, to one place, and read by webhooks, notifications,
+and analytics alike.
 
 <h2 id="h-what-it-is">What Nomba Subscriptions is</h2>
 
@@ -88,7 +88,7 @@ Three sides. One event store underneath all of them.
     <div className="card-desc">
       The merchant's own customers. They get a portal to manage their
       subscription and a recovery flow that reaches them on the channel they
-      actually use, web, WhatsApp, SMS, or USSD.
+      actually use, web, email, WhatsApp, SMS, or USSD.
     </div>
   </div>
 </div>
@@ -108,13 +108,20 @@ There is no AI or machine-learning layer in this release. Recovery sequencing
 is a deterministic, configurable orchestration component, not a model, because
 the goal here is a predictable, auditable billing system, not a scored one.
 
-<h2 id="h-channels">Four channels, one API underneath</h2>
+<h2 id="h-channels">Five channels, one API underneath</h2>
 <div className="card-grid cols-2">
   <a className="card" href="/channels/web">
     <div className="card-icon">🖥️</div>
     <div className="card-title">Web</div>
     <div className="card-desc">
       The API, the merchant dashboard, and the customer portal.
+    </div>
+  </a>
+  <a className="card" href="/channels/email">
+    <div className="card-icon">✉️</div>
+    <div className="card-title">Email</div>
+    <div className="card-desc">
+      The always-on baseline. Fires on every recovery attempt, no exceptions.
     </div>
   </a>
   <a className="card" href="/channels/whatsapp">

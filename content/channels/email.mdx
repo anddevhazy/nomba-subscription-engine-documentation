@@ -1,0 +1,24 @@
+export const meta = {
+  eyebrow: "Channels",
+  title: "Email",
+  lede: "The baseline channel. Every recovery sequence sends one, whether or not WhatsApp or SMS also fire.",
+};
+
+<p>Email is the one channel that fires on every recovery attempt, no exceptions. WhatsApp depends on a subscriber having WhatsApp; SMS depends on a phone number that accepts text; USSD depends on the subscriber dialling in themselves. Email just needs the address a subscriber signed up with, which every subscriber has, because it's how checkout confirmations and receipts already reach them.</p>
+
+<h2 id="h-what">What arrives by email</h2>
+<p>The same failed-charge notice as WhatsApp, formatted for a longer read and a written record.</p>
+<blockquote>Subject: Your Lumen Monthly payment didn't go through<br />Your card was charged ₦15,000 for Lumen Monthly and the payment failed. [Retry Now] [Pause Subscription] [Downgrade Plan]</blockquote>
+<p>Each action is a signed, single-use link rather than a button that needs an app to render, so the email works the same whether it's opened on a phone, a shared cybercafé desktop, or a work laptop.</p>
+
+<h2 id="h-role">Why it's the baseline, not a fallback</h2>
+<p>WhatsApp and SMS fall back to each other because a subscriber can only be reached on one of them at a time. Email isn't part of that either/or, it's sent in parallel on every recovery attempt, regardless of whether WhatsApp or SMS also succeed. That's deliberate: some merchants' subscribers are more email-native than phone-native (a B2B SaaS customer expensing a subscription, for instance), and a written, addressable record of every failed charge and every recovery is useful even when a faster channel already resolved it.</p>
+
+<h2 id="h-scope">What email is, and isn't, used for</h2>
+<p>Like WhatsApp, this channel is scoped to dunning, not general product communication. Plan changes a merchant makes, receipts, and marketing don't run through this pipeline; the recovery-orchestration component only sends what a subscriber needs to fix a specific failed charge.</p>
+
+<h2 id="h-next">Next</h2>
+<div className="card-grid cols-2">
+  <a className="card" href="/channels/whatsapp"><div className="card-icon">💬</div><div className="card-title">WhatsApp</div><div className="card-desc">The richest channel, when a phone's on file.</div></a>
+  <a className="card" href="/concepts/recovery-orchestration"><div className="card-icon">🧭</div><div className="card-title">Recovery orchestration</div><div className="card-desc">How email fits alongside the other three channels.</div></a>
+</div>
