@@ -20,12 +20,16 @@ export const meta = {
 <h2 id="h-outofscope">Explicitly out of scope, this release</h2>
 <p>Each of these was a deliberate line, not an oversight.</p>
 <table>
-  <tr><th>Not in scope</th><th>Why</th></tr>
-  <tr><td>Full KYC / compliance workflows</td><td>Customers are assumed pre-verified via Nomba. This platform doesn't re-run identity verification.</td></tr>
-  <tr><td>Tax calculation and invoicing compliance (VAT, WHT)</td><td>Left to the merchant's own accounting, for now.</td></tr>
-  <tr><td>Multi-currency settlement beyond NGN</td><td>Including FX-aware proration, a real problem, just not this release's problem.</td></tr>
-  <tr><td>Native mobile apps</td><td>Web dashboard, web portal, USSD, and WhatsApp/SMS channels only.</td></tr>
-  <tr><td>Granular, per-feature role permissioning</td><td>Owner and Team Member is the whole permission model at v1, no custom role builder yet.</td></tr>
+  <thead>
+    <tr><th>Not in scope</th><th>Why</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Full KYC / compliance workflows</td><td>Customers are assumed pre-verified via Nomba. This platform doesn't re-run identity verification.</td></tr>
+    <tr><td>Tax calculation and invoicing compliance (VAT, WHT)</td><td>Left to the merchant's own accounting, for now.</td></tr>
+    <tr><td>Multi-currency settlement beyond NGN</td><td>Including FX-aware proration, a real problem, just not this release's problem.</td></tr>
+    <tr><td>Native mobile apps</td><td>Web dashboard, web portal, USSD, and WhatsApp/SMS channels only.</td></tr>
+    <tr><td>Granular, per-feature role permissioning</td><td>Owner and Team Member is the whole permission model at v1, no custom role builder yet.</td></tr>
+  </tbody>
 </table>
 
 <div className="callout note"><div className="ic">ⓘ</div><p>None of these are "never." They're "not yet, and saying so beats pretending otherwise."</p></div>
