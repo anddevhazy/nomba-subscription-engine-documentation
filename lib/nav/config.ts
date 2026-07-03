@@ -80,8 +80,8 @@ export const NAV: NavGroup[] = [
   {
     group: "Get started",
     items: [
-      { slug: "introduction", title: "Introduction" },
-      { slug: "introduction-tolu", title: "Introduction (Tolu draft)" },
+      { slug: "introduction-tolu", title: "Introduction (Tolu option)" },
+      { slug: "introduction", title: "Introduction (GOTV option" },
       { slug: "mission", title: "The mission" },
       { slug: "how-it-works", title: "How it works" },
       { slug: "the-team", title: "The team" },
