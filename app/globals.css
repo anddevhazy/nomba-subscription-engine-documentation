@@ -183,6 +183,16 @@ td code.inline { font-size: 0.85em; }
 .callout p + p { margin-top: 8px; }
 .callout strong { color: inherit; }
 
+/* Inline prose links (not the big card-style links, those stay unstyled) */
+main a:not(.card) {
+  color: var(--gold-dark);
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: currentColor;
+  text-underline-offset: 2px;
+}
+main a:not(.card):hover { color: var(--gold); }
+
 /* Cards */
 .card-grid { display: grid; gap: 14px; margin-bottom: 22px; }
 .card-grid.cols-2 { grid-template-columns: 1fr 1fr; }
