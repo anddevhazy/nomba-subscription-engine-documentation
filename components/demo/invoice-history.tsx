@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { MoreHorizontal } from "lucide-react";
+import { Loader2, MoreHorizontal } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -28,6 +28,15 @@ export function InvoiceHistory({ invoices, paymentMethod }: { invoices: Invoice[
   const [query, setQuery] = useState("");
   const [sortKey, setSortKey] = useState<SortKey>("dueDate");
   const [sortDir, setSortDir] = useState<1 | -1>(-1);
+  const [downloadingId, setDownloadingId] = useState<string | null>(null);
+
+  function handleDownload(key: string, run: () => void) {
+    setDownloadingId(key);
+    setTimeout(() => {
+      run();
+      setDownloadingId(null);
+    }, 500);
+  }
 
   const rows = useMemo(() => {
     const filtered = invoices.filter((inv) => inv.items.toLowerCase().includes(query.toLowerCase()));
@@ -105,10 +114,18 @@ export function InvoiceHistory({ invoices, paymentMethod }: { invoices: Invoice[
                     <MoreHorizontal />
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
-                    <DropdownMenuItem onClick={() => downloadInvoicePdf(inv)}>
+                    <DropdownMenuItem
+                      disabled={downloadingId !== null}
+                      onClick={() => handleDownload(`${inv.id}:invoice`, () => downloadInvoicePdf(inv))}
+                    >
+                      {downloadingId === `${inv.id}:invoice` && <Loader2 className="size-3.5 animate-spin" />}
                       Download invoice
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => downloadReceiptPdf(inv, paymentMethod)}>
+                    <DropdownMenuItem
+                      disabled={downloadingId !== null}
+                      onClick={() => handleDownload(`${inv.id}:receipt`, () => downloadReceiptPdf(inv, paymentMethod))}
+                    >
+                      {downloadingId === `${inv.id}:receipt` && <Loader2 className="size-3.5 animate-spin" />}
                       Download receipt
                     </DropdownMenuItem>
                   </DropdownMenuContent>

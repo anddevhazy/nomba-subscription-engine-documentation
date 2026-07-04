@@ -35,6 +35,7 @@ type ActionButtonProps = {
   disabled?: boolean;
   fullWidth?: boolean;
   variant?: VariantProps<typeof buttonVariants>["variant"];
+  size?: VariantProps<typeof buttonVariants>["size"];
   className?: string;
 };
 
@@ -45,12 +46,14 @@ export function ActionButton({
   disabled = false,
   fullWidth = false,
   variant = "default",
+  size = "default",
   className,
 }: ActionButtonProps) {
   const isBusy = phase !== "idle";
   return (
     <Button
       variant={variant}
+      size={size}
       onClick={onClick}
       disabled={disabled || isBusy}
       className={cn(fullWidth && "w-full", className)}

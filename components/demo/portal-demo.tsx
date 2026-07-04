@@ -1,6 +1,6 @@
 "use client";
 
-import { useReducer } from "react";
+import { useEffect, useReducer, useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, RotateCcw } from "lucide-react";
 import {
@@ -13,11 +13,12 @@ import {
   addDays,
   initialPortalState,
 } from "@/lib/demo/portal-data";
-import { portalReducer } from "@/lib/demo/portal-reducer";
+import { portalReducer, type PortalAction } from "@/lib/demo/portal-reducer";
 import { InvoiceHistory } from "@/components/demo/invoice-history";
 import { PaymentMethodModal } from "@/components/demo/payment-method-modal";
 import { PaymentMethodBlock } from "@/components/demo/payment-method-block";
 import { ActionButton, useActionFeedback } from "@/components/demo/action-button";
+import { PortalSkeleton, type LoadableView } from "@/components/demo/portal-skeletons";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -40,7 +41,21 @@ function BackButton({ onClick }: { onClick: () => void }) {
 export function PortalDemo() {
   const [state, dispatch] = useReducer(portalReducer, undefined, initialPortalState);
   const plan = planById(state.planId);
-  const { phase, run } = useActionFeedback(state.view);
+  const { phase, run } = useActionFeedback(`${state.view}:${state.status}`);
+  const [loadingView, setLoadingView] = useState<LoadableView | null>("home");
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoadingView(null), 600);
+    return () => clearTimeout(timer);
+  }, []);
+
+  function navigate(view: LoadableView, action: PortalAction) {
+    setLoadingView(view);
+    setTimeout(() => {
+      dispatch(action);
+      setLoadingView(null);
+    }, 550);
+  }
 
   return (
     <div className="flex min-h-screen bg-white">
@@ -76,6 +91,10 @@ export function PortalDemo() {
           </Button>
         </div>
 
+        {loadingView ? (
+          <PortalSkeleton view={loadingView} />
+        ) : (
+          <>
         {state.view === "home" && (
           <div className="space-y-10">
             <div>
@@ -83,7 +102,7 @@ export function PortalDemo() {
               {state.status !== "canceled" ? (
                 <button
                   className="flex w-full items-center justify-between rounded-lg border border-gray-200 p-5 text-left transition-colors hover:border-gray-300"
-                  onClick={() => dispatch({ type: "OPEN_SUBSCRIPTION" })}
+                  onClick={() => navigate("subscription", { type: "OPEN_SUBSCRIPTION" })}
                 >
                   <div>
                     <div className="font-semibold text-gray-900">{plan.name}</div>
@@ -105,7 +124,7 @@ export function PortalDemo() {
               ) : (
                 <button
                   className="flex w-full items-center justify-between rounded-lg border border-gray-200 p-5 text-left transition-colors hover:border-gray-300"
-                  onClick={() => dispatch({ type: "OPEN_SUBSCRIPTION" })}
+                  onClick={() => navigate("subscription", { type: "OPEN_SUBSCRIPTION" })}
                 >
                   <div>
                     <div className="font-semibold text-gray-900">{plan.name}</div>
@@ -132,7 +151,7 @@ export function PortalDemo() {
 
         {state.view === "subscription" && (
           <div>
-            <BackButton onClick={() => dispatch({ type: "GO_HOME" })} />
+            <BackButton onClick={() => navigate("home", { type: "GO_HOME" })} />
             <h2 className="text-xl font-semibold text-gray-900">{plan.name}</h2>
             {state.status === "canceled" ? (
               <>
@@ -167,7 +186,7 @@ export function PortalDemo() {
                     : `Bills monthly • ${formatNaira(plan.priceKobo)} due ${formatDate(state.periodEnd)}`}
                 </p>
                 <div className="mt-5 flex flex-wrap gap-2">
-                  <Button size="sm" className={SECONDARY_BTN} onClick={() => dispatch({ type: "OPEN_CHOOSE_PLAN" })}>
+                  <Button size="sm" className={SECONDARY_BTN} onClick={() => navigate("choose-plan", { type: "OPEN_CHOOSE_PLAN" })}>
                     Update plan
                   </Button>
                   {state.status === "active" ? (
@@ -175,9 +194,13 @@ export function PortalDemo() {
                       Pause subscription
                     </Button>
                   ) : (
-                    <Button size="sm" className={SECONDARY_BTN} onClick={() => dispatch({ type: "RESUME_SUBSCRIPTION" })}>
-                      Resume subscription
-                    </Button>
+                    <ActionButton
+                      phase={phase}
+                      size="sm"
+                      className={SECONDARY_BTN}
+                      label="Resume subscription"
+                      onClick={() => run(() => dispatch({ type: "RESUME_SUBSCRIPTION" }))}
+                    />
                   )}
                   <Button size="sm" className={DANGER_BTN} onClick={() => dispatch({ type: "OPEN_CANCEL_DEFLECT" })}>
                     Cancel plan
@@ -216,7 +239,7 @@ export function PortalDemo() {
 
         {state.view === "choose-plan" && (
           <div>
-            <BackButton onClick={() => dispatch({ type: "CANCEL_PLAN_SELECTION" })} />
+            <BackButton onClick={() => navigate("subscription", { type: "CANCEL_PLAN_SELECTION" })} />
             <h2 className="mb-5 text-xl font-semibold text-gray-900">Choose your plan</h2>
             <div className="space-y-4">
               {PLANS.slice()
@@ -242,7 +265,7 @@ export function PortalDemo() {
                     {p.id !== state.planId && (
                       <Button
                         className={cn(PRIMARY_BTN, "mt-4 w-full")}
-                        onClick={() => dispatch({ type: "SELECT_PLAN", planId: p.id })}
+                        onClick={() => navigate("confirm-plan", { type: "SELECT_PLAN", planId: p.id })}
                       >
                         Select plan
                       </Button>
@@ -260,7 +283,7 @@ export function PortalDemo() {
             const { credit, charge, total } = prorate(plan, newPlan);
             return (
               <div>
-                <BackButton onClick={() => dispatch({ type: "OPEN_CHOOSE_PLAN" })} />
+                <BackButton onClick={() => navigate("choose-plan", { type: "OPEN_CHOOSE_PLAN" })} />
                 <h2 className="mb-5 text-xl font-semibold text-gray-900">Summary</h2>
                 <div className="mb-5 rounded-lg border border-gray-200 p-5">
                   <h3 className="mb-2 text-sm font-semibold text-gray-900">Updated plan</h3>
@@ -307,7 +330,7 @@ export function PortalDemo() {
 
         {state.view === "pause-confirm" && (
           <div>
-            <BackButton onClick={() => dispatch({ type: "OPEN_SUBSCRIPTION" })} />
+            <BackButton onClick={() => navigate("subscription", { type: "OPEN_SUBSCRIPTION" })} />
             <h2 className="mb-2 text-xl font-semibold text-gray-900">Pause subscription</h2>
             <p className="mb-5 text-sm text-gray-500">
               Billing stops immediately. Your plan and history stay exactly as they are, resume any time and billing
@@ -328,7 +351,7 @@ export function PortalDemo() {
             <p className="mb-5 text-sm text-gray-500">
               {plan.name} is paused. No charges will fire until you resume.
             </p>
-            <Button className={PRIMARY_BTN} onClick={() => dispatch({ type: "GO_HOME" })}>
+            <Button className={PRIMARY_BTN} onClick={() => navigate("home", { type: "GO_HOME" })}>
               Done
             </Button>
           </div>
@@ -336,7 +359,7 @@ export function PortalDemo() {
 
         {state.view === "cancel-deflect" && (
           <div>
-            <BackButton onClick={() => dispatch({ type: "OPEN_SUBSCRIPTION" })} />
+            <BackButton onClick={() => navigate("subscription", { type: "OPEN_SUBSCRIPTION" })} />
             <h2 className="mb-2 text-xl font-semibold text-gray-900">Before you cancel</h2>
             <p className="mb-5 text-sm text-gray-500">
               Two alternatives that keep your history intact. No coupon, no discount code, just the two things a
@@ -346,7 +369,7 @@ export function PortalDemo() {
               <Button size="sm" className={SECONDARY_BTN} onClick={() => dispatch({ type: "OPEN_PAUSE_CONFIRM" })}>
                 Pause instead
               </Button>
-              <Button size="sm" className={SECONDARY_BTN} onClick={() => dispatch({ type: "OPEN_CHOOSE_PLAN" })}>
+              <Button size="sm" className={SECONDARY_BTN} onClick={() => navigate("choose-plan", { type: "OPEN_CHOOSE_PLAN" })}>
                 Downgrade instead
               </Button>
             </div>
@@ -400,7 +423,7 @@ export function PortalDemo() {
               {plan.name} ends {state.cancelAt ? formatDate(state.cancelAt) : "-"}. You still have access until then
               and can reactivate anytime.
             </p>
-            <Button className={PRIMARY_BTN} onClick={() => dispatch({ type: "GO_HOME" })}>
+            <Button className={PRIMARY_BTN} onClick={() => navigate("home", { type: "GO_HOME" })}>
               Done
             </Button>
           </div>
@@ -408,7 +431,7 @@ export function PortalDemo() {
 
         {state.view === "reactivate-confirm" && (
           <div>
-            <BackButton onClick={() => dispatch({ type: "OPEN_SUBSCRIPTION" })} />
+            <BackButton onClick={() => navigate("subscription", { type: "OPEN_SUBSCRIPTION" })} />
             <h2 className="mb-2 text-xl font-semibold text-gray-900">Reactivate plan</h2>
             <p className="mb-5 text-sm text-gray-500">
               {plan.name}. You&apos;ll be charged {formatNaira(plan.priceKobo)} on {formatDate(state.periodEnd)}.
@@ -420,6 +443,8 @@ export function PortalDemo() {
               onClick={() => run(() => dispatch({ type: "CONFIRM_REACTIVATE" }))}
             />
           </div>
+        )}
+          </>
         )}
       </main>
 
