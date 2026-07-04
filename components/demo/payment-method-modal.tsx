@@ -30,45 +30,61 @@ export function PaymentMethodModal({
 
   return (
     <Dialog open onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="rounded-2xl p-6 sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Add payment method</DialogTitle>
-          <DialogDescription>
+          <DialogTitle className="text-lg font-semibold text-gray-900">Add payment method</DialogTitle>
+          <DialogDescription className="text-sm text-gray-500">
             Tokenised through Nomba Checkout. We never see or store your raw card number.
           </DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-3">
+        <div className="space-y-4">
           <div>
-            <label className="mb-1 block text-xs font-medium text-text-secondary">Card number</label>
+            <label className="mb-1.5 block text-xs font-medium text-gray-500">Card number</label>
             <Input
               placeholder="1234 1234 1234 1234"
               value={cardNumber}
               onChange={(e) => setCardNumber(e.target.value)}
+              className="h-10 rounded-md border-gray-300 focus-visible:border-[#6C5CE0] focus-visible:ring-[#6C5CE0]/20"
             />
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="mb-1 block text-xs font-medium text-text-secondary">Expiry</label>
-              <Input placeholder="MM/YY" value={expiry} onChange={(e) => setExpiry(e.target.value)} />
+              <label className="mb-1.5 block text-xs font-medium text-gray-500">Expiry</label>
+              <Input
+                placeholder="MM/YY"
+                value={expiry}
+                onChange={(e) => setExpiry(e.target.value)}
+                className="h-10 rounded-md border-gray-300 focus-visible:border-[#6C5CE0] focus-visible:ring-[#6C5CE0]/20"
+              />
             </div>
             <div>
-              <label className="mb-1 block text-xs font-medium text-text-secondary">CVV</label>
-              <Input placeholder="123" value={cvv} onChange={(e) => setCvv(e.target.value)} />
+              <label className="mb-1.5 block text-xs font-medium text-gray-500">CVV</label>
+              <Input
+                placeholder="123"
+                value={cvv}
+                onChange={(e) => setCvv(e.target.value)}
+                className="h-10 rounded-md border-gray-300 focus-visible:border-[#6C5CE0] focus-visible:ring-[#6C5CE0]/20"
+              />
             </div>
           </div>
-          <p className="text-xs text-text-muted">
+          <p className="text-xs text-gray-400">
             By continuing, you allow this merchant to charge this card for future subscription payments.
           </p>
         </div>
 
         <div className="flex justify-end gap-2">
-          <Button variant="outline" onClick={onClose} disabled={phase !== "idle"}>
+          <Button
+            className="rounded-md border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200"
+            onClick={onClose}
+            disabled={phase !== "idle"}
+          >
             Go back
           </Button>
           <ActionButton
             phase={phase}
             disabled={!canSave}
+            className="rounded-full bg-[#6C5CE0] px-5 text-white hover:bg-[#5B4BD6]"
             label="Update"
             onClick={() => run(() => onSave({ brand: "Verve", last4, expiry }))}
           />

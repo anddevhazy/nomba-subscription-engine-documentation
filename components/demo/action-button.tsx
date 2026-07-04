@@ -35,6 +35,7 @@ type ActionButtonProps = {
   disabled?: boolean;
   fullWidth?: boolean;
   variant?: VariantProps<typeof buttonVariants>["variant"];
+  className?: string;
 };
 
 export function ActionButton({
@@ -44,6 +45,7 @@ export function ActionButton({
   disabled = false,
   fullWidth = false,
   variant = "default",
+  className,
 }: ActionButtonProps) {
   const isBusy = phase !== "idle";
   return (
@@ -51,7 +53,7 @@ export function ActionButton({
       variant={variant}
       onClick={onClick}
       disabled={disabled || isBusy}
-      className={cn(fullWidth && "w-full")}
+      className={cn(fullWidth && "w-full", className)}
     >
       {phase === "idle" && label}
       {phase === "loading" && <Loader2 className="size-4 animate-spin" />}

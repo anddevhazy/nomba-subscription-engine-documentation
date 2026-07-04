@@ -49,45 +49,58 @@ export function InvoiceHistory({ invoices, paymentMethod }: { invoices: Invoice[
   }
 
   return (
-    <div className="rounded-xl border border-border p-4">
-      <h3 className="mb-3 text-sm font-semibold">Invoice history</h3>
+    <div>
+      <h3 className="mb-3 text-xl font-semibold text-gray-900">Invoice history</h3>
       <Input
         placeholder="Search invoices"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        className="mb-3"
+        className="mb-4 h-10 rounded-md border-gray-300 focus-visible:border-[#6C5CE0] focus-visible:ring-[#6C5CE0]/20"
       />
       <Table>
         <TableHeader>
-          <TableRow>
-            <TableHead className="cursor-pointer" onClick={() => toggleSort("dueDate")}>
+          <TableRow className="border-gray-200 hover:bg-transparent">
+            <TableHead
+              className="cursor-pointer text-xs font-medium text-gray-500"
+              onClick={() => toggleSort("dueDate")}
+            >
               Due date {sortKey === "dueDate" ? (sortDir === 1 ? "↑" : "↓") : "↕"}
             </TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Invoice number</TableHead>
-            <TableHead className="cursor-pointer" onClick={() => toggleSort("amount")}>
+            <TableHead className="text-xs font-medium text-gray-500">Status</TableHead>
+            <TableHead className="text-xs font-medium text-gray-500">Invoice number</TableHead>
+            <TableHead
+              className="cursor-pointer text-xs font-medium text-gray-500"
+              onClick={() => toggleSort("amount")}
+            >
               Amount {sortKey === "amount" ? (sortDir === 1 ? "↑" : "↓") : "↕"}
             </TableHead>
-            <TableHead>Items</TableHead>
+            <TableHead className="text-xs font-medium text-gray-500">Items</TableHead>
             <TableHead />
           </TableRow>
         </TableHeader>
         <TableBody>
           {rows.map((inv) => (
-            <TableRow key={inv.id}>
-              <TableCell>{inv.dueDate ? formatDate(inv.dueDate) : "-"}</TableCell>
+            <TableRow key={inv.id} className="border-gray-100 hover:bg-gray-50">
+              <TableCell className="text-gray-700">{inv.dueDate ? formatDate(inv.dueDate) : "-"}</TableCell>
               <TableCell>
-                <Badge variant="outline" className="bg-green-light text-green-dark">
+                <Badge variant="outline" className="rounded-full border-transparent bg-green-50 text-green-700">
                   Paid
                 </Badge>
               </TableCell>
-              <TableCell>{inv.id.toUpperCase()}</TableCell>
-              <TableCell>{formatNaira(inv.amountKobo)}</TableCell>
-              <TableCell className="max-w-56 truncate">{inv.items}</TableCell>
+              <TableCell className="text-gray-700">{inv.id.toUpperCase()}</TableCell>
+              <TableCell className="text-gray-700">{formatNaira(inv.amountKobo)}</TableCell>
+              <TableCell className="max-w-56 truncate text-gray-700">{inv.items}</TableCell>
               <TableCell>
                 <DropdownMenu>
                   <DropdownMenuTrigger
-                    render={<Button variant="ghost" size="icon-sm" aria-label="Invoice actions" />}
+                    render={
+                      <Button
+                        variant="ghost"
+                        size="icon-sm"
+                        className="text-gray-400 hover:text-gray-700"
+                        aria-label="Invoice actions"
+                      />
+                    }
                   >
                     <MoreHorizontal />
                   </DropdownMenuTrigger>
@@ -104,15 +117,15 @@ export function InvoiceHistory({ invoices, paymentMethod }: { invoices: Invoice[
             </TableRow>
           ))}
           {rows.length === 0 && (
-            <TableRow>
-              <TableCell colSpan={6} className="text-center text-text-muted">
+            <TableRow className="border-gray-100">
+              <TableCell colSpan={6} className="text-center text-gray-400">
                 No invoices found
               </TableCell>
             </TableRow>
           )}
         </TableBody>
       </Table>
-      <p className="mt-3 text-xs text-text-muted">Viewing page 1</p>
+      <p className="mt-3 text-xs text-gray-400">Viewing page 1</p>
     </div>
   );
 }

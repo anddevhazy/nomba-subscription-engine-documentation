@@ -21,10 +21,17 @@ import { ActionButton, useActionFeedback } from "@/components/demo/action-button
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { cn } from "@/lib/utils";
+
+const PRIMARY_BTN = "rounded-full bg-[#6C5CE0] px-5 text-white hover:bg-[#5B4BD6]";
+const SECONDARY_BTN = "rounded-md border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200";
+const DANGER_BTN = "rounded-md border-transparent bg-red-50 text-red-600 hover:bg-red-100";
+const GRAY_PILL = "rounded-full border-transparent bg-gray-100 text-gray-600";
+const AMBER_PILL = "rounded-full border-transparent bg-amber-50 text-amber-700";
 
 function BackButton({ onClick }: { onClick: () => void }) {
   return (
-    <Button variant="ghost" size="sm" className="-ml-2.5 mb-4" onClick={onClick}>
+    <Button variant="ghost" size="sm" className="-ml-2.5 mb-5 text-gray-500 hover:text-gray-900" onClick={onClick}>
       <ArrowLeft /> Back
     </Button>
   );
@@ -36,71 +43,82 @@ export function PortalDemo() {
   const { phase, run } = useActionFeedback(state.view);
 
   return (
-    <div className="flex min-h-screen bg-background">
-      <aside className="flex w-64 shrink-0 flex-col gap-6 border-r border-border p-6">
+    <div className="flex min-h-screen bg-white">
+      <aside className="flex w-[360px] shrink-0 flex-col justify-between bg-[#4B5568] p-10 text-white">
         <div>
           <div className="flex items-center gap-2">
             <span className="text-xl">🏋️</span>
             <span className="font-semibold">Lumen</span>
-            <Badge variant="outline" className="ml-auto">
+            <Badge variant="outline" className={cn(AMBER_PILL, "ml-auto")}>
               Demo mode
             </Badge>
           </div>
-          <p className="mt-2 text-sm text-text-secondary">Book classes. Track your plan. Show up.</p>
+          <p className="mt-8 text-2xl leading-snug font-medium">Book classes. Track your plan. Show up.</p>
+          <Link href="/introduction" className="mt-8 inline-block text-sm text-white/70 hover:text-white">
+            ← Return to Lumen
+          </Link>
         </div>
-        <Link href="/introduction" className="text-sm font-medium text-gold-dark hover:underline">
-          ← Return to Lumen
-        </Link>
+        <footer className="flex items-center gap-4 text-xs text-white/50">
+          <span>Powered by Nomba</span>
+          <a href="#" className="hover:text-white/80">
+            Terms
+          </a>
+          <a href="#" className="hover:text-white/80">
+            Privacy
+          </a>
+        </footer>
       </aside>
 
-      <main className="mx-auto w-full max-w-lg flex-1 px-8 py-10">
-        <div className="mb-6 flex justify-end">
-          <Button variant="ghost" size="sm" onClick={() => dispatch({ type: "RESET" })}>
+      <main className="mx-auto w-full max-w-2xl flex-1 px-12 py-12">
+        <div className="mb-8 flex justify-end">
+          <Button variant="ghost" size="sm" className="text-gray-400 hover:text-gray-700" onClick={() => dispatch({ type: "RESET" })}>
             <RotateCcw /> Reset demo
           </Button>
         </div>
 
         {state.view === "home" && (
-          <div className="space-y-6">
-            <h2 className="text-xl font-bold tracking-tight">Active plan</h2>
-            {state.status !== "canceled" ? (
-              <button
-                className="flex w-full items-center justify-between rounded-xl border border-border p-4 text-left transition-colors hover:border-gold"
-                onClick={() => dispatch({ type: "OPEN_SUBSCRIPTION" })}
-              >
-                <div>
-                  <div className="font-semibold">{plan.name}</div>
-                  {state.status === "paused" && (
-                    <Badge variant="outline" className="mt-1">
-                      Paused
-                    </Badge>
-                  )}
-                </div>
-                <div className="text-right text-sm">
+          <div className="space-y-10">
+            <div>
+              <h2 className="mb-3 text-xl font-semibold text-gray-900">Active plan</h2>
+              {state.status !== "canceled" ? (
+                <button
+                  className="flex w-full items-center justify-between rounded-lg border border-gray-200 p-5 text-left transition-colors hover:border-gray-300"
+                  onClick={() => dispatch({ type: "OPEN_SUBSCRIPTION" })}
+                >
                   <div>
-                    {formatNaira(plan.priceKobo)} due {formatDate(state.periodEnd)}
+                    <div className="font-semibold text-gray-900">{plan.name}</div>
+                    {state.status === "paused" && (
+                      <Badge variant="outline" className={cn(GRAY_PILL, "mt-1")}>
+                        Paused
+                      </Badge>
+                    )}
                   </div>
-                  <div className="text-xs text-text-muted">
-                    {state.paymentMethod.brand} •••• {state.paymentMethod.last4}
+                  <div className="text-right text-sm text-gray-700">
+                    <div>
+                      {formatNaira(plan.priceKobo)} due {formatDate(state.periodEnd)}
+                    </div>
+                    <div className="mt-1 text-xs text-gray-400">
+                      {state.paymentMethod.brand} •••• {state.paymentMethod.last4}
+                    </div>
                   </div>
-                </div>
-              </button>
-            ) : (
-              <button
-                className="flex w-full items-center justify-between rounded-xl border border-border p-4 text-left transition-colors hover:border-gold"
-                onClick={() => dispatch({ type: "OPEN_SUBSCRIPTION" })}
-              >
-                <div>
-                  <div className="font-semibold">{plan.name}</div>
-                  <Badge variant="outline" className="mt-1 bg-amber-50 text-amber-700">
-                    Canceled
-                  </Badge>
-                </div>
-                <div className="text-right text-sm">
-                  <div>Ends {state.cancelAt ? formatDate(state.cancelAt) : "-"}</div>
-                </div>
-              </button>
-            )}
+                </button>
+              ) : (
+                <button
+                  className="flex w-full items-center justify-between rounded-lg border border-gray-200 p-5 text-left transition-colors hover:border-gray-300"
+                  onClick={() => dispatch({ type: "OPEN_SUBSCRIPTION" })}
+                >
+                  <div>
+                    <div className="font-semibold text-gray-900">{plan.name}</div>
+                    <Badge variant="outline" className={cn(AMBER_PILL, "mt-1")}>
+                      Canceled
+                    </Badge>
+                  </div>
+                  <div className="text-right text-sm text-gray-700">
+                    <div>Ends {state.cancelAt ? formatDate(state.cancelAt) : "-"}</div>
+                  </div>
+                </button>
+              )}
+            </div>
 
             <PaymentMethodBlock
               paymentMethod={state.paymentMethod}
@@ -115,69 +133,70 @@ export function PortalDemo() {
         {state.view === "subscription" && (
           <div>
             <BackButton onClick={() => dispatch({ type: "GO_HOME" })} />
-            <h2 className="text-xl font-bold tracking-tight">{plan.name}</h2>
+            <h2 className="text-xl font-semibold text-gray-900">{plan.name}</h2>
             {state.status === "canceled" ? (
               <>
-                <div className="mt-2 flex gap-2">
-                  <Badge variant="outline">Active discounts: none</Badge>
-                  <Badge variant="outline" className="bg-amber-50 text-amber-700">
+                <div className="mt-3 flex gap-2">
+                  <Badge variant="outline" className={GRAY_PILL}>
+                    Active discounts: none
+                  </Badge>
+                  <Badge variant="outline" className={AMBER_PILL}>
                     Canceled
                   </Badge>
                 </div>
-                <p className="mt-2 text-sm text-text-secondary">
+                <p className="mt-3 text-sm text-gray-500">
                   Ends {state.cancelAt ? formatDate(state.cancelAt) : "-"}
                 </p>
                 <Button
-                  variant="outline"
                   size="sm"
-                  className="mt-3"
+                  className={cn(SECONDARY_BTN, "mt-4")}
                   onClick={() => dispatch({ type: "OPEN_REACTIVATE_CONFIRM" })}
                 >
                   Reactivate plan
                 </Button>
-                <div className="mt-6 rounded-xl border border-border p-4">
-                  <h3 className="mb-2 text-sm font-semibold">Upcoming payment</h3>
-                  <p className="text-sm text-text-muted">No charges scheduled</p>
+                <div className="mt-8 rounded-lg border border-gray-200 p-5">
+                  <h3 className="mb-2 text-sm font-semibold text-gray-900">Upcoming payment</h3>
+                  <p className="text-sm text-gray-400">No charges scheduled</p>
                 </div>
               </>
             ) : (
               <>
-                <p className="mt-2 text-sm text-text-secondary">
+                <p className="mt-3 text-sm text-gray-500">
                   {state.status === "paused"
                     ? "Paused"
                     : `Bills monthly • ${formatNaira(plan.priceKobo)} due ${formatDate(state.periodEnd)}`}
                 </p>
-                <div className="mt-4 flex flex-wrap gap-2">
-                  <Button variant="outline" size="sm" onClick={() => dispatch({ type: "OPEN_CHOOSE_PLAN" })}>
+                <div className="mt-5 flex flex-wrap gap-2">
+                  <Button size="sm" className={SECONDARY_BTN} onClick={() => dispatch({ type: "OPEN_CHOOSE_PLAN" })}>
                     Update plan
                   </Button>
                   {state.status === "active" ? (
-                    <Button variant="outline" size="sm" onClick={() => dispatch({ type: "OPEN_PAUSE_CONFIRM" })}>
+                    <Button size="sm" className={SECONDARY_BTN} onClick={() => dispatch({ type: "OPEN_PAUSE_CONFIRM" })}>
                       Pause subscription
                     </Button>
                   ) : (
-                    <Button variant="outline" size="sm" onClick={() => dispatch({ type: "RESUME_SUBSCRIPTION" })}>
+                    <Button size="sm" className={SECONDARY_BTN} onClick={() => dispatch({ type: "RESUME_SUBSCRIPTION" })}>
                       Resume subscription
                     </Button>
                   )}
-                  <Button variant="destructive" size="sm" onClick={() => dispatch({ type: "OPEN_CANCEL_DEFLECT" })}>
+                  <Button size="sm" className={DANGER_BTN} onClick={() => dispatch({ type: "OPEN_CANCEL_DEFLECT" })}>
                     Cancel plan
                   </Button>
                 </div>
                 {state.status === "active" && (
-                  <div className="mt-6 rounded-xl border border-border p-4">
-                    <h3 className="mb-3 text-sm font-semibold">Upcoming payment</h3>
-                    <div className="flex justify-between text-sm">
+                  <div className="mt-8 rounded-lg border border-gray-200 p-5">
+                    <h3 className="mb-4 text-sm font-semibold text-gray-900">Upcoming payment</h3>
+                    <div className="flex justify-between text-sm text-gray-700">
                       <div>
                         <div>{plan.name}</div>
-                        <div className="text-xs text-text-muted">
+                        <div className="mt-1 text-xs text-gray-400">
                           {formatDate(state.periodStart)} to {formatDate(state.periodEnd)}
                         </div>
                       </div>
                       <div>{formatNaira(plan.priceKobo)}</div>
                     </div>
-                    <Separator className="my-3" />
-                    <div className="flex justify-between text-sm font-semibold">
+                    <Separator className="my-4" />
+                    <div className="flex justify-between text-sm font-semibold text-gray-900">
                       <span>Total</span>
                       <span>{formatNaira(plan.priceKobo)}</span>
                     </div>
@@ -185,7 +204,7 @@ export function PortalDemo() {
                 )}
               </>
             )}
-            <div className="mt-6">
+            <div className="mt-8">
               <PaymentMethodBlock
                 paymentMethod={state.paymentMethod}
                 onChangeClick={() => dispatch({ type: "OPEN_PAYMENT_MODAL" })}
@@ -198,24 +217,31 @@ export function PortalDemo() {
         {state.view === "choose-plan" && (
           <div>
             <BackButton onClick={() => dispatch({ type: "CANCEL_PLAN_SELECTION" })} />
-            <h2 className="mb-4 text-xl font-bold tracking-tight">Choose your plan</h2>
-            <div className="space-y-3">
+            <h2 className="mb-5 text-xl font-semibold text-gray-900">Choose your plan</h2>
+            <div className="space-y-4">
               {PLANS.slice()
                 .reverse()
                 .map((p) => (
                   <div
                     key={p.id}
-                    className={`rounded-xl border p-4 ${p.id === state.planId ? "border-gold bg-gold-light/40" : "border-border"}`}
+                    className={cn(
+                      "rounded-lg border p-5",
+                      p.id === state.planId ? "border-[#6C5CE0] bg-[#6C5CE0]/5" : "border-gray-200",
+                    )}
                   >
                     <div className="flex items-center justify-between">
-                      <div className="font-semibold">{p.name}</div>
-                      {p.id === state.planId && <Badge variant="outline">Current plan</Badge>}
+                      <div className="font-semibold text-gray-900">{p.name}</div>
+                      {p.id === state.planId && (
+                        <Badge variant="outline" className={GRAY_PILL}>
+                          Current plan
+                        </Badge>
+                      )}
                     </div>
-                    <p className="mt-1 text-sm text-text-secondary">{p.description}</p>
-                    <div className="mt-2 text-sm font-medium">{formatNaira(p.priceKobo)} / month</div>
+                    <p className="mt-1 text-sm text-gray-500">{p.description}</p>
+                    <div className="mt-2 text-sm font-medium text-gray-900">{formatNaira(p.priceKobo)} / month</div>
                     {p.id !== state.planId && (
                       <Button
-                        className="mt-3 w-full"
+                        className={cn(PRIMARY_BTN, "mt-4 w-full")}
                         onClick={() => dispatch({ type: "SELECT_PLAN", planId: p.id })}
                       >
                         Select plan
@@ -235,35 +261,35 @@ export function PortalDemo() {
             return (
               <div>
                 <BackButton onClick={() => dispatch({ type: "OPEN_CHOOSE_PLAN" })} />
-                <h2 className="mb-4 text-xl font-bold tracking-tight">Summary</h2>
-                <div className="mb-4 rounded-xl border border-border p-4">
-                  <h3 className="mb-2 text-sm font-semibold">Updated plan</h3>
-                  <div className="font-semibold">{newPlan.name}</div>
-                  <p className="mt-1 text-sm text-text-secondary">{newPlan.description}</p>
-                  <div className="mt-2 text-sm font-medium">{formatNaira(newPlan.priceKobo)} / month</div>
+                <h2 className="mb-5 text-xl font-semibold text-gray-900">Summary</h2>
+                <div className="mb-5 rounded-lg border border-gray-200 p-5">
+                  <h3 className="mb-2 text-sm font-semibold text-gray-900">Updated plan</h3>
+                  <div className="font-semibold text-gray-900">{newPlan.name}</div>
+                  <p className="mt-1 text-sm text-gray-500">{newPlan.description}</p>
+                  <div className="mt-2 text-sm font-medium text-gray-900">{formatNaira(newPlan.priceKobo)} / month</div>
                 </div>
-                <div className="mb-4 rounded-xl border border-border p-4">
-                  <h3 className="mb-3 text-sm font-semibold">Upcoming payment</h3>
-                  <div className="flex justify-between text-sm">
+                <div className="mb-5 rounded-lg border border-gray-200 p-5">
+                  <h3 className="mb-4 text-sm font-semibold text-gray-900">Upcoming payment</h3>
+                  <div className="flex justify-between text-sm text-gray-700">
                     <div>
                       <div>Proration for {plan.name}</div>
-                      <div className="text-xs text-text-muted">
+                      <div className="mt-1 text-xs text-gray-400">
                         {formatDate(new Date())} to {formatDate(addDays(new Date(), 15))}
                       </div>
                     </div>
                     <div>{formatNaira(credit)}</div>
                   </div>
-                  <div className="mt-2 flex justify-between text-sm">
+                  <div className="mt-3 flex justify-between text-sm text-gray-700">
                     <div>
                       <div>Proration for {newPlan.name}</div>
-                      <div className="text-xs text-text-muted">
+                      <div className="mt-1 text-xs text-gray-400">
                         {formatDate(new Date())} to {formatDate(addDays(new Date(), 15))}
                       </div>
                     </div>
                     <div>{formatNaira(charge)}</div>
                   </div>
-                  <Separator className="my-3" />
-                  <div className="flex justify-between text-sm font-semibold">
+                  <Separator className="my-4" />
+                  <div className="flex justify-between text-sm font-semibold text-gray-900">
                     <span>{total < 0 ? "Credit applied to next invoice" : "Total due now"}</span>
                     <span>{formatNaira(total)}</span>
                   </div>
@@ -271,6 +297,7 @@ export function PortalDemo() {
                 <ActionButton
                   phase={phase}
                   fullWidth
+                  className={PRIMARY_BTN}
                   label={total < 0 ? "Confirm plan change" : "Confirm and pay"}
                   onClick={() => run(() => dispatch({ type: "CONFIRM_PLAN_CHANGE" }))}
                 />
@@ -281,13 +308,14 @@ export function PortalDemo() {
         {state.view === "pause-confirm" && (
           <div>
             <BackButton onClick={() => dispatch({ type: "OPEN_SUBSCRIPTION" })} />
-            <h2 className="mb-2 text-xl font-bold tracking-tight">Pause subscription</h2>
-            <p className="mb-4 text-sm text-text-secondary">
+            <h2 className="mb-2 text-xl font-semibold text-gray-900">Pause subscription</h2>
+            <p className="mb-5 text-sm text-gray-500">
               Billing stops immediately. Your plan and history stay exactly as they are, resume any time and billing
               picks back up on the same cycle.
             </p>
             <ActionButton
               phase={phase}
+              className={PRIMARY_BTN}
               label="Pause subscription"
               onClick={() => run(() => dispatch({ type: "CONFIRM_PAUSE" }))}
             />
@@ -296,33 +324,34 @@ export function PortalDemo() {
 
         {state.view === "pause-success" && (
           <div>
-            <h2 className="mb-2 text-xl font-bold tracking-tight">Subscription paused</h2>
-            <p className="mb-4 text-sm text-text-secondary">
+            <h2 className="mb-2 text-xl font-semibold text-gray-900">Subscription paused</h2>
+            <p className="mb-5 text-sm text-gray-500">
               {plan.name} is paused. No charges will fire until you resume.
             </p>
-            <Button onClick={() => dispatch({ type: "GO_HOME" })}>Done</Button>
+            <Button className={PRIMARY_BTN} onClick={() => dispatch({ type: "GO_HOME" })}>
+              Done
+            </Button>
           </div>
         )}
 
         {state.view === "cancel-deflect" && (
           <div>
             <BackButton onClick={() => dispatch({ type: "OPEN_SUBSCRIPTION" })} />
-            <h2 className="mb-2 text-xl font-bold tracking-tight">Before you cancel</h2>
-            <p className="mb-4 text-sm text-text-secondary">
+            <h2 className="mb-2 text-xl font-semibold text-gray-900">Before you cancel</h2>
+            <p className="mb-5 text-sm text-gray-500">
               Two alternatives that keep your history intact. No coupon, no discount code, just the two things a
               subscription can actually do besides end.
             </p>
-            <div className="mb-4 flex gap-2">
-              <Button variant="outline" size="sm" onClick={() => dispatch({ type: "OPEN_PAUSE_CONFIRM" })}>
+            <div className="mb-5 flex gap-2">
+              <Button size="sm" className={SECONDARY_BTN} onClick={() => dispatch({ type: "OPEN_PAUSE_CONFIRM" })}>
                 Pause instead
               </Button>
-              <Button variant="outline" size="sm" onClick={() => dispatch({ type: "OPEN_CHOOSE_PLAN" })}>
+              <Button size="sm" className={SECONDARY_BTN} onClick={() => dispatch({ type: "OPEN_CHOOSE_PLAN" })}>
                 Downgrade instead
               </Button>
             </div>
             <Button
-              variant="destructive"
-              className="w-full"
+              className={cn(DANGER_BTN, "w-full")}
               onClick={() => dispatch({ type: "CONTINUE_TO_CANCEL" })}
             >
               Continue to cancel
@@ -333,15 +362,15 @@ export function PortalDemo() {
         {state.view === "cancel-confirm" && (
           <div>
             <BackButton onClick={() => dispatch({ type: "OPEN_CANCEL_DEFLECT" })} />
-            <h2 className="mb-2 text-xl font-bold tracking-tight">Cancel {plan.name}</h2>
-            <p className="mb-4 text-sm text-text-secondary">
+            <h2 className="mb-2 text-xl font-semibold text-gray-900">Cancel {plan.name}</h2>
+            <p className="mb-5 text-sm text-gray-500">
               You&apos;ll keep access until {formatDate(state.periodEnd)}.
             </p>
-            <label className="mb-1 block text-xs font-medium text-text-secondary">
+            <label className="mb-1.5 block text-xs font-medium text-gray-500">
               Why are you cancelling? (optional)
             </label>
             <select
-              className="mb-4 h-8 w-full rounded-lg border border-input bg-transparent px-2.5 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+              className="mb-5 h-10 w-full rounded-md border border-gray-300 bg-transparent px-3 text-sm text-gray-900 outline-none focus-visible:border-[#6C5CE0] focus-visible:ring-3 focus-visible:ring-[#6C5CE0]/20"
               value={state.cancelReason ?? ""}
               onChange={(e) => dispatch({ type: "SET_CANCEL_REASON", reason: e.target.value as never })}
             >
@@ -357,7 +386,7 @@ export function PortalDemo() {
             <ActionButton
               phase={phase}
               fullWidth
-              variant="destructive"
+              className={DANGER_BTN}
               label="Cancel plan"
               onClick={() => run(() => dispatch({ type: "CONFIRM_CANCEL" }))}
             />
@@ -366,39 +395,32 @@ export function PortalDemo() {
 
         {state.view === "cancel-success" && (
           <div>
-            <h2 className="mb-2 text-xl font-bold tracking-tight">Plan canceled</h2>
-            <p className="mb-4 text-sm text-text-secondary">
+            <h2 className="mb-2 text-xl font-semibold text-gray-900">Plan canceled</h2>
+            <p className="mb-5 text-sm text-gray-500">
               {plan.name} ends {state.cancelAt ? formatDate(state.cancelAt) : "-"}. You still have access until then
               and can reactivate anytime.
             </p>
-            <Button onClick={() => dispatch({ type: "GO_HOME" })}>Done</Button>
+            <Button className={PRIMARY_BTN} onClick={() => dispatch({ type: "GO_HOME" })}>
+              Done
+            </Button>
           </div>
         )}
 
         {state.view === "reactivate-confirm" && (
           <div>
             <BackButton onClick={() => dispatch({ type: "OPEN_SUBSCRIPTION" })} />
-            <h2 className="mb-2 text-xl font-bold tracking-tight">Reactivate plan</h2>
-            <p className="mb-4 text-sm text-text-secondary">
+            <h2 className="mb-2 text-xl font-semibold text-gray-900">Reactivate plan</h2>
+            <p className="mb-5 text-sm text-gray-500">
               {plan.name}. You&apos;ll be charged {formatNaira(plan.priceKobo)} on {formatDate(state.periodEnd)}.
             </p>
             <ActionButton
               phase={phase}
+              className={PRIMARY_BTN}
               label="Reactivate plan"
               onClick={() => run(() => dispatch({ type: "CONFIRM_REACTIVATE" }))}
             />
           </div>
         )}
-
-        <footer className="mt-16 flex items-center gap-4 border-t border-border pt-4 text-xs text-text-muted">
-          <span>Powered by Nomba</span>
-          <a href="#" className="hover:text-foreground">
-            Terms
-          </a>
-          <a href="#" className="hover:text-foreground">
-            Privacy
-          </a>
-        </footer>
       </main>
 
       {state.showPaymentModal && (
