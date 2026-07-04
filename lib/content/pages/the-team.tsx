@@ -45,12 +45,13 @@ export default function TheTeam() {
       <h2 id="h-builders">The builders</h2>
       <CardGrid cols={2}>
         <Card icon="🧭" title="Benjamin Nkem - Team lead & Software Engineer">
-          Owns the subscription lifecycle and the event store, the two pieces
-          everything else is built on top of.
+          Owns the subscription lifecycle, the event store, and the backend as a
+          whole, all the pieces everything else is built on top of and the
+          merchant dashboard.
         </Card>
         <Card icon="💳" title="Ayowole Sodipe - Software Engineer">
-          Owns the Nomba integration, Checkout, Tokenised Cards, Charge, and
-          Transfers, and the reconciliation logic that sits on top of it.
+          Owns the frontend and the Nomba integration, Customer Portal,
+          Documentation and API Reference.
         </Card>
       </CardGrid>
 
@@ -59,10 +60,13 @@ export default function TheTeam() {
         Most subscription tooling available to a Nigerian business is either a
         raw set of payment primitives, tokenised cards, a charge endpoint, that
         still leaves the billing logic, the recovery logic, and the reporting to
-        be built from scratch, or a subscription platform built for a market
-        where a customer is more reliably reached by email than by WhatsApp,
-        SMS, or a USSD code. Neither fits a business collecting recurring naira
-        payments from customers who live on their phones, not their inboxes.
+        be built from scratch.
+      </p>
+      <p>
+        Or a subscription platform built for a market where a customer is more
+        reliably reached by email than by WhatsApp, SMS, or a USSD code.
+        Neither fits a business collecting recurring naira payments from
+        customers who live on their phones, not their inboxes.
       </p>
       <p>
         Nomba Subscription Engine is the version built for that reality, the
