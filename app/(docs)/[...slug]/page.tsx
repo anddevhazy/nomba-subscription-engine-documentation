@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { allSlugs } from "@/lib/nav";
 import { getPageModule } from "@/lib/content/registry";
 import { stubMeta, StubBody } from "@/lib/content/stub";
-import { Toc } from "@/components/docs/toc";
+import { Toc } from "@/components/docs/Toc";
 
 type Params = { slug: string[] };
 
