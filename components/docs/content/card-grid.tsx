@@ -41,7 +41,7 @@ export function CardLink({
   return (
     <Link
       href={href}
-      className={cn(cardBase, "hover:border-gold hover:shadow-[0_2px_12px_rgba(201,151,31,0.1)]")}
+      className={cn(cardBase, "card", "hover:border-gold hover:shadow-[0_2px_12px_rgba(201,151,31,0.1)]")}
     >
       <div className={cardIconBase}>{icon}</div>
       <div className={cardTitleBase}>{title}</div>
