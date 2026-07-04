@@ -38,58 +38,60 @@ export default function SubscriptionLifecycle() {
       </p>
 
       <table>
-        <tr>
-          <th>State</th>
-          <th>What it means</th>
-        </tr>
-        <tr>
-          <td>
-            <code className="inline">pending</code>
-          </td>
-          <td>Created, not yet activated, usually waiting on card tokenisation to complete.</td>
-        </tr>
-        <tr>
-          <td>
-            <code className="inline">trialing</code>
-          </td>
-          <td>Inside the plan&apos;s trial window. No charge has fired yet.</td>
-        </tr>
-        <tr>
-          <td>
-            <code className="inline">active</code>
-          </td>
-          <td>Billing normally. The healthy state.</td>
-        </tr>
-        <tr>
-          <td>
-            <code className="inline">past_due</code>
-          </td>
-          <td>A charge just failed. The clock on the grace period starts here.</td>
-        </tr>
-        <tr>
-          <td>
-            <code className="inline">grace_period</code>
-          </td>
-          <td>Recovery is actively in progress, messages have gone out, retries are expected.</td>
-        </tr>
-        <tr>
-          <td>
-            <code className="inline">suspended</code>
-          </td>
-          <td>The grace period lapsed without recovery. Access is paused, but the subscription record and history are intact.</td>
-        </tr>
-        <tr>
-          <td>
-            <code className="inline">cancelled</code>
-          </td>
-          <td>Ended, by the subscriber or the merchant. Terminal.</td>
-        </tr>
-        <tr>
-          <td>
-            <code className="inline">expired</code>
-          </td>
-          <td>A fixed-term subscription reached its natural end. Terminal.</td>
-        </tr>
+        <tbody>
+          <tr>
+            <th>State</th>
+            <th>What it means</th>
+          </tr>
+          <tr>
+            <td>
+              <code className="inline">pending</code>
+            </td>
+            <td>Created, not yet activated, usually waiting on card tokenisation to complete.</td>
+          </tr>
+          <tr>
+            <td>
+              <code className="inline">trialing</code>
+            </td>
+            <td>Inside the plan&apos;s trial window. No charge has fired yet.</td>
+          </tr>
+          <tr>
+            <td>
+              <code className="inline">active</code>
+            </td>
+            <td>Billing normally. The healthy state.</td>
+          </tr>
+          <tr>
+            <td>
+              <code className="inline">past_due</code>
+            </td>
+            <td>A charge just failed. The clock on the grace period starts here.</td>
+          </tr>
+          <tr>
+            <td>
+              <code className="inline">grace_period</code>
+            </td>
+            <td>Recovery is actively in progress, messages have gone out, retries are expected.</td>
+          </tr>
+          <tr>
+            <td>
+              <code className="inline">suspended</code>
+            </td>
+            <td>The grace period lapsed without recovery. Access is paused, but the subscription record and history are intact.</td>
+          </tr>
+          <tr>
+            <td>
+              <code className="inline">cancelled</code>
+            </td>
+            <td>Ended, by the subscriber or the merchant. Terminal.</td>
+          </tr>
+          <tr>
+            <td>
+              <code className="inline">expired</code>
+            </td>
+            <td>A fixed-term subscription reached its natural end. Terminal.</td>
+          </tr>
+        </tbody>
       </table>
 
       <h2 id="h-why-split">Why past_due and grace_period are separate states</h2>

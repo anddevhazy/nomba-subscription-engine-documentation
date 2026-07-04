@@ -22,52 +22,56 @@ export default function RateLimits() {
 
       <h2 id="h-numbers">Indicative limits</h2>
       <table>
-        <tr>
-          <th>Resource</th>
-          <th>Per-key limit</th>
-        </tr>
-        <tr>
-          <td>Read endpoints (subscriptions, customers, invoices, analytics)</td>
-          <td>100 requests/second sustained, burst to 200 for 5 seconds</td>
-        </tr>
-        <tr>
-          <td>Write endpoints (create/update subscription, create plan)</td>
-          <td>30 requests/second sustained, burst to 60</td>
-        </tr>
-        <tr>
-          <td>Webhook subscription management</td>
-          <td>10 requests/second sustained</td>
-        </tr>
-        <tr>
-          <td>Inbound webhook delivery to you</td>
-          <td>Unlimited, you&apos;re receiving, not requesting</td>
-        </tr>
+        <tbody>
+          <tr>
+            <th>Resource</th>
+            <th>Per-key limit</th>
+          </tr>
+          <tr>
+            <td>Read endpoints (subscriptions, customers, invoices, analytics)</td>
+            <td>100 requests/second sustained, burst to 200 for 5 seconds</td>
+          </tr>
+          <tr>
+            <td>Write endpoints (create/update subscription, create plan)</td>
+            <td>30 requests/second sustained, burst to 60</td>
+          </tr>
+          <tr>
+            <td>Webhook subscription management</td>
+            <td>10 requests/second sustained</td>
+          </tr>
+          <tr>
+            <td>Inbound webhook delivery to you</td>
+            <td>Unlimited, you&apos;re receiving, not requesting</td>
+          </tr>
+        </tbody>
       </table>
 
       <h2 id="h-headers">Headers on every response</h2>
       <table>
-        <tr>
-          <th>Header</th>
-          <th>Meaning</th>
-        </tr>
-        <tr>
-          <td>
-            <code className="inline">X-RateLimit-Limit</code>
-          </td>
-          <td>The current limit for this resource.</td>
-        </tr>
-        <tr>
-          <td>
-            <code className="inline">X-RateLimit-Remaining</code>
-          </td>
-          <td>Requests left in the current window.</td>
-        </tr>
-        <tr>
-          <td>
-            <code className="inline">X-RateLimit-Reset</code>
-          </td>
-          <td>Unix timestamp when the bucket refills.</td>
-        </tr>
+        <tbody>
+          <tr>
+            <th>Header</th>
+            <th>Meaning</th>
+          </tr>
+          <tr>
+            <td>
+              <code className="inline">X-RateLimit-Limit</code>
+            </td>
+            <td>The current limit for this resource.</td>
+          </tr>
+          <tr>
+            <td>
+              <code className="inline">X-RateLimit-Remaining</code>
+            </td>
+            <td>Requests left in the current window.</td>
+          </tr>
+          <tr>
+            <td>
+              <code className="inline">X-RateLimit-Reset</code>
+            </td>
+            <td>Unix timestamp when the bucket refills.</td>
+          </tr>
+        </tbody>
       </table>
       <p>Exceeding the limit returns:</p>
 

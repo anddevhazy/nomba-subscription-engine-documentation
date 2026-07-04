@@ -33,28 +33,30 @@ export default function ChannelsWhatsapp() {
 
       <h2 id="h-actions">The three actions</h2>
       <table>
-        <tr>
-          <th>Action</th>
-          <th>What fires</th>
-        </tr>
-        <tr>
-          <td>
-            <strong>Retry Now</strong>
-          </td>
-          <td>Immediately re-attempts the charge against the card on file.</td>
-        </tr>
-        <tr>
-          <td>
-            <strong>Pause Subscription</strong>
-          </td>
-          <td>Moves the subscription to paused, billing stops, access can resume whenever the subscriber&apos;s ready.</td>
-        </tr>
-        <tr>
-          <td>
-            <strong>Downgrade Plan</strong>
-          </td>
-          <td>Switches to a lower-priced plan the merchant has configured as a downgrade path, and retries at the new price.</td>
-        </tr>
+        <tbody>
+          <tr>
+            <th>Action</th>
+            <th>What fires</th>
+          </tr>
+          <tr>
+            <td>
+              <strong>Retry Now</strong>
+            </td>
+            <td>Immediately re-attempts the charge against the card on file.</td>
+          </tr>
+          <tr>
+            <td>
+              <strong>Pause Subscription</strong>
+            </td>
+            <td>Moves the subscription to paused, billing stops, access can resume whenever the subscriber&apos;s ready.</td>
+          </tr>
+          <tr>
+            <td>
+              <strong>Downgrade Plan</strong>
+            </td>
+            <td>Switches to a lower-priced plan the merchant has configured as a downgrade path, and retries at the new price.</td>
+          </tr>
+        </tbody>
       </table>
 
       <h2 id="h-scope">What WhatsApp is, and isn&apos;t, used for</h2>

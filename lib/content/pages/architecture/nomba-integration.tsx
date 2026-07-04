@@ -19,34 +19,36 @@ export default function NombaIntegration() {
 
       <h2 id="h-surfaces">The four surfaces</h2>
       <table>
-        <tr>
-          <th>Surface</th>
-          <th>Used for</th>
-        </tr>
-        <tr>
-          <td>
-            <strong>Checkout API</strong>
-          </td>
-          <td>Initial card tokenisation at subscription signup, and portal-driven payment-method updates.</td>
-        </tr>
-        <tr>
-          <td>
-            <strong>Tokenised Cards</strong>
-          </td>
-          <td>The stored reference reused for every recurring charge, never the raw card number.</td>
-        </tr>
-        <tr>
-          <td>
-            <strong>Charge API</strong>
-          </td>
-          <td>Executes every billing-cycle charge attempt and every dunning retry.</td>
-        </tr>
-        <tr>
-          <td>
-            <strong>Transfers API</strong>
-          </td>
-          <td>Payout-side handling for platform fee splits, where applicable.</td>
-        </tr>
+        <tbody>
+          <tr>
+            <th>Surface</th>
+            <th>Used for</th>
+          </tr>
+          <tr>
+            <td>
+              <strong>Checkout API</strong>
+            </td>
+            <td>Initial card tokenisation at subscription signup, and portal-driven payment-method updates.</td>
+          </tr>
+          <tr>
+            <td>
+              <strong>Tokenised Cards</strong>
+            </td>
+            <td>The stored reference reused for every recurring charge, never the raw card number.</td>
+          </tr>
+          <tr>
+            <td>
+              <strong>Charge API</strong>
+            </td>
+            <td>Executes every billing-cycle charge attempt and every dunning retry.</td>
+          </tr>
+          <tr>
+            <td>
+              <strong>Transfers API</strong>
+            </td>
+            <td>Payout-side handling for platform fee splits, where applicable.</td>
+          </tr>
+        </tbody>
       </table>
 
       <h2 id="h-inbound">Inbound webhooks from Nomba</h2>

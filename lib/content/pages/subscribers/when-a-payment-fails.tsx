@@ -50,28 +50,30 @@ export default function WhenAPaymentFails() {
 
       <h2 id="h-options">Your three options on a failed charge</h2>
       <table>
-        <tr>
-          <th>Option</th>
-          <th>What it does</th>
-        </tr>
-        <tr>
-          <td>
-            <strong>Retry Now</strong>
-          </td>
-          <td>Attempts the same charge again immediately, the right choice if the card is fine and it was a temporary decline.</td>
-        </tr>
-        <tr>
-          <td>
-            <strong>Pause Subscription</strong>
-          </td>
-          <td>Stops billing without cancelling. Good if you need a break, not a card fix.</td>
-        </tr>
-        <tr>
-          <td>
-            <strong>Downgrade Plan</strong>
-          </td>
-          <td>Switches to a cheaper plan if the price, not the card, is the actual issue.</td>
-        </tr>
+        <tbody>
+          <tr>
+            <th>Option</th>
+            <th>What it does</th>
+          </tr>
+          <tr>
+            <td>
+              <strong>Retry Now</strong>
+            </td>
+            <td>Attempts the same charge again immediately, the right choice if the card is fine and it was a temporary decline.</td>
+          </tr>
+          <tr>
+            <td>
+              <strong>Pause Subscription</strong>
+            </td>
+            <td>Stops billing without cancelling. Good if you need a break, not a card fix.</td>
+          </tr>
+          <tr>
+            <td>
+              <strong>Downgrade Plan</strong>
+            </td>
+            <td>Switches to a cheaper plan if the price, not the card, is the actual issue.</td>
+          </tr>
+        </tbody>
       </table>
 
       <h2 id="h-noresponse">If you don&apos;t respond</h2>

@@ -36,46 +36,48 @@ export default function MerchantsAnalytics() {
 
       <h2 id="h-endpoints">Where to read it</h2>
       <table>
-        <tr>
-          <th>Endpoint</th>
-          <th>Returns</th>
-        </tr>
-        <tr>
-          <td>
-            <code className="inline">GET /analytics/metrics</code>
-          </td>
-          <td>The core snapshot, MRR, ARR, churn, recovery, ARPU, subscription counts.</td>
-        </tr>
-        <tr>
-          <td>
-            <code className="inline">GET /analytics/overview</code>
-          </td>
-          <td>The full dashboard payload, metrics plus payments, customers, dunning, webhooks, and plan breakdown.</td>
-        </tr>
-        <tr>
-          <td>
-            <code className="inline">GET /analytics/revenue-trend</code>
-          </td>
-          <td>Revenue over time, at day, week, or month granularity.</td>
-        </tr>
-        <tr>
-          <td>
-            <code className="inline">GET /analytics/plans</code>
-          </td>
-          <td>MRR and subscriber count per plan, which tier is actually carrying the business.</td>
-        </tr>
-        <tr>
-          <td>
-            <code className="inline">GET /analytics/dunning</code>
-          </td>
-          <td>Past-due volume, grace-period volume, recovery rate, by channel.</td>
-        </tr>
-        <tr>
-          <td>
-            <code className="inline">GET /analytics/activity</code>
-          </td>
-          <td>A paginated feed of recent events, sourced straight from the event store.</td>
-        </tr>
+        <tbody>
+          <tr>
+            <th>Endpoint</th>
+            <th>Returns</th>
+          </tr>
+          <tr>
+            <td>
+              <code className="inline">GET /analytics/metrics</code>
+            </td>
+            <td>The core snapshot, MRR, ARR, churn, recovery, ARPU, subscription counts.</td>
+          </tr>
+          <tr>
+            <td>
+              <code className="inline">GET /analytics/overview</code>
+            </td>
+            <td>The full dashboard payload, metrics plus payments, customers, dunning, webhooks, and plan breakdown.</td>
+          </tr>
+          <tr>
+            <td>
+              <code className="inline">GET /analytics/revenue-trend</code>
+            </td>
+            <td>Revenue over time, at day, week, or month granularity.</td>
+          </tr>
+          <tr>
+            <td>
+              <code className="inline">GET /analytics/plans</code>
+            </td>
+            <td>MRR and subscriber count per plan, which tier is actually carrying the business.</td>
+          </tr>
+          <tr>
+            <td>
+              <code className="inline">GET /analytics/dunning</code>
+            </td>
+            <td>Past-due volume, grace-period volume, recovery rate, by channel.</td>
+          </tr>
+          <tr>
+            <td>
+              <code className="inline">GET /analytics/activity</code>
+            </td>
+            <td>A paginated feed of recent events, sourced straight from the event store.</td>
+          </tr>
+        </tbody>
       </table>
 
       <h2 id="h-why-onread">Why this is computed on demand, not batched</h2>

@@ -29,40 +29,42 @@ export default function DeepLinksAndFlows() {
 
       <h2 id="h-types">Flow types</h2>
       <table>
-        <tr>
-          <th>Type</th>
-          <th>What it does</th>
-        </tr>
-        <tr>
-          <td>
-            <code className="inline">update_payment_method</code>
-          </td>
-          <td>Land the subscriber straight on the card-update screen. The exact link our dunning messages send on a failed charge.</td>
-        </tr>
-        <tr>
-          <td>
-            <code className="inline">pause_subscription</code>
-          </td>
-          <td>One tap pauses, no navigation required.</td>
-        </tr>
-        <tr>
-          <td>
-            <code className="inline">resume_subscription</code>
-          </td>
-          <td>For a subscriber who paused and is ready to come back.</td>
-        </tr>
-        <tr>
-          <td>
-            <code className="inline">cancel_subscription</code>
-          </td>
-          <td>Opens straight to cancellation, including the reason prompt and Pause/Downgrade offer if you&apos;ve enabled them.</td>
-        </tr>
-        <tr>
-          <td>
-            <code className="inline">change_plan</code>
-          </td>
-          <td>Opens the plan-switch screen, respecting whatever plan restrictions you&apos;ve configured.</td>
-        </tr>
+        <tbody>
+          <tr>
+            <th>Type</th>
+            <th>What it does</th>
+          </tr>
+          <tr>
+            <td>
+              <code className="inline">update_payment_method</code>
+            </td>
+            <td>Land the subscriber straight on the card-update screen. The exact link our dunning messages send on a failed charge.</td>
+          </tr>
+          <tr>
+            <td>
+              <code className="inline">pause_subscription</code>
+            </td>
+            <td>One tap pauses, no navigation required.</td>
+          </tr>
+          <tr>
+            <td>
+              <code className="inline">resume_subscription</code>
+            </td>
+            <td>For a subscriber who paused and is ready to come back.</td>
+          </tr>
+          <tr>
+            <td>
+              <code className="inline">cancel_subscription</code>
+            </td>
+            <td>Opens straight to cancellation, including the reason prompt and Pause/Downgrade offer if you&apos;ve enabled them.</td>
+          </tr>
+          <tr>
+            <td>
+              <code className="inline">change_plan</code>
+            </td>
+            <td>Opens the plan-switch screen, respecting whatever plan restrictions you&apos;ve configured.</td>
+          </tr>
+        </tbody>
       </table>
 
       <h2 id="h-create">Creating a flow</h2>

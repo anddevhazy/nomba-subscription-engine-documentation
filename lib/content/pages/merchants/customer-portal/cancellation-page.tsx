@@ -38,23 +38,25 @@ export default function CancellationPage() {
       <h2 id="h-find">Finding the reasons your subscribers give</h2>
       <p>Two places, both already covered elsewhere in these docs:</p>
       <table>
-        <tr>
-          <th>Where</th>
-          <th>What you see</th>
-        </tr>
-        <tr>
-          <td>Merchant dashboard</td>
-          <td>The subscription&apos;s detail page shows the reason alongside its cancellation date.</td>
-        </tr>
-        <tr>
-          <td>
-            <code className="inline">subscription.cancelled</code> webhook
-          </td>
-          <td>
-            The event payload carries a <code className="inline">cancellationReason</code> field when reason capture
-            is on. See <a href="/api-reference/webhook-events">Webhook events</a>.
-          </td>
-        </tr>
+        <tbody>
+          <tr>
+            <th>Where</th>
+            <th>What you see</th>
+          </tr>
+          <tr>
+            <td>Merchant dashboard</td>
+            <td>The subscription&apos;s detail page shows the reason alongside its cancellation date.</td>
+          </tr>
+          <tr>
+            <td>
+              <code className="inline">subscription.cancelled</code> webhook
+            </td>
+            <td>
+              The event payload carries a <code className="inline">cancellationReason</code> field when reason capture
+              is on. See <a href="/api-reference/webhook-events">Webhook events</a>.
+            </td>
+          </tr>
+        </tbody>
       </table>
 
       <h2 id="h-offer">Offer Pause or Downgrade first</h2>

@@ -109,26 +109,28 @@ export default function ApiSetup() {
         no separate webhook system for the portal. The subset that matters here:
       </p>
       <table>
-        <tr>
-          <th>Event</th>
-          <th>Fires when</th>
-        </tr>
-        <tr>
-          <td>
-            <code className="inline">subscription.updated</code>
-          </td>
-          <td>A subscriber pauses, resumes, or changes plan from the portal.</td>
-        </tr>
-        <tr>
-          <td>
-            <code className="inline">subscription.cancelled</code>
-          </td>
-          <td>
-            A subscriber cancels, with a <code className="inline">cancellationReason</code> field if you&apos;ve
-            enabled reason capture, see{" "}
-            <a href="/merchants/customer-portal/cancellation-page">Add a cancellation page</a>.
-          </td>
-        </tr>
+        <tbody>
+          <tr>
+            <th>Event</th>
+            <th>Fires when</th>
+          </tr>
+          <tr>
+            <td>
+              <code className="inline">subscription.updated</code>
+            </td>
+            <td>A subscriber pauses, resumes, or changes plan from the portal.</td>
+          </tr>
+          <tr>
+            <td>
+              <code className="inline">subscription.cancelled</code>
+            </td>
+            <td>
+              A subscriber cancels, with a <code className="inline">cancellationReason</code> field if you&apos;ve
+              enabled reason capture, see{" "}
+              <a href="/merchants/customer-portal/cancellation-page">Add a cancellation page</a>.
+            </td>
+          </tr>
+        </tbody>
       </table>
       <p>
         There&apos;s no dedicated event for a payment-method update; the next successful charge against the new card

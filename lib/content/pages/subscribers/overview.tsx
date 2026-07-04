@@ -43,43 +43,45 @@ export default function SubscribersOverview() {
 
       <h2 id="h-channels">How you reach your subscription</h2>
       <table>
-        <tr>
-          <th>Channel</th>
-          <th>What you can do</th>
-        </tr>
-        <tr>
-          <td>
-            <strong>Web portal</strong>
-          </td>
-          <td>Full self-service: view, pause, resume, cancel, update payment method.</td>
-        </tr>
-        <tr>
-          <td>
-            <strong>Email</strong>
-          </td>
-          <td>
-            A written record of every failed charge, with Retry Now, Pause, or Downgrade as links. Always sent,
-            whatever else fires.
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <strong>WhatsApp</strong>
-          </td>
-          <td>Act on a failed-charge message directly, Retry Now, Pause, or Downgrade.</td>
-        </tr>
-        <tr>
-          <td>
-            <strong>SMS</strong>
-          </td>
-          <td>Reply YES to retry a failed charge. No app required.</td>
-        </tr>
-        <tr>
-          <td>
-            <strong>USSD</strong>
-          </td>
-          <td>Check status, pause, or cancel by dialling a short code, no data connection needed.</td>
-        </tr>
+        <tbody>
+          <tr>
+            <th>Channel</th>
+            <th>What you can do</th>
+          </tr>
+          <tr>
+            <td>
+              <strong>Web portal</strong>
+            </td>
+            <td>Full self-service: view, pause, resume, cancel, update payment method.</td>
+          </tr>
+          <tr>
+            <td>
+              <strong>Email</strong>
+            </td>
+            <td>
+              A written record of every failed charge, with Retry Now, Pause, or Downgrade as links. Always sent,
+              whatever else fires.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <strong>WhatsApp</strong>
+            </td>
+            <td>Act on a failed-charge message directly, Retry Now, Pause, or Downgrade.</td>
+          </tr>
+          <tr>
+            <td>
+              <strong>SMS</strong>
+            </td>
+            <td>Reply YES to retry a failed charge. No app required.</td>
+          </tr>
+          <tr>
+            <td>
+              <strong>USSD</strong>
+            </td>
+            <td>Check status, pause, or cancel by dialling a short code, no data connection needed.</td>
+          </tr>
+        </tbody>
       </table>
 
       <h2 id="h-start">Where to start</h2>

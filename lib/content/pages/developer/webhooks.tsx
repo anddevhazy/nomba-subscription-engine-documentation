@@ -21,52 +21,54 @@ export default function DeveloperWebhooks() {
 
       <h2 id="h-events">Event types</h2>
       <table>
-        <tr>
-          <th>Event</th>
-          <th>Fires when</th>
-        </tr>
-        <tr>
-          <td>
-            <code className="inline">subscription.created</code>
-          </td>
-          <td>A new subscription is created.</td>
-        </tr>
-        <tr>
-          <td>
-            <code className="inline">subscription.updated</code>
-          </td>
-          <td>A plan change, pause, or resume.</td>
-        </tr>
-        <tr>
-          <td>
-            <code className="inline">subscription.cancelled</code>
-          </td>
-          <td>A subscription is cancelled.</td>
-        </tr>
-        <tr>
-          <td>
-            <code className="inline">subscription.renewed</code>
-          </td>
-          <td>A billing cycle completes successfully.</td>
-        </tr>
-        <tr>
-          <td>
-            <code className="inline">invoice.paid</code>
-          </td>
-          <td>An invoice is settled in full.</td>
-        </tr>
-        <tr>
-          <td>
-            <code className="inline">payment.failed</code>
-          </td>
-          <td>A billing-cycle charge attempt fails.</td>
-        </tr>
-        <tr>
-          <td>
-            <code className="inline">payment.recovered</code>
-          </td>
-          <td>A previously failed charge succeeds on retry.</td>
-        </tr>
+        <tbody>
+          <tr>
+            <th>Event</th>
+            <th>Fires when</th>
+          </tr>
+          <tr>
+            <td>
+              <code className="inline">subscription.created</code>
+            </td>
+            <td>A new subscription is created.</td>
+          </tr>
+          <tr>
+            <td>
+              <code className="inline">subscription.updated</code>
+            </td>
+            <td>A plan change, pause, or resume.</td>
+          </tr>
+          <tr>
+            <td>
+              <code className="inline">subscription.cancelled</code>
+            </td>
+            <td>A subscription is cancelled.</td>
+          </tr>
+          <tr>
+            <td>
+              <code className="inline">subscription.renewed</code>
+            </td>
+            <td>A billing cycle completes successfully.</td>
+          </tr>
+          <tr>
+            <td>
+              <code className="inline">invoice.paid</code>
+            </td>
+            <td>An invoice is settled in full.</td>
+          </tr>
+          <tr>
+            <td>
+              <code className="inline">payment.failed</code>
+            </td>
+            <td>A billing-cycle charge attempt fails.</td>
+          </tr>
+          <tr>
+            <td>
+              <code className="inline">payment.recovered</code>
+            </td>
+            <td>A previously failed charge succeeds on retry.</td>
+          </tr>
+        </tbody>
       </table>
 
       <h2 id="h-subscribe">Subscribing</h2>
@@ -115,30 +117,32 @@ export default function DeveloperWebhooks() {
         if ordering matters to your handler. On a non-2xx response, we retry with exponential backoff:
       </p>
       <table>
-        <tr>
-          <th>Attempt</th>
-          <th>Delay since last</th>
-        </tr>
-        <tr>
-          <td>1</td>
-          <td>30 seconds</td>
-        </tr>
-        <tr>
-          <td>2</td>
-          <td>5 minutes</td>
-        </tr>
-        <tr>
-          <td>3</td>
-          <td>30 minutes</td>
-        </tr>
-        <tr>
-          <td>4</td>
-          <td>2 hours</td>
-        </tr>
-        <tr>
-          <td>5+</td>
-          <td>12-24 hours, up to 14 days total</td>
-        </tr>
+        <tbody>
+          <tr>
+            <th>Attempt</th>
+            <th>Delay since last</th>
+          </tr>
+          <tr>
+            <td>1</td>
+            <td>30 seconds</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>5 minutes</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>30 minutes</td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>2 hours</td>
+          </tr>
+          <tr>
+            <td>5+</td>
+            <td>12-24 hours, up to 14 days total</td>
+          </tr>
+        </tbody>
       </table>
       <p>
         After 14 days of failed delivery, an event moves to a dead-letter state, visible in your dashboard, and

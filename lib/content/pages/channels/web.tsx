@@ -33,29 +33,31 @@ export default function ChannelsWeb() {
 
       <h2 id="h-auth">How sign-in differs across them</h2>
       <table>
-        <tr>
-          <th>App</th>
-          <th>Auth</th>
-        </tr>
-        <tr>
-          <td>Merchant dashboard</td>
-          <td>
-            Email + password, JWT access and refresh tokens. Scoped to a merchant and a role (Owner or Team Member).
-          </td>
-        </tr>
-        <tr>
-          <td>Customer portal</td>
-          <td>
-            Phone or email plus a one-time code. Scoped to a single subscriber identity, with no path into merchant
-            data.
-          </td>
-        </tr>
-        <tr>
-          <td>API</td>
-          <td>
-            Bearer key, scoped to a merchant. See <a href="/developer/authentication">Authentication</a>.
-          </td>
-        </tr>
+        <tbody>
+          <tr>
+            <th>App</th>
+            <th>Auth</th>
+          </tr>
+          <tr>
+            <td>Merchant dashboard</td>
+            <td>
+              Email + password, JWT access and refresh tokens. Scoped to a merchant and a role (Owner or Team Member).
+            </td>
+          </tr>
+          <tr>
+            <td>Customer portal</td>
+            <td>
+              Phone or email plus a one-time code. Scoped to a single subscriber identity, with no path into merchant
+              data.
+            </td>
+          </tr>
+          <tr>
+            <td>API</td>
+            <td>
+              Bearer key, scoped to a merchant. See <a href="/developer/authentication">Authentication</a>.
+            </td>
+          </tr>
+        </tbody>
       </table>
 
       <h2 id="h-separation">Why the separation matters</h2>

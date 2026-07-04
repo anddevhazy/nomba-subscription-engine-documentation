@@ -16,36 +16,38 @@ export default function ArchitectureOverview() {
 
       <h2 id="h-stack">The stack</h2>
       <table>
-        <tr>
-          <th>Layer</th>
-          <th>Technology</th>
-        </tr>
-        <tr>
-          <td>Framework</td>
-          <td>NestJS 11, TypeScript</td>
-        </tr>
-        <tr>
-          <td>Database</td>
-          <td>PostgreSQL + TypeORM</td>
-        </tr>
-        <tr>
-          <td>Queue / async jobs</td>
-          <td>BullMQ + Redis</td>
-        </tr>
-        <tr>
-          <td>Auth</td>
-          <td>JWT, access + refresh tokens</td>
-        </tr>
-        <tr>
-          <td>Payments</td>
-          <td>Nomba API</td>
-        </tr>
-        <tr>
-          <td>API docs</td>
-          <td>
-            Swagger, served at <code className="inline">/docs</code>
-          </td>
-        </tr>
+        <tbody>
+          <tr>
+            <th>Layer</th>
+            <th>Technology</th>
+          </tr>
+          <tr>
+            <td>Framework</td>
+            <td>NestJS 11, TypeScript</td>
+          </tr>
+          <tr>
+            <td>Database</td>
+            <td>PostgreSQL + TypeORM</td>
+          </tr>
+          <tr>
+            <td>Queue / async jobs</td>
+            <td>BullMQ + Redis</td>
+          </tr>
+          <tr>
+            <td>Auth</td>
+            <td>JWT, access + refresh tokens</td>
+          </tr>
+          <tr>
+            <td>Payments</td>
+            <td>Nomba API</td>
+          </tr>
+          <tr>
+            <td>API docs</td>
+            <td>
+              Swagger, served at <code className="inline">/docs</code>
+            </td>
+          </tr>
+        </tbody>
       </table>
 
       <h2 id="h-shape">The shape of the system</h2>
@@ -97,32 +99,34 @@ export default function ArchitectureOverview() {
 
       <h2 id="h-decisions">A few deliberate choices</h2>
       <table>
-        <tr>
-          <th>Decision</th>
-          <th>Why</th>
-        </tr>
-        <tr>
-          <td>One NestJS monolith, not microservices</td>
-          <td>
-            Operational simplicity at this scale. Module boundaries give the same separation of concerns without
-            the deployment overhead.
-          </td>
-        </tr>
-        <tr>
-          <td>Analytics as a read-model over the event store</td>
-          <td>One data path means analytics and webhooks can never quietly drift apart from each other.</td>
-        </tr>
-        <tr>
-          <td>Recovery orchestration as one centralized component</td>
-          <td>
-            Channel selection and fallback logic (email always, WhatsApp → SMS, USSD as pull) lives in one place,
-            not duplicated at every call site that needs to notify a subscriber.
-          </td>
-        </tr>
-        <tr>
-          <td>BullMQ over inline processing for anything slow or external</td>
-          <td>A webhook delivery or a WhatsApp send shouldn&apos;t hold open the request that triggered it.</td>
-        </tr>
+        <tbody>
+          <tr>
+            <th>Decision</th>
+            <th>Why</th>
+          </tr>
+          <tr>
+            <td>One NestJS monolith, not microservices</td>
+            <td>
+              Operational simplicity at this scale. Module boundaries give the same separation of concerns without
+              the deployment overhead.
+            </td>
+          </tr>
+          <tr>
+            <td>Analytics as a read-model over the event store</td>
+            <td>One data path means analytics and webhooks can never quietly drift apart from each other.</td>
+          </tr>
+          <tr>
+            <td>Recovery orchestration as one centralized component</td>
+            <td>
+              Channel selection and fallback logic (email always, WhatsApp → SMS, USSD as pull) lives in one place,
+              not duplicated at every call site that needs to notify a subscriber.
+            </td>
+          </tr>
+          <tr>
+            <td>BullMQ over inline processing for anything slow or external</td>
+            <td>A webhook delivery or a WhatsApp send shouldn&apos;t hold open the request that triggered it.</td>
+          </tr>
+        </tbody>
       </table>
 
       <h2 id="h-next">What to read next</h2>

@@ -45,36 +45,38 @@ export default function Resilience() {
 
       <h2 id="h-degrade">Graceful degradation, concretely</h2>
       <table>
-        <tr>
-          <th>Failure</th>
-          <th>What happens</th>
-        </tr>
-        <tr>
-          <td>WhatsApp provider outage</td>
-          <td>
-            Recovery messages queue and retry; once the outage clears, queued messages send, or the orchestration
-            falls forward to SMS if the delay exceeds a threshold. Email has already reached the subscriber
-            regardless.
-          </td>
-        </tr>
-        <tr>
-          <td>Email provider outage</td>
-          <td>
-            Queued and retried like any other job; WhatsApp and SMS still fire on their own schedule, so recovery
-            isn&apos;t blocked on a single provider.
-          </td>
-        </tr>
-        <tr>
-          <td>A merchant&apos;s webhook endpoint is down</td>
-          <td>
-            Deliveries retry on the schedule in <a href="/developer/webhooks">Webhooks</a>, up to 14 days, then
-            move to dead-letter, replayable, not lost.
-          </td>
-        </tr>
-        <tr>
-          <td>Nomba&apos;s API is briefly unreachable</td>
-          <td>Charge attempts retry rather than being marked failed on a single transient error.</td>
-        </tr>
+        <tbody>
+          <tr>
+            <th>Failure</th>
+            <th>What happens</th>
+          </tr>
+          <tr>
+            <td>WhatsApp provider outage</td>
+            <td>
+              Recovery messages queue and retry; once the outage clears, queued messages send, or the orchestration
+              falls forward to SMS if the delay exceeds a threshold. Email has already reached the subscriber
+              regardless.
+            </td>
+          </tr>
+          <tr>
+            <td>Email provider outage</td>
+            <td>
+              Queued and retried like any other job; WhatsApp and SMS still fire on their own schedule, so recovery
+              isn&apos;t blocked on a single provider.
+            </td>
+          </tr>
+          <tr>
+            <td>A merchant&apos;s webhook endpoint is down</td>
+            <td>
+              Deliveries retry on the schedule in <a href="/developer/webhooks">Webhooks</a>, up to 14 days, then
+              move to dead-letter, replayable, not lost.
+            </td>
+          </tr>
+          <tr>
+            <td>Nomba&apos;s API is briefly unreachable</td>
+            <td>Charge attempts retry rather than being marked failed on a single transient error.</td>
+          </tr>
+        </tbody>
       </table>
 
       <h2 id="h-async-default">Why async-by-default is itself a resilience choice</h2>

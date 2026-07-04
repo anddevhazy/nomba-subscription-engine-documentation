@@ -25,52 +25,54 @@ export default function EventStore() {
 
       <h2 id="h-events">What gets written</h2>
       <table>
-        <tr>
-          <th>Event</th>
-          <th>Fired when</th>
-        </tr>
-        <tr>
-          <td>
-            <code className="inline">SubscriptionCreated</code>
-          </td>
-          <td>A new subscription is created.</td>
-        </tr>
-        <tr>
-          <td>
-            <code className="inline">SubscriptionUpdated</code>
-          </td>
-          <td>A plan change, pause, or resume happens.</td>
-        </tr>
-        <tr>
-          <td>
-            <code className="inline">SubscriptionCancelled</code>
-          </td>
-          <td>A subscription is cancelled, by either side.</td>
-        </tr>
-        <tr>
-          <td>
-            <code className="inline">SubscriptionRenewed</code>
-          </td>
-          <td>A billing cycle completes and the subscription rolls into the next period.</td>
-        </tr>
-        <tr>
-          <td>
-            <code className="inline">PaymentFailed</code>
-          </td>
-          <td>A charge attempt fails.</td>
-        </tr>
-        <tr>
-          <td>
-            <code className="inline">PaymentRecovered</code>
-          </td>
-          <td>A previously failed charge succeeds on retry.</td>
-        </tr>
-        <tr>
-          <td>
-            <code className="inline">InvoicePaid</code>
-          </td>
-          <td>An invoice is settled in full.</td>
-        </tr>
+        <tbody>
+          <tr>
+            <th>Event</th>
+            <th>Fired when</th>
+          </tr>
+          <tr>
+            <td>
+              <code className="inline">SubscriptionCreated</code>
+            </td>
+            <td>A new subscription is created.</td>
+          </tr>
+          <tr>
+            <td>
+              <code className="inline">SubscriptionUpdated</code>
+            </td>
+            <td>A plan change, pause, or resume happens.</td>
+          </tr>
+          <tr>
+            <td>
+              <code className="inline">SubscriptionCancelled</code>
+            </td>
+            <td>A subscription is cancelled, by either side.</td>
+          </tr>
+          <tr>
+            <td>
+              <code className="inline">SubscriptionRenewed</code>
+            </td>
+            <td>A billing cycle completes and the subscription rolls into the next period.</td>
+          </tr>
+          <tr>
+            <td>
+              <code className="inline">PaymentFailed</code>
+            </td>
+            <td>A charge attempt fails.</td>
+          </tr>
+          <tr>
+            <td>
+              <code className="inline">PaymentRecovered</code>
+            </td>
+            <td>A previously failed charge succeeds on retry.</td>
+          </tr>
+          <tr>
+            <td>
+              <code className="inline">InvoicePaid</code>
+            </td>
+            <td>An invoice is settled in full.</td>
+          </tr>
+        </tbody>
       </table>
 
       <h2 id="h-consumers">Three consumers, one store</h2>

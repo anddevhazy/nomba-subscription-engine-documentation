@@ -72,28 +72,30 @@ export default function MerchantsOverview() {
 
       <h2 id="h-surfaces">Where you work</h2>
       <table>
-        <tr>
-          <th>Surface</th>
-          <th>What you do there</th>
-        </tr>
-        <tr>
-          <td>
-            <strong>Merchant dashboard</strong>
-          </td>
-          <td>Create plans, manage customers, watch analytics, configure webhooks, rotate API keys, manage your team.</td>
-        </tr>
-        <tr>
-          <td>
-            <strong>API</strong>
-          </td>
-          <td>Everything the dashboard does, programmatically, for merchants embedding subscription management into their own product.</td>
-        </tr>
-        <tr>
-          <td>
-            <strong>Audit log</strong>
-          </td>
-          <td>Every material action, plan changes, API key rotation, webhook configuration, recorded and queryable.</td>
-        </tr>
+        <tbody>
+          <tr>
+            <th>Surface</th>
+            <th>What you do there</th>
+          </tr>
+          <tr>
+            <td>
+              <strong>Merchant dashboard</strong>
+            </td>
+            <td>Create plans, manage customers, watch analytics, configure webhooks, rotate API keys, manage your team.</td>
+          </tr>
+          <tr>
+            <td>
+              <strong>API</strong>
+            </td>
+            <td>Everything the dashboard does, programmatically, for merchants embedding subscription management into their own product.</td>
+          </tr>
+          <tr>
+            <td>
+              <strong>Audit log</strong>
+            </td>
+            <td>Every material action, plan changes, API key rotation, webhook configuration, recorded and queryable.</td>
+          </tr>
+        </tbody>
       </table>
 
       <h2 id="h-start">Where to start</h2>

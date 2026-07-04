@@ -20,40 +20,42 @@ export default function CreateAPlan() {
 
       <h2 id="h-fields">What a plan needs</h2>
       <table>
-        <tr>
-          <th>Field</th>
-          <th>What goes in</th>
-        </tr>
-        <tr>
-          <td>
-            <strong>Name</strong>
-          </td>
-          <td>
-            &quot;Lumen Monthly,&quot; &quot;Pro Annual&quot;, whatever your customers will recognise on their
-            statement and in the portal.
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <strong>Price</strong>
-          </td>
-          <td>The amount charged per billing cycle, in your settlement currency.</td>
-        </tr>
-        <tr>
-          <td>
-            <strong>Interval</strong>
-          </td>
-          <td>Monthly, quarterly, yearly, or a custom interval you define.</td>
-        </tr>
-        <tr>
-          <td>
-            <strong>Trial period</strong>
-          </td>
-          <td>
-            Optional. Days before the first charge fires. A subscription sits in{" "}
-            <code className="inline">trialing</code> for this window.
-          </td>
-        </tr>
+        <tbody>
+          <tr>
+            <th>Field</th>
+            <th>What goes in</th>
+          </tr>
+          <tr>
+            <td>
+              <strong>Name</strong>
+            </td>
+            <td>
+              &quot;Lumen Monthly,&quot; &quot;Pro Annual&quot;, whatever your customers will recognise on their
+              statement and in the portal.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <strong>Price</strong>
+            </td>
+            <td>The amount charged per billing cycle, in your settlement currency.</td>
+          </tr>
+          <tr>
+            <td>
+              <strong>Interval</strong>
+            </td>
+            <td>Monthly, quarterly, yearly, or a custom interval you define.</td>
+          </tr>
+          <tr>
+            <td>
+              <strong>Trial period</strong>
+            </td>
+            <td>
+              Optional. Days before the first charge fires. A subscription sits in{" "}
+              <code className="inline">trialing</code> for this window.
+            </td>
+          </tr>
+        </tbody>
       </table>
 
       <h2 id="h-create">Creating one</h2>

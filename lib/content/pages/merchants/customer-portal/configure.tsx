@@ -18,93 +18,99 @@ export default function ConfigureCustomerPortal() {
 
       <h2 id="h-subscription">Subscription management</h2>
       <table>
-        <tr>
-          <th>Option</th>
-          <th>What it does</th>
-          <th>Default</th>
-        </tr>
-        <tr>
-          <td>Switch plan</td>
-          <td>
-            Let a subscriber move to a different plan from the portal. Optionally restricted to a specific plan
-            list, see <a href="/merchants/customer-portal/api-setup">Set up with the API</a>.
-          </td>
-          <td>Off</td>
-        </tr>
-        <tr>
-          <td>Prorate on switch</td>
-          <td>
-            Credit the unused portion of the old plan and charge the prorated remainder of the new one immediately,
-            the same math covered in <a href="/merchants/billing-and-invoicing">Billing & invoicing</a>.
-          </td>
-          <td>On</td>
-        </tr>
-        <tr>
-          <td>Manage downgrades</td>
-          <td>
-            If off, a downgrade takes effect immediately with proration. If on, it&apos;s scheduled to take effect at
-            the end of the current billing period instead, no partial-period credit needed.
-          </td>
-          <td>Off</td>
-        </tr>
+        <tbody>
+          <tr>
+            <th>Option</th>
+            <th>What it does</th>
+            <th>Default</th>
+          </tr>
+          <tr>
+            <td>Switch plan</td>
+            <td>
+              Let a subscriber move to a different plan from the portal. Optionally restricted to a specific plan
+              list, see <a href="/merchants/customer-portal/api-setup">Set up with the API</a>.
+            </td>
+            <td>Off</td>
+          </tr>
+          <tr>
+            <td>Prorate on switch</td>
+            <td>
+              Credit the unused portion of the old plan and charge the prorated remainder of the new one immediately,
+              the same math covered in <a href="/merchants/billing-and-invoicing">Billing & invoicing</a>.
+            </td>
+            <td>On</td>
+          </tr>
+          <tr>
+            <td>Manage downgrades</td>
+            <td>
+              If off, a downgrade takes effect immediately with proration. If on, it&apos;s scheduled to take effect at
+              the end of the current billing period instead, no partial-period credit needed.
+            </td>
+            <td>Off</td>
+          </tr>
+        </tbody>
       </table>
 
       <h2 id="h-cancellation">Cancellation management</h2>
       <table>
-        <tr>
-          <th>Option</th>
-          <th>What it does</th>
-          <th>Default</th>
-        </tr>
-        <tr>
-          <td>Cancel subscription</td>
-          <td>Let a subscriber cancel from the portal at all. A subscriber can always still reactivate before the current period ends.</td>
-          <td>On</td>
-        </tr>
-        <tr>
-          <td>Cancellation reason</td>
-          <td>
-            Capture a short reason when a subscriber cancels. See{" "}
-            <a href="/merchants/customer-portal/cancellation-page">Add a cancellation page</a>.
-          </td>
-          <td>Off</td>
-        </tr>
-        <tr>
-          <td>Offer Pause or Downgrade first</td>
-          <td>
-            Before a cancellation completes, show Pause and Downgrade as alternatives, the same two actions our
-            dunning messages already offer on a failed charge. No coupons, no discount codes, just the paths that
-            already exist.
-          </td>
-          <td>Off</td>
-        </tr>
+        <tbody>
+          <tr>
+            <th>Option</th>
+            <th>What it does</th>
+            <th>Default</th>
+          </tr>
+          <tr>
+            <td>Cancel subscription</td>
+            <td>Let a subscriber cancel from the portal at all. A subscriber can always still reactivate before the current period ends.</td>
+            <td>On</td>
+          </tr>
+          <tr>
+            <td>Cancellation reason</td>
+            <td>
+              Capture a short reason when a subscriber cancels. See{" "}
+              <a href="/merchants/customer-portal/cancellation-page">Add a cancellation page</a>.
+            </td>
+            <td>Off</td>
+          </tr>
+          <tr>
+            <td>Offer Pause or Downgrade first</td>
+            <td>
+              Before a cancellation completes, show Pause and Downgrade as alternatives, the same two actions our
+              dunning messages already offer on a failed charge. No coupons, no discount codes, just the paths that
+              already exist.
+            </td>
+            <td>Off</td>
+          </tr>
+        </tbody>
       </table>
 
       <h2 id="h-customer">What a subscriber can edit about themselves</h2>
       <table>
-        <tr>
-          <th>Field</th>
-          <th>Editable from the portal?</th>
-        </tr>
-        <tr>
-          <td>Name</td>
-          <td>Yes</td>
-        </tr>
-        <tr>
-          <td>Phone</td>
-          <td>Yes, with a fresh OTP verification on the new number</td>
-        </tr>
-        <tr>
-          <td>Email</td>
-          <td>
-            No, view-only, changing the identity a login resolves to isn&apos;t self-serve, see{" "}
-            <a href="/merchants/customer-portal/no-code-setup">the no-code setup page</a>
-          </td>
-        </tr>
-        <tr>
-          <td>Payment method</td>
-          <td>Yes, re-tokenised through Nomba Checkout</td>
-        </tr>
+        <tbody>
+          <tr>
+            <th>Field</th>
+            <th>Editable from the portal?</th>
+          </tr>
+          <tr>
+            <td>Name</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>Phone</td>
+            <td>Yes, with a fresh OTP verification on the new number</td>
+          </tr>
+          <tr>
+            <td>Email</td>
+            <td>
+              No, view-only, changing the identity a login resolves to isn&apos;t self-serve, see{" "}
+              <a href="/merchants/customer-portal/no-code-setup">the no-code setup page</a>
+            </td>
+          </tr>
+          <tr>
+            <td>Payment method</td>
+            <td>Yes, re-tokenised through Nomba Checkout</td>
+          </tr>
+        </tbody>
       </table>
       <Callout variant="note">
         <p>
@@ -115,19 +121,21 @@ export default function ConfigureCustomerPortal() {
 
       <h2 id="h-invoices">Invoice history</h2>
       <table>
-        <tr>
-          <th>Option</th>
-          <th>What it does</th>
-          <th>Default</th>
-        </tr>
-        <tr>
-          <td>Invoice history visible</td>
-          <td>
-            Show a read-only list of past invoices in the portal, sourced from the same data a merchant sees via{" "}
-            <code className="inline">GET /invoices</code>.
-          </td>
-          <td>On</td>
-        </tr>
+        <tbody>
+          <tr>
+            <th>Option</th>
+            <th>What it does</th>
+            <th>Default</th>
+          </tr>
+          <tr>
+            <td>Invoice history visible</td>
+            <td>
+              Show a read-only list of past invoices in the portal, sourced from the same data a merchant sees via{" "}
+              <code className="inline">GET /invoices</code>.
+            </td>
+            <td>On</td>
+          </tr>
+        </tbody>
       </table>
 
       <h2 id="h-next">Next</h2>

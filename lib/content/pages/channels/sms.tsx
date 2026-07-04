@@ -34,20 +34,22 @@ export default function ChannelsSms() {
       </p>
 
       <table>
-        <tr>
-          <th>Message</th>
-          <th>What it does</th>
-        </tr>
-        <tr>
-          <td>Failed-charge alert</td>
-          <td>Outbound. Prompts a reply of YES to retry.</td>
-        </tr>
-        <tr>
-          <td>
-            <code className="inline">YES</code> reply
-          </td>
-          <td>Inbound. Triggers a retry against the stored card, same as WhatsApp&apos;s Retry Now.</td>
-        </tr>
+        <tbody>
+          <tr>
+            <th>Message</th>
+            <th>What it does</th>
+          </tr>
+          <tr>
+            <td>Failed-charge alert</td>
+            <td>Outbound. Prompts a reply of YES to retry.</td>
+          </tr>
+          <tr>
+            <td>
+              <code className="inline">YES</code> reply
+            </td>
+            <td>Inbound. Triggers a retry against the stored card, same as WhatsApp&apos;s Retry Now.</td>
+          </tr>
+        </tbody>
       </table>
 
       <h2 id="h-when">When SMS is the primary channel, not the fallback</h2>

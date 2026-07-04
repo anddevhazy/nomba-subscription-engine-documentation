@@ -35,28 +35,30 @@ export default function ChannelsUssd() {
       </Flow>
 
       <table>
-        <tr>
-          <th>Option</th>
-          <th>What it shows or does</th>
-        </tr>
-        <tr>
-          <td>
-            <strong>1. Check status</strong>
-          </td>
-          <td>Current plan, price, next billing date, and whether the subscription is active, past due, or in a grace period.</td>
-        </tr>
-        <tr>
-          <td>
-            <strong>2. Pause subscription</strong>
-          </td>
-          <td>Same effect as pausing from the portal, billing stops, resumable any time.</td>
-        </tr>
-        <tr>
-          <td>
-            <strong>3. Cancel subscription</strong>
-          </td>
-          <td>Ends the subscription, same as cancelling from the portal.</td>
-        </tr>
+        <tbody>
+          <tr>
+            <th>Option</th>
+            <th>What it shows or does</th>
+          </tr>
+          <tr>
+            <td>
+              <strong>1. Check status</strong>
+            </td>
+            <td>Current plan, price, next billing date, and whether the subscription is active, past due, or in a grace period.</td>
+          </tr>
+          <tr>
+            <td>
+              <strong>2. Pause subscription</strong>
+            </td>
+            <td>Same effect as pausing from the portal, billing stops, resumable any time.</td>
+          </tr>
+          <tr>
+            <td>
+              <strong>3. Cancel subscription</strong>
+            </td>
+            <td>Ends the subscription, same as cancelling from the portal.</td>
+          </tr>
+        </tbody>
       </table>
 
       <h2 id="h-why">Why this exists as its own channel</h2>

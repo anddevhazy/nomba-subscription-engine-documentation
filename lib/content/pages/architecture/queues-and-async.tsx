@@ -19,32 +19,34 @@ export default function QueuesAndAsync() {
 
       <h2 id="h-what">What runs async</h2>
       <table>
-        <tr>
-          <th>Job</th>
-          <th>Why it&apos;s queued, not inline</th>
-        </tr>
-        <tr>
-          <td>Webhook delivery</td>
-          <td>
-            A merchant&apos;s endpoint might be slow, down, or misconfigured. That should never hold open the
-            request that created the underlying event.
-          </td>
-        </tr>
-        <tr>
-          <td>Dunning retries and recovery messages</td>
-          <td>Scheduled on a grace-period timer, not fired synchronously from the failed charge itself.</td>
-        </tr>
-        <tr>
-          <td>Invoice generation on a billing cycle</td>
-          <td>Runs on a schedule, independent of any specific request.</td>
-        </tr>
-        <tr>
-          <td>Email / WhatsApp / SMS / USSD notification delivery</td>
-          <td>
-            Third-party providers with their own latency and occasional outages, see{" "}
-            <a href="/architecture/resilience">Resilience & scale</a>.
-          </td>
-        </tr>
+        <tbody>
+          <tr>
+            <th>Job</th>
+            <th>Why it&apos;s queued, not inline</th>
+          </tr>
+          <tr>
+            <td>Webhook delivery</td>
+            <td>
+              A merchant&apos;s endpoint might be slow, down, or misconfigured. That should never hold open the
+              request that created the underlying event.
+            </td>
+          </tr>
+          <tr>
+            <td>Dunning retries and recovery messages</td>
+            <td>Scheduled on a grace-period timer, not fired synchronously from the failed charge itself.</td>
+          </tr>
+          <tr>
+            <td>Invoice generation on a billing cycle</td>
+            <td>Runs on a schedule, independent of any specific request.</td>
+          </tr>
+          <tr>
+            <td>Email / WhatsApp / SMS / USSD notification delivery</td>
+            <td>
+              Third-party providers with their own latency and occasional outages, see{" "}
+              <a href="/architecture/resilience">Resilience & scale</a>.
+            </td>
+          </tr>
+        </tbody>
       </table>
 
       <h2 id="h-shape">The shape of a queued job</h2>

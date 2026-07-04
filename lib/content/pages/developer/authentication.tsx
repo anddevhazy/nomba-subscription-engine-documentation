@@ -25,22 +25,24 @@ export default function DeveloperAuthentication() {
 
       <h2 id="h-format">Key format</h2>
       <table>
-        <tr>
-          <th>Prefix</th>
-          <th>Environment</th>
-        </tr>
-        <tr>
-          <td>
-            <code className="inline">nse_sandbox_&lt;id&gt;</code>
-          </td>
-          <td>Sandbox, no real charges ever fire.</td>
-        </tr>
-        <tr>
-          <td>
-            <code className="inline">nse_live_&lt;id&gt;</code>
-          </td>
-          <td>Production.</td>
-        </tr>
+        <tbody>
+          <tr>
+            <th>Prefix</th>
+            <th>Environment</th>
+          </tr>
+          <tr>
+            <td>
+              <code className="inline">nse_sandbox_&lt;id&gt;</code>
+            </td>
+            <td>Sandbox, no real charges ever fire.</td>
+          </tr>
+          <tr>
+            <td>
+              <code className="inline">nse_live_&lt;id&gt;</code>
+            </td>
+            <td>Production.</td>
+          </tr>
+        </tbody>
       </table>
       <p>
         A sandbox key against a production endpoint (or vice versa) fails with 401, there&apos;s no accidental
