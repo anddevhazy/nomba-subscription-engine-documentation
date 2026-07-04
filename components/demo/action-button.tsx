@@ -56,7 +56,12 @@ export function ActionButton({
       size={size}
       onClick={onClick}
       disabled={disabled || isBusy}
-      className={cn(fullWidth && "w-full", className)}
+      className={cn(
+        fullWidth && "w-full",
+        phase === "success" &&
+          "bg-green-600 text-white hover:bg-green-600 disabled:opacity-100",
+        className,
+      )}
     >
       {phase === "idle" && label}
       {phase === "loading" && <Loader2 className="size-4 animate-spin" />}

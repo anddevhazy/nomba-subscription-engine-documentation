@@ -64,7 +64,7 @@ export function portalReducer(state: PortalState, action: PortalAction): PortalS
         planId: state.pendingPlanId,
         pendingPlanId: null,
         invoices: newInvoices,
-        view: "subscription",
+        view: "home",
       };
     }
     case "OPEN_PAUSE_CONFIRM":
@@ -84,7 +84,7 @@ export function portalReducer(state: PortalState, action: PortalAction): PortalS
     case "OPEN_REACTIVATE_CONFIRM":
       return { ...state, view: "reactivate-confirm" };
     case "CONFIRM_REACTIVATE":
-      return { ...state, status: "active", cancelAt: null, cancelReason: null, view: "subscription" };
+      return { ...state, status: "active", cancelAt: null, cancelReason: null, view: "home" };
     case "OPEN_PAYMENT_MODAL":
       return { ...state, showPaymentModal: true };
     case "CLOSE_PAYMENT_MODAL":
