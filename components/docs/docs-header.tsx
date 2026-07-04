@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { MobileNav } from "@/components/docs/mobile-nav";
-import { SWAGGER_URL } from "@/lib/constants";
+import { DASHBOARD_URL, SWAGGER_URL } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 
 export function DocsHeader() {
@@ -36,12 +36,14 @@ export function DocsHeader() {
           >
             Swagger
           </a>
-          <Link
-            href="/quick-start"
+          <a
+            href={DASHBOARD_URL}
+            target="_blank"
+            rel="noopener noreferrer"
             className="flex items-center gap-1 rounded-lg bg-gold px-4 py-2 text-[13.5px] font-semibold whitespace-nowrap text-white"
           >
             Dashboard →
-          </Link>
+          </a>
           <div className="flex size-[34px] shrink-0 items-center justify-center rounded-full border border-border text-text-secondary">
             ☀️
           </div>
