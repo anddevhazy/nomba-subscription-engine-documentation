@@ -32,20 +32,34 @@ export function CardLink({
   icon,
   title,
   description,
+  external = false,
 }: {
   href: string;
   icon: string;
   title: string;
   description: ReactNode;
+  external?: boolean;
 }) {
-  return (
-    <Link
-      href={href}
-      className={cn(cardBase, "card", "hover:border-gold hover:shadow-[0_2px_12px_rgba(201,151,31,0.1)]")}
-    >
+  const className = cn(cardBase, "card", "hover:border-gold hover:shadow-[0_2px_12px_rgba(201,151,31,0.1)]");
+  const content = (
+    <>
       <div className={cardIconBase}>{icon}</div>
       <div className={cardTitleBase}>{title}</div>
       <div>{description}</div>
+    </>
+  );
+
+  if (external) {
+    return (
+      <a href={href} target="_blank" rel="noopener noreferrer" className={className}>
+        {content}
+      </a>
+    );
+  }
+
+  return (
+    <Link href={href} className={className}>
+      {content}
     </Link>
   );
 }

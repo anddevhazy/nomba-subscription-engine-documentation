@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import { cn } from "@/lib/utils";
-import { DocsShell } from "@/components/docs/docs-shell";
 import "./globals.css";
 
 const inter = Inter({
@@ -35,9 +34,7 @@ export default function RootLayout({
       lang="en"
       className={cn("h-full antialiased", inter.variable, jetbrainsMono.variable)}
     >
-      <body className="min-h-full font-sans">
-        <DocsShell>{children}</DocsShell>
-      </body>
+      <body className="min-h-full font-sans">{children}</body>
     </html>
   );
 }

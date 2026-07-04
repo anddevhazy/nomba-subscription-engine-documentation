@@ -146,7 +146,7 @@ export const NAV: NavGroup[] = [
       { slug: "merchants/customer-portal/overview", title: "Customer portal" },
       {
         slug: "merchants/customer-portal/no-code-setup",
-        title: "Set up the no-code customer portal",
+        title: "Create a customer portal",
       },
       {
         slug: "merchants/customer-portal/api-setup",
