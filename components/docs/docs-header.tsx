@@ -1,5 +1,6 @@
 "use client";
 
+import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { MobileNav } from "@/components/docs/mobile-nav";
@@ -42,11 +43,9 @@ export function DocsHeader() {
             rel="noopener noreferrer"
             className="flex items-center gap-1 rounded-lg bg-gold px-4 py-2 text-[13.5px] font-semibold whitespace-nowrap text-white"
           >
-            Dashboard →
+            Dashboard
+            <ChevronRight className="size-4" strokeWidth={2.5} />
           </a>
-          <div className="flex size-[34px] shrink-0 items-center justify-center rounded-full border border-border text-text-secondary">
-            ☀️
-          </div>
         </div>
       </div>
       <div className="flex h-11 items-center gap-2 px-6">
