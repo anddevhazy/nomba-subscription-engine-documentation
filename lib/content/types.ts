@@ -3,5 +3,3 @@ export type PageMeta = {
   title: string;
   lede: string;
 };
-
-export type Heading = { id: string; text: string };

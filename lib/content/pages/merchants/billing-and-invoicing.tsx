@@ -1,0 +1,89 @@
+import { Callout } from "@/components/docs/content/callout";
+import { CardGrid, CardLink } from "@/components/docs/content/card-grid";
+import { Steps, Step } from "@/components/docs/content/steps";
+import type { PageMeta } from "@/lib/content/types";
+
+export const meta: PageMeta = {
+  eyebrow: "For merchants",
+  title: "Billing & invoicing",
+  lede: "Invoices generate themselves. Charges fire themselves. Proration does the maths so you don't have to.",
+};
+
+export default function BillingAndInvoicing() {
+  return (
+    <>
+      <p>
+        Here&apos;s the thing most new merchants are surprised by: after a subscription is created, you don&apos;t
+        tap anything. The billing cycle runs on its own, an invoice generates itself with line-item detail, a charge
+        fires against the stored card, and the outcome, paid or failed, writes to the event store automatically.
+        Your job is to watch the dashboard, not operate it.
+      </p>
+
+      <h2 id="h-cycle">How a billing cycle runs</h2>
+      <Steps>
+        <Step number={1} title="The cycle boundary arrives">
+          <p>Determined by the plan&apos;s interval and the subscription&apos;s anchor date, the date the subscription first went active.</p>
+        </Step>
+        <Step number={2} title="An invoice generates">
+          <p>Line items reflect the plan price, plus any proration from a mid-cycle change (see below).</p>
+        </Step>
+        <Step number={3} title="A charge attempt fires">
+          <p>Against the tokenised card on file, via Nomba&apos;s Charge API.</p>
+        </Step>
+        <Step number={4} title="The outcome writes to the event store">
+          <p>
+            Success → <code className="inline">InvoicePaid</code>. Failure → <code className="inline">PaymentFailed</code>,
+            and the subscription moves to <code className="inline">past_due</code>. See{" "}
+            <a href="/concepts/subscription-lifecycle">Subscription lifecycle</a>.
+          </p>
+        </Step>
+      </Steps>
+
+      <h2 id="h-proration">Proration on plan changes</h2>
+      <p>
+        A customer upgrades from &quot;Lumen Monthly&quot; to &quot;Lumen Pro&quot; halfway through a billing cycle.
+        Rather than charging the full new price immediately or waiting until the next cycle, the engine prorates:
+        credits the unused portion of the old plan, charges the prorated cost of the new one for the remainder of
+        the current cycle, and the next full cycle bills at the new plan&apos;s full price.
+      </p>
+      <Callout variant="note">
+        <p>
+          The same logic runs in reverse for a downgrade, the difference just shows up as a credit against the next
+          invoice rather than an immediate charge.
+        </p>
+      </Callout>
+
+      <h2 id="h-attempts">Every attempt, tracked</h2>
+      <p>
+        Every charge attempt, successful or failed, is recorded as a payment attempt, linked to its invoice and its
+        subscription. If a charge fails and later recovers through dunning, you see both attempts on the same
+        invoice, in order, not just the final outcome. This is what makes a support conversation (&quot;why was I
+        charged twice&quot;) answerable from the dashboard instead of an escalation to engineering.
+      </p>
+
+      <h2 id="h-failure">When a charge fails</h2>
+      <p>
+        The subscription transitions to <code className="inline">past_due</code>, a grace period begins, and
+        recovery starts on the subscriber&apos;s preferred channel. None of this requires you to do anything,
+        it&apos;s the same mechanism covered in <a href="/how-it-works">How it works</a> and detailed in{" "}
+        <a href="/concepts/recovery-orchestration">Recovery orchestration</a>.
+      </p>
+
+      <h2 id="h-next">Next</h2>
+      <CardGrid cols={2}>
+        <CardLink
+          href="/concepts/subscription-lifecycle"
+          icon="🔄"
+          title="Subscription lifecycle"
+          description="The full state machine, including grace periods and suspension."
+        />
+        <CardLink
+          href="/merchants/analytics"
+          icon="📊"
+          title="Analytics"
+          description="How billing outcomes roll up into MRR, churn, and recovery rate."
+        />
+      </CardGrid>
+    </>
+  );
+}

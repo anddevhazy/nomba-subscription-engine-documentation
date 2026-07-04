@@ -1,25 +1,28 @@
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
+import { cn } from "@/lib/utils";
+import { DocsShell } from "@/components/docs/docs-shell";
 import "./globals.css";
-import { SidebarProvider } from "@/components/layout/SidebarContext";
-import { TopBar } from "@/components/layout/TopBar";
-import { Sidebar } from "@/components/layout/Sidebar";
 
 const inter = Inter({
-  variable: "--font-inter",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  variable: "--font-sans",
+  display: "swap",
 });
 
 const jetbrainsMono = JetBrains_Mono({
-  variable: "--font-jetbrains-mono",
   subsets: ["latin"],
-  weight: ["400", "500"],
+  variable: "--font-mono",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "Nomba Subscription Engine | Docs",
-  description: "Multi-tenant Subscription-as-a-Service, built on Nomba's payment rails.",
+  title: {
+    default: "Nomba Subscription Engine | Docs",
+    template: "%s | Nomba Subscription Engine",
+  },
+  description:
+    "Multi-tenant Subscription-as-a-Service, built on Nomba's payment rails.",
 };
 
 export default function RootLayout({
@@ -28,15 +31,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable}`}>
-      <body>
-        <SidebarProvider>
-          <TopBar />
-          <div className="layout">
-            <Sidebar />
-            {children}
-          </div>
-        </SidebarProvider>
+    <html
+      lang="en"
+      className={cn("h-full antialiased", inter.variable, jetbrainsMono.variable)}
+    >
+      <body className="min-h-full font-sans">
+        <DocsShell>{children}</DocsShell>
       </body>
     </html>
   );

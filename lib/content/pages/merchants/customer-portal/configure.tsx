@@ -1,0 +1,150 @@
+import { Callout } from "@/components/docs/content/callout";
+import { CardGrid, CardLink } from "@/components/docs/content/card-grid";
+import type { PageMeta } from "@/lib/content/types";
+
+export const meta: PageMeta = {
+  eyebrow: "Customer portal",
+  title: "Configure the customer portal",
+  lede: "Which actions are on, which are off, and what a subscriber is actually allowed to touch.",
+};
+
+export default function ConfigureCustomerPortal() {
+  return (
+    <>
+      <p>
+        Every option below lives in Dashboard → Settings → Customer portal, and every one of them is also settable
+        through the API for merchants who&apos;d rather manage configuration as code.
+      </p>
+
+      <h2 id="h-subscription">Subscription management</h2>
+      <table>
+        <tr>
+          <th>Option</th>
+          <th>What it does</th>
+          <th>Default</th>
+        </tr>
+        <tr>
+          <td>Switch plan</td>
+          <td>
+            Let a subscriber move to a different plan from the portal. Optionally restricted to a specific plan
+            list, see <a href="/merchants/customer-portal/api-setup">Set up with the API</a>.
+          </td>
+          <td>Off</td>
+        </tr>
+        <tr>
+          <td>Prorate on switch</td>
+          <td>
+            Credit the unused portion of the old plan and charge the prorated remainder of the new one immediately,
+            the same math covered in <a href="/merchants/billing-and-invoicing">Billing & invoicing</a>.
+          </td>
+          <td>On</td>
+        </tr>
+        <tr>
+          <td>Manage downgrades</td>
+          <td>
+            If off, a downgrade takes effect immediately with proration. If on, it&apos;s scheduled to take effect at
+            the end of the current billing period instead, no partial-period credit needed.
+          </td>
+          <td>Off</td>
+        </tr>
+      </table>
+
+      <h2 id="h-cancellation">Cancellation management</h2>
+      <table>
+        <tr>
+          <th>Option</th>
+          <th>What it does</th>
+          <th>Default</th>
+        </tr>
+        <tr>
+          <td>Cancel subscription</td>
+          <td>Let a subscriber cancel from the portal at all. A subscriber can always still reactivate before the current period ends.</td>
+          <td>On</td>
+        </tr>
+        <tr>
+          <td>Cancellation reason</td>
+          <td>
+            Capture a short reason when a subscriber cancels. See{" "}
+            <a href="/merchants/customer-portal/cancellation-page">Add a cancellation page</a>.
+          </td>
+          <td>Off</td>
+        </tr>
+        <tr>
+          <td>Offer Pause or Downgrade first</td>
+          <td>
+            Before a cancellation completes, show Pause and Downgrade as alternatives, the same two actions our
+            dunning messages already offer on a failed charge. No coupons, no discount codes, just the paths that
+            already exist.
+          </td>
+          <td>Off</td>
+        </tr>
+      </table>
+
+      <h2 id="h-customer">What a subscriber can edit about themselves</h2>
+      <table>
+        <tr>
+          <th>Field</th>
+          <th>Editable from the portal?</th>
+        </tr>
+        <tr>
+          <td>Name</td>
+          <td>Yes</td>
+        </tr>
+        <tr>
+          <td>Phone</td>
+          <td>Yes, with a fresh OTP verification on the new number</td>
+        </tr>
+        <tr>
+          <td>Email</td>
+          <td>
+            No, view-only, changing the identity a login resolves to isn&apos;t self-serve, see{" "}
+            <a href="/merchants/customer-portal/no-code-setup">the no-code setup page</a>
+          </td>
+        </tr>
+        <tr>
+          <td>Payment method</td>
+          <td>Yes, re-tokenised through Nomba Checkout</td>
+        </tr>
+      </table>
+      <Callout variant="note">
+        <p>
+          There&apos;s no billing address or tax ID field on a customer record in this release, so there&apos;s
+          nothing to expose here for either. Both are explicitly out of scope, see <a href="/mission">The mission</a>.
+        </p>
+      </Callout>
+
+      <h2 id="h-invoices">Invoice history</h2>
+      <table>
+        <tr>
+          <th>Option</th>
+          <th>What it does</th>
+          <th>Default</th>
+        </tr>
+        <tr>
+          <td>Invoice history visible</td>
+          <td>
+            Show a read-only list of past invoices in the portal, sourced from the same data a merchant sees via{" "}
+            <code className="inline">GET /invoices</code>.
+          </td>
+          <td>On</td>
+        </tr>
+      </table>
+
+      <h2 id="h-next">Next</h2>
+      <CardGrid cols={2}>
+        <CardLink
+          href="/merchants/customer-portal/cancellation-page"
+          icon="✖️"
+          title="Add a cancellation page"
+          description="The reason list, and where the data ends up."
+        />
+        <CardLink
+          href="/merchants/customer-portal/deep-links-and-flows"
+          icon="🔗"
+          title="Deep links and flows"
+          description="Scope a link to one action instead of the whole portal."
+        />
+      </CardGrid>
+    </>
+  );
+}

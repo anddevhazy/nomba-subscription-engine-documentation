@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { allSlugs } from "@/lib/nav";
-import { getPage, getHeadings } from "@/lib/content";
-import { Toc } from "@/components/docs/Toc";
+import { getPageModule } from "@/lib/content/registry";
+import { stubMeta, StubBody } from "@/lib/content/stub";
+import { Toc } from "@/components/docs/toc";
 
 type Params = { slug: string[] };
 
@@ -15,6 +16,12 @@ function slugFromParams(slug: string[]): string | null {
   return allSlugs().includes(joined) ? joined : null;
 }
 
+function resolvePage(slug: string) {
+  const registered = getPageModule(slug);
+  if (registered) return registered;
+  return { meta: stubMeta(slug), Content: StubBody };
+}
+
 export async function generateMetadata({
   params,
 }: {
@@ -23,7 +30,7 @@ export async function generateMetadata({
   const { slug } = await params;
   const resolved = slugFromParams(slug);
   if (!resolved) return {};
-  const { meta } = await getPage(resolved);
+  const { meta } = resolvePage(resolved);
   return {
     title: `${meta.title} | Nomba Subscription Engine`,
     description: meta.lede,
@@ -39,27 +46,32 @@ export default async function DocPage({
   const resolved = slugFromParams(slug);
   if (!resolved) notFound();
 
-  const { meta, Content } = await getPage(resolved);
-  const headings = getHeadings(resolved);
+  const { meta, Content } = resolvePage(resolved);
 
   return (
     <>
-      <div className="content-col">
-        <main>
-          <div className="eyebrow">{meta.eyebrow}</div>
-          <div className="title-row">
-            <h1>{meta.title}</h1>
-            <div className="ask-ai-btn">☀️ Open in Claude ▾</div>
+      <div className="flex min-w-0 flex-1 justify-center">
+        <main className="w-full max-w-[740px] px-8 pt-10 pb-[100px]">
+          <div className="mb-2 text-[13.5px] font-semibold text-gold-dark">{meta.eyebrow}</div>
+          <div className="mb-2.5 flex items-start justify-between gap-5 max-[820px]:flex-col">
+            <h1 className="text-[33px] leading-tight font-bold tracking-tight max-[820px]:text-[26px]">
+              {meta.title}
+            </h1>
+            <div className="flex shrink-0 items-center gap-1.5 rounded-lg bg-gold px-3.5 py-2 text-[13px] font-semibold whitespace-nowrap text-white">
+              ☀️ Open in Claude ▾
+            </div>
           </div>
-          <p className="lede">{meta.lede}</p>
-          <Content />
-          <div className="page-footer">
+          <p className="mb-8 text-lg leading-[1.55] text-text-secondary">{meta.lede}</p>
+          <div className="docs-prose">
+            <Content />
+          </div>
+          <div className="mt-[60px] flex justify-between border-t border-border pt-6 text-sm text-text-muted">
             <span>Nomba Subscription Engine</span>
             <span>Edit this page on GitHub</span>
           </div>
         </main>
       </div>
-      <Toc headings={headings} />
+      <Toc />
     </>
   );
 }
