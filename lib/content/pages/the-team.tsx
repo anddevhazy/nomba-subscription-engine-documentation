@@ -4,48 +4,53 @@ import type { PageMeta } from "@/lib/content/types";
 
 export const meta: PageMeta = {
   eyebrow: "Get started",
-  title: "The team",
-  lede: "2 guys who've lost a number of weekends to a billing cron job.",
+  title: "Team Sentry",
+  lede: "2 guys who've lost a number of weekends to billing cron jobs.",
 };
 
 export default function TheTeam() {
   return (
     <>
       <p>
-        The Nomba Subscription Engine started as an internal frustration, not a
-        product brief. A small backend team kept getting pulled off feature work
-        to patch the same recurring-billing gaps, a webhook that silently
-        stopped firing, a customer who wanted to pause instead of cancel and had
-        no way to do it, a Friday-night card decline nobody saw until Monday.
-        Each fix was reasonable on its own. Together they were a second product
-        nobody had budgeted for.
+        The Nomba Subscription Engine is built by{" "}
+        <strong className="font-extrabold">Team Sentry</strong>, 2 fresh
+        graduates, for the{" "}
+        <strong className="font-extrabold">
+          Nomba x DevCareer Hackathon 2026
+        </strong>
+        .
       </p>
       <p>
-        So the team stopped patching and built the thing properly: a real
-        subscription lifecycle instead of a status column, an event store
-        instead of three different write paths for webhooks and analytics, and a
-        recovery flow that reaches a customer on the channel they actually check
-        instead of an email that sits unread.
+        The dynamics of handling subscriptions is a problem we&apos;ve both
+        faced at different times during our careers when trying to add
+        subscriptions to gig apps we&apos;ve built. Hence, it&apos;s technically
+        an internal frustration for us.
+      </p>
+      <p>
+        Many times we&apos;ve had to pull off feature work to patch the same
+        recurring-billing gaps, e.g a webhook that silently stopped firing, a
+        customer who wanted to pause instead of cancel and had no way to do it,
+        a Friday-night card decline nobody saw until Monday. Each of those fixes
+        was reasonable on its own, however, together they were a second product
+        nobody entirely.
+      </p>
+      <p>
+        So this for us is an opportunity to build that product properly, which
+        is a real subscription lifecycle, with an event store instead of three
+        different write paths for webhooks and analytics, and a recovery flow
+        that reaches a customer on the channel they actually check instead of an
+        email that sits unread.
       </p>
 
       <h2 id="h-builders">The builders</h2>
       <CardGrid cols={2}>
-        <Card icon="🧭" title="Engineering lead">
+        <Card icon="🧭" title="Benjamin Nkem - Team lead & Software Engineer">
           Owns the subscription lifecycle and the event store, the two pieces
           everything else is built on top of.
         </Card>
-        <Card icon="💳" title="Payments engineer">
+        <Card icon="💳" title="Ayowole Sodipe - Software Engineer">
           Owns the Nomba integration, Checkout, Tokenised Cards, Charge, and
           Transfers, and the reconciliation logic that sits on top of it.
-        </Card>
-        <Card icon="🔁" title="Recovery & notifications engineer">
-          Owns dunning: the retry schedule, the grace period, and the
-          email/WhatsApp/SMS/USSD orchestration that decides who gets contacted,
-          how, and when.
-        </Card>
-        <Card icon="📊" title="Platform engineer">
-          Owns analytics, audit logging, and the webhook delivery pipeline, the
-          parts merchants and integrators trust the platform on.
         </Card>
       </CardGrid>
 
@@ -60,9 +65,10 @@ export default function TheTeam() {
         payments from customers who live on their phones, not their inboxes.
       </p>
       <p>
-        This platform is the version built for that reality: recurring billing
-        that works the way payment behaviour actually works here, and recovery
-        that reaches people on the rails they&apos;re already using.
+        Nomba Subscription Engine is the version built for that reality, the
+        Nigerian reality: recurring billing that works the way payment behaviour
+        actually works here, and recovery that reaches people on the rails
+        they&apos;re already using.
       </p>
 
       <h2 id="h-next">What to read next</h2>
