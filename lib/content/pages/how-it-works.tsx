@@ -1,6 +1,6 @@
 import { Callout } from "@/components/docs/content/callout";
 import { CardGrid, CardLink } from "@/components/docs/content/card-grid";
-import { Flow, FlowNode, FlowArrow } from "@/components/docs/content/flow";
+import { Mermaid } from "@/components/docs/content/mermaid";
 import { Steps, Step } from "@/components/docs/content/steps";
 import type { PageMeta } from "@/lib/content/types";
 
@@ -20,27 +20,20 @@ export default function HowItWorks() {
         defines a plan to the moment a failed charge recovers itself.
       </p>
 
-      <Flow>
-        <FlowNode variant="accent">1. Merchant creates a plan</FlowNode>
-        <FlowArrow />
-        <FlowNode>
-          2. Customer subscribes
-          <br />
-          (card tokenised via Checkout)
-        </FlowNode>
-        <FlowArrow />
-        <FlowNode>3. Billing cycle fires</FlowNode>
-        <FlowArrow />
-        <FlowNode variant="accent">4. Charge attempted via Nomba</FlowNode>
-        <FlowArrow />
-        <FlowNode variant="accent2">5a. Success: invoice paid, event stored</FlowNode>
-        <FlowArrow />
-        <FlowNode>5b. Failure: past_due → grace period</FlowNode>
-        <FlowArrow />
-        <FlowNode>6. Recovery fires on email / WhatsApp / SMS / USSD</FlowNode>
-        <FlowArrow />
-        <FlowNode variant="accent2">7. Recovered, subscription returns to active</FlowNode>
-      </Flow>
+      <Mermaid
+        chart={`flowchart TD
+    A["1. Merchant creates a plan"]:::accent --> B["2. Customer subscribes\n(card tokenised via Checkout)"]
+    B --> C["3. Billing cycle fires"]
+    C --> D["4. Charge attempted via Nomba"]:::accent
+    D -->|success| E["5a. Invoice paid, event stored"]:::accent2
+    D -->|failure| F["5b. past_due → grace period"]
+    F --> G["6. Recovery fires: email / WhatsApp / SMS / USSD"]
+    G --> H["7. Recovered, subscription returns to active"]:::accent2
+
+    classDef accent fill:#c9971f,stroke:#8a6416,color:#ffffff,font-weight:600;
+    classDef accent2 fill:#1e9a5a,stroke:#166e42,color:#ffffff,font-weight:600;
+`}
+      />
 
       <h2 id="h-plan">1. Adaeze creates a plan</h2>
 
