@@ -51,11 +51,6 @@ import * as securityOverview from "./pages/security/overview";
 import * as webhookVerification from "./pages/security/webhook-verification";
 import * as dataProtection from "./pages/security/data-protection";
 
-import * as apiIntroduction from "./pages/api-reference/introduction";
-import * as apiAuthentication from "./pages/api-reference/authentication";
-import * as apiErrors from "./pages/api-reference/errors";
-import * as apiWebhookEvents from "./pages/api-reference/webhook-events";
-
 type PageModule = { meta: PageMeta; default: ComponentType };
 
 const modules: Record<string, PageModule> = {
@@ -108,11 +103,6 @@ const modules: Record<string, PageModule> = {
   "security/overview": securityOverview,
   "security/webhook-verification": webhookVerification,
   "security/data-protection": dataProtection,
-
-  "api-reference/introduction": apiIntroduction,
-  "api-reference/authentication": apiAuthentication,
-  "api-reference/errors": apiErrors,
-  "api-reference/webhook-events": apiWebhookEvents,
 };
 
 export function getPageModule(slug: string): { meta: PageMeta; Content: ComponentType } | null {

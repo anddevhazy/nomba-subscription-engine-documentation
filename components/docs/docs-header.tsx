@@ -50,7 +50,7 @@ export function DocsHeader() {
             Documentation
           </Link>
           <Link
-            href="/api-reference/introduction"
+            href="/api-reference"
             className={cn(
               "flex h-full items-center border-b-2 border-transparent text-[14.5px] font-medium text-text-secondary",
               isApiReference && "border-gold font-semibold text-foreground",

@@ -29,7 +29,6 @@ import {
   Boxes,
   Shield,
   CheckCircle2,
-  AlertTriangle,
   MessageSquareText,
   DoorOpen,
   ToggleRight,
@@ -84,10 +83,6 @@ export const ICONS: Record<string, LucideIcon> = {
   "security/overview": Shield,
   "security/webhook-verification": CheckCircle2,
   "security/data-protection": Lock,
-  "api-reference/introduction": Book,
-  "api-reference/authentication": Lock,
-  "api-reference/errors": AlertTriangle,
-  "api-reference/webhook-events": Bell,
 };
 
 export const NAV: NavGroup[] = [
@@ -298,12 +293,4 @@ export const DESCRIPTIONS: Record<string, string> = {
     "Every webhook we send is signed. Here's exactly how to verify one, in five languages.",
   "security/data-protection":
     "AES-256-GCM at rest for anything sensitive. What's encrypted, what isn't, and why.",
-  "api-reference/introduction":
-    "The formal reference for the Subscription Engine API. Authentication, resources, errors, webhooks.",
-  "api-reference/authentication":
-    "Bearer tokens, scoped to a merchant. Live and test environments, never crossed.",
-  "api-reference/errors":
-    "Status codes, error codes, and what each one means for your retry logic.",
-  "api-reference/webhook-events":
-    "Every event type we emit, with payload shape and the signature header that proves it came from us.",
 };

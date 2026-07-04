@@ -2,7 +2,7 @@ import { createHighlighter, type Highlighter } from "shiki";
 
 const THEME = "dark-plus";
 
-const LANGS = ["json", "javascript", "typescript", "bash", "text"] as const;
+const LANGS = ["json", "javascript", "typescript", "bash", "python", "text"] as const;
 
 const langMap: Record<string, string> = {
   bash: "bash",
@@ -12,6 +12,8 @@ const langMap: Record<string, string> = {
   js: "javascript",
   typescript: "typescript",
   ts: "typescript",
+  python: "python",
+  py: "python",
   json: "json",
   text: "text",
 };
