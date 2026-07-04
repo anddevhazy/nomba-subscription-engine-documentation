@@ -57,9 +57,6 @@ export default async function DocPage({
             <h1 className="text-[33px] leading-tight font-bold tracking-tight max-[820px]:text-[26px]">
               {meta.title}
             </h1>
-            <div className="flex shrink-0 items-center gap-1.5 rounded-lg bg-gold px-3.5 py-2 text-[13px] font-semibold whitespace-nowrap text-white">
-              ☀️ Open in Claude ▾
-            </div>
           </div>
           <p className="mb-8 text-lg leading-[1.55] text-text-secondary">{meta.lede}</p>
           <div className="docs-prose">

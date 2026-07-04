@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { MobileNav } from "@/components/docs/mobile-nav";
+import { SWAGGER_URL } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 
 export function DocsHeader() {
@@ -27,6 +28,14 @@ export function DocsHeader() {
           </kbd>
         </div>
         <div className="flex shrink-0 items-center gap-3">
+          <a
+            href={SWAGGER_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hidden items-center gap-1 rounded-lg border border-border px-4 py-2 text-[13.5px] font-semibold whitespace-nowrap text-text-secondary hover:bg-[#f7f6f2] hover:text-foreground sm:flex"
+          >
+            Swagger
+          </a>
           <Link
             href="/quick-start"
             className="flex items-center gap-1 rounded-lg bg-gold px-4 py-2 text-[13.5px] font-semibold whitespace-nowrap text-white"
