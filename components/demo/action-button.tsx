@@ -58,9 +58,9 @@ export function ActionButton({
       disabled={disabled || isBusy}
       className={cn(
         fullWidth && "w-full",
+        className,
         phase === "success" &&
           "bg-green-600 text-white hover:bg-green-600 disabled:opacity-100",
-        className,
       )}
     >
       {phase === "idle" && label}
