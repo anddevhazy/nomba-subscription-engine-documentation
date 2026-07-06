@@ -58,8 +58,8 @@ export function PortalDemo() {
   }
 
   return (
-    <div className="flex min-h-screen bg-white">
-      <aside className="flex w-[360px] shrink-0 flex-col justify-between bg-[#4B5568] p-10 text-white">
+    <div className="flex min-h-screen flex-col bg-white md:flex-row">
+      <aside className="flex w-full shrink-0 flex-col justify-between gap-8 bg-[#4B5568] p-6 text-white sm:p-8 md:w-[360px] md:p-10">
         <div>
           <div className="flex items-center gap-2">
             <span className="text-xl">🏋️</span>
@@ -68,8 +68,8 @@ export function PortalDemo() {
               Demo mode
             </Badge>
           </div>
-          <p className="mt-8 text-2xl leading-snug font-medium">Book classes. Track your plan. Show up.</p>
-          <Link href="/introduction" className="mt-8 inline-block text-sm text-white/70 hover:text-white">
+          <p className="mt-6 text-xl leading-snug font-medium sm:mt-8 sm:text-2xl">Book classes. Track your plan. Show up.</p>
+          <Link href="/introduction" className="mt-6 inline-block text-sm text-white/70 hover:text-white sm:mt-8">
             ← Return to Lumen
           </Link>
         </div>
@@ -84,8 +84,8 @@ export function PortalDemo() {
         </footer>
       </aside>
 
-      <main className="mx-auto w-full max-w-2xl flex-1 px-12 py-12">
-        <div className="mb-8 flex justify-end">
+      <main className="mx-auto w-full min-w-0 max-w-2xl flex-1 px-5 py-6 sm:px-8 sm:py-8 md:px-12 md:py-12">
+        <div className="mb-6 flex justify-end sm:mb-8">
           <Button variant="ghost" size="sm" className="text-gray-400 hover:text-gray-700" onClick={() => dispatch({ type: "RESET" })}>
             <RotateCcw /> Reset demo
           </Button>

@@ -16,7 +16,7 @@ export function DocsHeader() {
       <div className="flex h-[62px] items-center gap-[18px] border-b border-border px-6">
         <MobileNav />
         <Link
-          href="/introduction"
+          href="/introduction-tolu"
           className="flex items-center gap-2 text-lg font-bold whitespace-nowrap"
         >
           <img src="/brand/nomba-icon-dark.svg" alt="Nomba" className="h-[26px] w-[22px]" />
@@ -51,7 +51,7 @@ export function DocsHeader() {
       <div className="flex h-11 items-center gap-2 px-6">
         <div className="flex h-full gap-[26px]">
           <Link
-            href="/introduction"
+            href="/introduction-tolu"
             className={cn(
               "flex h-full items-center border-b-2 border-transparent text-[14.5px] font-medium text-text-secondary",
               !isApiReference && "border-gold font-semibold text-foreground",
