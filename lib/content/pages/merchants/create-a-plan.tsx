@@ -32,14 +32,14 @@ export default function CreateAPlan() {
             </td>
             <td>
               &quot;Lumen Monthly,&quot; &quot;Pro Annual&quot;, whatever your customers will recognise on their
-              statement and in the portal.
+              statement.
             </td>
           </tr>
           <tr>
             <td>
               <strong>Price</strong>
             </td>
-            <td>The amount charged per billing cycle, in your settlement currency.</td>
+            <td>The amount charged per billing cycle. NGN today, the only settlement currency the dashboard offers.</td>
           </tr>
           <tr>
             <td>

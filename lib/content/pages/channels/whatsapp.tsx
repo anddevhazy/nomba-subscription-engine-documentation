@@ -1,3 +1,4 @@
+import { Callout } from "@/components/docs/content/callout";
 import { CardGrid, CardLink } from "@/components/docs/content/card-grid";
 import type { PageMeta } from "@/lib/content/types";
 import { Mail, Repeat, Smartphone } from "lucide-react";
@@ -5,73 +6,50 @@ import { Mail, Repeat, Smartphone } from "lucide-react";
 export const meta: PageMeta = {
   eyebrow: "Channels",
   title: "WhatsApp",
-  lede: "Retry Now, Pause Subscription, Downgrade Plan. A failed charge, three buttons, no phone call.",
+  lede: "A real Twilio send on every failed charge, with a simulated stand-in if Twilio isn't configured. Inbound taps aren't wired yet.",
 };
 
 export default function ChannelsWhatsapp() {
   return (
     <>
       <p>
-        WhatsApp is the primary push channel, the first one recovery orchestration reaches for after a failed
-        charge, ahead of SMS. An email with the same notice goes out in parallel every time, regardless of what
-        happens here; see <a href="/channels/email">Email</a>. WhatsApp itself is provisioned via Twilio, with
-        production business verification in place.
+        WhatsApp sends go out via a direct call to Twilio&apos;s REST API on every recovery attempt where a number
+        is on file, in parallel with the email that always fires regardless, see <a href="/channels/email">Email</a>.
       </p>
+
+      <Callout variant="note">
+        <p>
+          If Twilio credentials aren&apos;t configured for an environment, the send is simulated rather than
+          silently failing, the request looks and logs like a real Twilio call, but nothing reaches a phone. Worth
+          checking before assuming a message was actually delivered in a given environment.
+        </p>
+      </Callout>
 
       <h2 id="h-what">What arrives on WhatsApp</h2>
-      <p>A single scenario, deliberately: a failed-charge notification with three inline actions.</p>
-      <blockquote>
-        Your Lumen Monthly payment of ₦15,000 didn&apos;t go through.
-        <br />
-        [Retry Now] &nbsp; [Pause Subscription] &nbsp; [Downgrade Plan]
-      </blockquote>
+      <p>A failed-charge notice.</p>
+      <blockquote>Your payment of ₦15,000 didn&apos;t go through.</blockquote>
+
+      <h2 id="h-links">Acting on it</h2>
       <p>
-        The subscriber&apos;s tap is read directly and routed to the matching action against the subscription, no
-        additional login, no separate app. Under the hood, each button is a scoped portal link, the same primitive
-        documented in <a href="/merchants/customer-portal/deep-links-and-flows">Deep links and flows</a>, generated
-        by recovery orchestration instead of by you.
+        Recovery resolves through the same single-use links covered in{" "}
+        <a href="/concepts/recovery-orchestration">Recovery orchestration</a>: retry, pause, or cancel. There&apos;s
+        no downgrade action today, so a message offering that isn&apos;t accurate to what the platform can actually
+        do yet.
       </p>
 
-      <h2 id="h-actions">The three actions</h2>
-      <table>
-        <tbody>
-          <tr>
-            <th>Action</th>
-            <th>What fires</th>
-          </tr>
-          <tr>
-            <td>
-              <strong>Retry Now</strong>
-            </td>
-            <td>Immediately re-attempts the charge against the card on file.</td>
-          </tr>
-          <tr>
-            <td>
-              <strong>Pause Subscription</strong>
-            </td>
-            <td>Moves the subscription to paused, billing stops, access can resume whenever the subscriber&apos;s ready.</td>
-          </tr>
-          <tr>
-            <td>
-              <strong>Downgrade Plan</strong>
-            </td>
-            <td>Switches to a lower-priced plan the merchant has configured as a downgrade path, and retries at the new price.</td>
-          </tr>
-        </tbody>
-      </table>
-
-      <h2 id="h-scope">What WhatsApp is, and isn&apos;t, used for</h2>
+      <h2 id="h-inbound">Tapping a button on a real message</h2>
       <p>
-        This channel is scoped to dunning, failed-charge notification and the actions above. It is not a
-        general-purpose conversational interface for browsing plans, managing a team, or reading analytics; those
-        live on the web dashboard and portal. Keeping the scope narrow keeps the failure modes narrow too.
+        This is the part that isn&apos;t wired up: a subscriber tapping an inline button on an actual WhatsApp
+        message doesn&apos;t reach this system today. An inbound endpoint exists in roughly the shape a real
+        WhatsApp Business API webhook would need, but it isn&apos;t connected to Twilio&apos;s actual webhook
+        format yet. Until that lands, a WhatsApp recovery message is a one-way notice, the subscriber&apos;s next
+        step happens elsewhere, not by tapping the message itself.
       </p>
 
-      <h2 id="h-fallback">When WhatsApp isn&apos;t available</h2>
+      <h2 id="h-scope">What this channel is, and isn&apos;t, for</h2>
       <p>
-        If the subscriber doesn&apos;t have WhatsApp, or delivery fails, the same message falls back to{" "}
-        <a href="/channels/sms">SMS</a> automatically, see{" "}
-        <a href="/concepts/recovery-orchestration">Recovery orchestration</a> for exactly how that decision is made.
+        Scoped to dunning, a failed-charge notice and nothing else. Not a general-purpose interface for plans,
+        team management, or analytics, those live on the merchant dashboard.
       </p>
 
       <h2 id="h-next">Next</h2>
@@ -80,19 +58,19 @@ export default function ChannelsWhatsapp() {
           href="/channels/sms"
           icon={Smartphone}
           title="SMS"
-          description="The fallback channel, and where it's the primary one instead."
+          description="The other Twilio-backed channel, same caveats."
         />
         <CardLink
           href="/channels/email"
           icon={Mail}
           title="Email"
-          description="The channel that fires no matter what happens here."
+          description="The one channel with nothing simulated about it."
         />
         <CardLink
-          href="/subscribers/when-a-payment-fails"
+          href="/concepts/recovery-orchestration"
           icon={Repeat}
-          title="When a payment fails"
-          description="The same flow, from the subscriber's side."
+          title="Recovery orchestration"
+          description="What's live, what's simulated, across every channel."
         />
       </CardGrid>
     </>

@@ -1,11 +1,11 @@
 import { CardGrid, CardLink } from "@/components/docs/content/card-grid";
 import type { PageMeta } from "@/lib/content/types";
-import { BarChart3, CreditCard, DoorOpen, FileText, Lock, Receipt } from "lucide-react";
+import { BarChart3, CreditCard, FileText, Receipt, Wallet } from "lucide-react";
 
 export const meta: PageMeta = {
   eyebrow: "For merchants",
   title: "For merchants",
-  lede: "Stop building billing logic in-house. Plans, customers, invoices, recovery, and analytics, one API, one dashboard.",
+  lede: "Stop building billing logic in-house. Plans, customers, invoices, dunning, and analytics, one API, one dashboard.",
 };
 
 export default function MerchantsOverview() {
@@ -37,13 +37,13 @@ export default function MerchantsOverview() {
           href="/merchants/billing-and-invoicing"
           icon={Receipt}
           title="Billing & invoicing"
-          description="Invoices generate themselves. Proration handles upgrades and downgrades mid-cycle."
+          description="Invoices generate themselves on schedule. Proration on plan changes is a preview today, not yet a charge."
         />
         <CardLink
-          href="/merchants/team-and-roles"
-          icon={Lock}
-          title="Team & roles"
-          description="Bring on a Team Member for day-to-day support without handing over API keys."
+          href="/merchants/payments"
+          icon={Wallet}
+          title="Payments"
+          description="Checkout sessions, charges, and payment attempts, the money-movement record behind every invoice."
         />
         <CardLink
           href="/merchants/analytics"
@@ -51,24 +51,20 @@ export default function MerchantsOverview() {
           title="Analytics"
           description="MRR, churn, recovery rate, and plan performance, computed on demand, always current."
         />
-        <CardLink
-          href="/merchants/customer-portal/overview"
-          icon={DoorOpen}
-          title="Customer portal"
-          description="Let subscribers manage themselves. Setup, configuration, deep links, and cancellation, in one subsection."
-        />
       </CardGrid>
 
       <h2 id="h-why">Why this works</h2>
       <p>
-        <strong>One: your subscribers manage themselves.</strong> Pause, cancel, resume, update a card, all from the
-        customer portal, authenticated separately from your merchant account. None of it lands in your support queue
-        unless something&apos;s genuinely gone wrong.
+        <strong>One: the billing cycle runs itself.</strong> Invoices generate, charges fire, and outcomes write to
+        the event store without you tapping anything, see <a href="/merchants/billing-and-invoicing">Billing &amp;
+        invoicing</a>.
       </p>
       <p>
         <strong>Two: a failed payment isn&apos;t a lost customer by default.</strong> The moment a charge fails,
-        recovery starts on whichever channel actually reaches that subscriber, email always, plus WhatsApp, SMS, or
-        USSD, inside the grace period, not after someone happens to check a report.
+        three scheduled retries and a real-time notification, email always, plus a Twilio-backed WhatsApp or SMS
+        send where a number&apos;s on file, run inside the grace period, not after someone happens to check a
+        report. See <a href="/concepts/recovery-orchestration">Recovery orchestration</a> for exactly what&apos;s
+        live today.
       </p>
 
       <h2 id="h-surfaces">Where you work</h2>
@@ -82,7 +78,7 @@ export default function MerchantsOverview() {
             <td>
               <strong>Merchant dashboard</strong>
             </td>
-            <td>Create plans, manage customers, watch analytics, configure webhooks, rotate API keys, manage your team.</td>
+            <td>Create plans, manage customers and subscriptions, watch analytics, configure webhooks, rotate API keys.</td>
           </tr>
           <tr>
             <td>
@@ -98,6 +94,10 @@ export default function MerchantsOverview() {
           </tr>
         </tbody>
       </table>
+      <p className="body-secondary">
+        One user per merchant account today, there&apos;s no invite flow or role tier yet, whoever has the login
+        has full access.
+      </p>
 
       <h2 id="h-start">Where to start</h2>
       <p>

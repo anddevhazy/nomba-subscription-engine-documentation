@@ -137,10 +137,10 @@ export default function HowItWorks() {
           description="Plans, billing, and analytics from the operator's side."
         />
         <CardLink
-          href="/subscribers/overview"
+          href="/concepts/recovery-orchestration"
           icon={UserCheck}
-          title="Subscribers"
-          description="The portal and the recovery experience from the customer's side."
+          title="Recovery"
+          description="The recovery experience from the customer's side, and what's live today."
         />
         <CardLink
           href="/developer/webhooks"

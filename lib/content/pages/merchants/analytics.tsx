@@ -27,8 +27,9 @@ export default function MerchantsAnalytics() {
           Share of subscribers who cancelled or lapsed into <code className="inline">expired</code> in the period.
         </Card>
         <Card icon={Repeat} title="Recovery rate">
-          Share of failed payments recovered within the grace period, broken down by channel, email vs. WhatsApp vs.
-          SMS vs. USSD.
+          Share of failed payments recovered within the grace period, with attribution available for the channels
+          that have a live trigger path today, automatic retry, WhatsApp, and USSD, see{" "}
+          <a href="/concepts/recovery-orchestration">Recovery orchestration</a>.
         </Card>
         <Card icon={User} title="ARPU">
           Average revenue per active subscriber.
@@ -62,15 +63,39 @@ export default function MerchantsAnalytics() {
           </tr>
           <tr>
             <td>
+              <code className="inline">GET /analytics/subscriptions/trend</code>
+            </td>
+            <td>New versus cancelled subscriptions over time, same granularity options.</td>
+          </tr>
+          <tr>
+            <td>
               <code className="inline">GET /analytics/plans</code>
             </td>
             <td>MRR and subscriber count per plan, which tier is actually carrying the business.</td>
           </tr>
           <tr>
             <td>
+              <code className="inline">GET /analytics/payments</code>
+            </td>
+            <td>Payment success rate, average amount, and attempt volume.</td>
+          </tr>
+          <tr>
+            <td>
+              <code className="inline">GET /analytics/customers</code>
+            </td>
+            <td>Total customers, share with an active subscription, new customers in the period.</td>
+          </tr>
+          <tr>
+            <td>
               <code className="inline">GET /analytics/dunning</code>
             </td>
-            <td>Past-due volume, grace-period volume, recovery rate, by channel.</td>
+            <td>Past-due volume, grace-period volume, recovery rate.</td>
+          </tr>
+          <tr>
+            <td>
+              <code className="inline">GET /analytics/webhooks</code>
+            </td>
+            <td>Delivery counts by status, delivered, failed, pending.</td>
           </tr>
           <tr>
             <td>

@@ -11,8 +11,6 @@ import {
   Receipt,
   Lock,
   LineChart,
-  Hand,
-  Settings,
   RotateCw,
   Book,
   Monitor,
@@ -30,12 +28,9 @@ import {
   Shield,
   CheckCircle2,
   MessageSquareText,
-  DoorOpen,
-  ToggleRight,
-  Code,
-  SlidersHorizontal,
-  Link as LinkIcon,
-  X,
+  Wallet,
+  Radio,
+  Server,
 } from "lucide-react";
 
 export type NavItem = { slug: string; title: string };
@@ -52,17 +47,8 @@ export const ICONS: Record<string, LucideIcon> = {
   "merchants/create-a-plan": FileText,
   "merchants/onboard-and-collect-payment": CreditCard,
   "merchants/billing-and-invoicing": Receipt,
-  "merchants/team-and-roles": Lock,
+  "merchants/payments": Wallet,
   "merchants/analytics": LineChart,
-  "merchants/customer-portal/overview": DoorOpen,
-  "merchants/customer-portal/no-code-setup": ToggleRight,
-  "merchants/customer-portal/api-setup": Code,
-  "merchants/customer-portal/configure": SlidersHorizontal,
-  "merchants/customer-portal/deep-links-and-flows": LinkIcon,
-  "merchants/customer-portal/cancellation-page": X,
-  "subscribers/overview": Hand,
-  "subscribers/manage-your-subscription": Settings,
-  "subscribers/when-a-payment-fails": RotateCw,
   "concepts/subscription-lifecycle": RotateCw,
   "concepts/event-store": Book,
   "concepts/recovery-orchestration": Compass,
@@ -74,12 +60,14 @@ export const ICONS: Record<string, LucideIcon> = {
   "developer/authentication": Key,
   "developer/webhooks": Bell,
   "developer/rate-limits": Timer,
+  "developer/service-info": Server,
   "architecture/overview": Building2,
   "architecture/modules": Puzzle,
   "architecture/nomba-integration": Plug,
   "architecture/data-flow": FolderTree,
   "architecture/queues-and-async": Boxes,
   "architecture/resilience": Shield,
+  "architecture/mission-control": Radio,
   "security/overview": Shield,
   "security/webhook-verification": CheckCircle2,
   "security/data-protection": Lock,
@@ -111,21 +99,6 @@ export const NAV: NavGroup[] = [
       },
     ],
   },
-
-  {
-    group: "For subscribers",
-    items: [
-      { slug: "subscribers/overview", title: "For subscribers" },
-      {
-        slug: "subscribers/manage-your-subscription",
-        title: "Manage your subscription",
-      },
-      {
-        slug: "subscribers/when-a-payment-fails",
-        title: "When a payment fails",
-      },
-    ],
-  },
   {
     group: "For merchants",
     items: [
@@ -136,34 +109,8 @@ export const NAV: NavGroup[] = [
         title: "Onboard a customer",
       },
       { slug: "merchants/billing-and-invoicing", title: "Billing & invoicing" },
-      { slug: "merchants/team-and-roles", title: "Team & roles" },
+      { slug: "merchants/payments", title: "Payments" },
       { slug: "merchants/analytics", title: "Analytics" },
-    ],
-  },
-  {
-    group: "Customer portal",
-    items: [
-      { slug: "merchants/customer-portal/overview", title: "Customer portal" },
-      {
-        slug: "merchants/customer-portal/no-code-setup",
-        title: "Create a customer portal",
-      },
-      {
-        slug: "merchants/customer-portal/api-setup",
-        title: "Set up the customer portal with the API",
-      },
-      {
-        slug: "merchants/customer-portal/configure",
-        title: "Configure the customer portal",
-      },
-      {
-        slug: "merchants/customer-portal/deep-links-and-flows",
-        title: "Deep links and flows",
-      },
-      {
-        slug: "merchants/customer-portal/cancellation-page",
-        title: "Add a cancellation page",
-      },
     ],
   },
   {
@@ -172,9 +119,9 @@ export const NAV: NavGroup[] = [
       { slug: "developer/authentication", title: "Authentication" },
       { slug: "developer/webhooks", title: "Webhooks" },
       { slug: "developer/rate-limits", title: "Rate limits" },
+      { slug: "developer/service-info", title: "Service info" },
     ],
   },
-
   {
     group: "Channels",
     items: [
@@ -197,6 +144,7 @@ export const NAV: NavGroup[] = [
         title: "Queues & async processing",
       },
       { slug: "architecture/resilience", title: "Resilience & scale" },
+      { slug: "architecture/mission-control", title: "Mission control" },
     ],
   },
   {
@@ -224,73 +172,59 @@ export const DESCRIPTIONS: Record<string, string> = {
   "the-team":
     "The people behind Subflow, and why recurring billing in Nigeria needed a second look.",
   "merchants/overview":
-    "Stop building billing logic in-house. Plans, customers, invoices, recovery, analytics, one API, one dashboard.",
+    "Stop building billing logic in-house. Plans, customers, invoices, dunning, analytics, one API, one dashboard.",
   "merchants/create-a-plan":
     "Name, price, interval, trial. From an idea for a pricing tier to something a customer can subscribe to.",
   "merchants/onboard-and-collect-payment":
     "Tokenise a card once. Charge it on every billing cycle after, without asking the customer again.",
   "merchants/billing-and-invoicing":
-    "Invoices generate themselves. Charges fire themselves. Proration does the maths so you don't have to.",
-  "merchants/team-and-roles":
-    "Owner and Team Member. Who can rotate an API key, and who just needs to handle today's support queue.",
+    "Invoices generate themselves. Charges fire themselves. Proration on a plan change is previewed today, not yet charged automatically.",
+  "merchants/payments":
+    "Checkout sessions, charges, and payment attempts, the money-movement record underneath every invoice.",
   "merchants/analytics":
     "MRR, churn, recovery rate, plan performance, computed from the same event store that powers your webhooks.",
-  "merchants/customer-portal/overview":
-    "Let your subscribers manage their own account. View, pause, resume, cancel, update payment method, no support ticket required.",
-  "merchants/customer-portal/no-code-setup":
-    "There's nothing to activate. Here's what you actually configure, in the Dashboard, without writing a line of code.",
-  "merchants/customer-portal/api-setup":
-    "Generate a portal link server-side, redirect your customer, listen for what they change.",
-  "merchants/customer-portal/configure":
-    "Which actions are on, which are off, and what a subscriber is actually allowed to touch.",
-  "merchants/customer-portal/deep-links-and-flows":
-    "A signed, single-use link into exactly one action. The same primitive that already powers our recovery messages.",
-  "merchants/customer-portal/cancellation-page":
-    "Cancellation is on by default. Here's how to learn why it happened, and what to offer before it does.",
-  "subscribers/overview":
-    "View it. Pause it. Cancel it. Fix a failed card. Without emailing the merchant and waiting.",
-  "subscribers/manage-your-subscription":
-    "Everything you can do from the portal, and why it doesn't touch the merchant's dashboard to do it.",
-  "subscribers/when-a-payment-fails":
-    "A card fails. A message arrives on WhatsApp before you even notice. Here's the whole recovery path.",
   "concepts/subscription-lifecycle":
     "Eight states. One state machine. Why `past_due` and `grace_period` are different states, not the same failure twice.",
   "concepts/event-store":
     "Every domain event, persisted once, read by webhooks, notifications, and analytics. One source of truth, not three.",
   "concepts/recovery-orchestration":
-    "One component decides which channel reaches a customer first, and what to do when that channel doesn't answer.",
+    "One event triggers a real email, a Twilio-backed WhatsApp or SMS send, and three single-use links. What's live today, and what's still a stand-in.",
   "channels/web":
-    "The API and docs site, the merchant dashboard, and the customer portal, three applications, one API underneath.",
+    "The API and docs site, and the merchant dashboard, two applications, one API underneath. There's no separate subscriber-facing app yet.",
   "channels/email":
     "The baseline channel. Every recovery sequence sends one, whether or not WhatsApp or SMS also fire.",
   "channels/whatsapp":
-    "Retry Now, Pause Subscription, Downgrade Plan. A failed charge, three buttons, no phone call.",
+    "A real Twilio send on every failed charge, with a simulated stand-in if Twilio isn't configured. Inbound taps aren't wired yet.",
   "channels/sms":
-    "Reply YES to retry. The rail that works when a customer has neither an app nor a smartphone worth the name.",
+    "A real Twilio text on a failed charge. Replying to it doesn't do anything yet, there's no inbound receiver.",
   "channels/ussd":
-    "Dial a short code, check your status, pause or cancel. No data connection required, ever.",
+    "A session endpoint shaped for a telco short code. There's no telco behind it yet, so it doesn't reach a real handset today.",
   "developer/authentication":
     "Live and test keys per merchant. Bearer auth, rotation, and what happens the moment a request lands.",
   "developer/webhooks":
     "Subscribe once. Every domain event, delivered with retry, dead-letter handling, and replay by subscription ID or time range.",
   "developer/rate-limits":
-    "Per-key throughput, burst headroom, and the headers that tell you exactly where you stand.",
+    "One global limit, 100 requests per 60 seconds, shared by every caller. No per-key tiers yet.",
+  "developer/service-info":
+    "A debug console for the one webhook direction that's easy to get wrong: Nomba calling into you, not you calling out.",
   "architecture/overview":
     "One NestJS API. Postgres for the ledger. Redis and BullMQ for everything that shouldn't block a response.",
   "architecture/modules":
-    "Sixteen modules, each owning one slice of the domain. What each one is responsible for, and who it talks to.",
+    "Nineteen domain modules and five shared-infrastructure ones. What each is responsible for, and who it talks to.",
   "architecture/nomba-integration":
-    "Checkout, Tokenised Cards, Charge, Transfers. The four Nomba surfaces this engine is built on.",
+    "Token issuance, Checkout, and Tokenised-card Charge. The three Nomba surfaces this engine is actually built on.",
   "architecture/data-flow":
     "How a single event, a payment failing, a subscription renewing, reaches webhooks, notifications, and analytics without three separate write paths.",
   "architecture/queues-and-async":
     "Dunning retries, webhook delivery, invoice generation. Why none of them happen inline on the request that triggered them.",
   "architecture/resilience":
-    "Async by default, retried with backoff, degraded gracefully when WhatsApp or SMS goes down for an hour.",
+    "Async by default, retried with backoff, degraded gracefully when WhatsApp, SMS, or email goes down for an hour.",
+  "architecture/mission-control":
+    "A live, per-merchant WebSocket feed of the same events that drive webhooks and analytics. Real, scoped, and running today.",
   "security/overview":
     "The defence-in-depth posture across authentication, webhook signing, and data at rest.",
   "security/webhook-verification":
-    "Every webhook we send is signed. Here's exactly how to verify one, in five languages.",
+    "Every webhook is signed with HMAC-SHA256 over the raw body. Here's exactly how to verify one, and one gap worth knowing about.",
   "security/data-protection":
-    "AES-256-GCM at rest for anything sensitive. What's encrypted, what isn't, and why.",
+    "Passwords and secrets are hashed today. AES-256-GCM at rest exists as a utility, but isn't applied to any stored field yet.",
 };

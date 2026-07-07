@@ -1,3 +1,4 @@
+import { Callout } from "@/components/docs/content/callout";
 import { CardGrid, CardLink } from "@/components/docs/content/card-grid";
 import type { PageMeta } from "@/lib/content/types";
 import { Mail, Phone, Repeat } from "lucide-react";
@@ -5,59 +6,37 @@ import { Mail, Phone, Repeat } from "lucide-react";
 export const meta: PageMeta = {
   eyebrow: "Channels",
   title: "SMS",
-  lede: "Reply YES to retry. The rail that works when a customer has neither an app nor a smartphone worth the name.",
+  lede: "A real Twilio text on a failed charge. Replying to it doesn't do anything yet, there's no inbound receiver.",
 };
 
 export default function ChannelsSms() {
   return (
     <>
       <p>
-        SMS is the fallback push channel, where <a href="/channels/whatsapp">WhatsApp</a> can&apos;t reach a
-        subscriber, SMS does. It&apos;s also, for some merchants&apos; customer bases, the primary push channel by
-        default: not every subscriber has WhatsApp, but nearly all of them can receive a text. An{" "}
-        <a href="/channels/email">email</a> with the same notice goes out in parallel regardless of how SMS
-        resolves.
+        SMS sends via the same Twilio integration as WhatsApp, over a raw REST call, with the same simulated
+        stand-in if Twilio credentials aren&apos;t configured. It reaches subscribers WhatsApp can&apos;t, and for
+        some customer bases it&apos;s the more realistic default: not everyone has WhatsApp, but nearly everyone
+        can receive a text. An <a href="/channels/email">email</a> with the same notice goes out in parallel
+        regardless.
       </p>
 
       <h2 id="h-what">What arrives by SMS</h2>
-      <blockquote>Lumen: payment of ₦15,000 failed. Reply YES to retry.</blockquote>
-      <p>
-        The subscriber replies <strong>YES</strong>, and the retry fires against the stored card, the same action
-        as tapping Retry Now on WhatsApp, just over a rail that works on any handset.
-      </p>
+      <blockquote>Subflow: payment of ₦15,000 failed.</blockquote>
 
-      <h2 id="h-scope">One job, done reliably</h2>
-      <p>
-        Unlike WhatsApp&apos;s three inline actions, SMS carries one clear instruction, because the interaction
-        model is more limited by design, a short reply-driven exchange, not a menu. A subscriber who needs to pause
-        or downgrade rather than retry is directed to the customer portal or USSD instead of trying to cram those
-        options into a text exchange.
-      </p>
+      <Callout variant="note">
+        <p>
+          There&apos;s no inbound SMS receiver today, so a &quot;reply YES to retry&quot; prompt isn&apos;t
+          accurate yet, an actual reply doesn&apos;t reach the system. Until that lands, SMS here is a one-way
+          notice: it tells a subscriber something needs attention, but doesn&apos;t itself carry the fix.
+        </p>
+      </Callout>
 
-      <table>
-        <tbody>
-          <tr>
-            <th>Message</th>
-            <th>What it does</th>
-          </tr>
-          <tr>
-            <td>Failed-charge alert</td>
-            <td>Outbound. Prompts a reply of YES to retry.</td>
-          </tr>
-          <tr>
-            <td>
-              <code className="inline">YES</code> reply
-            </td>
-            <td>Inbound. Triggers a retry against the stored card, same as WhatsApp&apos;s Retry Now.</td>
-          </tr>
-        </tbody>
-      </table>
-
-      <h2 id="h-when">When SMS is the primary channel, not the fallback</h2>
+      <h2 id="h-scope">What this channel is, and isn&apos;t, for</h2>
       <p>
-        For a subscriber with no WhatsApp presence, recovery orchestration goes straight to SMS as the first
-        attempt, see <a href="/concepts/recovery-orchestration">Recovery orchestration</a> for exactly how that
-        channel preference resolves.
+        Scoped to dunning, a failed-charge notice and nothing else. A subscriber who needs to actually retry,
+        pause, or cancel resolves that through <a href="/concepts/recovery-orchestration">the single-use links</a>{" "}
+        wired into WhatsApp and USSD today, or through a merchant acting on their behalf, not through this
+        channel directly.
       </p>
 
       <h2 id="h-next">Next</h2>
@@ -72,13 +51,13 @@ export default function ChannelsSms() {
           href="/channels/ussd"
           icon={Phone}
           title="USSD"
-          description="Full self-service, no data connection at all."
+          description="No data connection needed, still simulated end to end."
         />
         <CardLink
-          href="/subscribers/when-a-payment-fails"
+          href="/concepts/recovery-orchestration"
           icon={Repeat}
-          title="When a payment fails"
-          description="The recovery flow, from the subscriber's side."
+          title="Recovery orchestration"
+          description="What's actually live versus simulated, across every channel."
         />
       </CardGrid>
     </>

@@ -31,7 +31,7 @@ export default function SecurityOverview() {
           href="/security/data-protection"
           icon={Lock}
           title="Data at rest"
-          description="Sensitive data, including stored payment references, is encrypted with AES-256-GCM."
+          description="What's actually protected today (hashing) versus what's built but not yet wired up (field encryption)."
         />
       </CardGrid>
 
@@ -43,11 +43,13 @@ export default function SecurityOverview() {
         another&apos;s response if the query itself is scoped before it ever reaches application logic.
       </p>
 
-      <h2 id="h-idempotent">Idempotency as a security property, not just a reliability one</h2>
+      <h2 id="h-idempotent">Idempotency, where it exists today</h2>
       <p>
-        Idempotency keys on writes and stable event IDs on webhook replay mean a retried or replayed request can
-        never be turned into a duplicate charge or a duplicate side effect, whether the retry was benign (a network
-        blip) or adversarial (someone replaying a captured request).
+        Stable event IDs on webhook replay mean a replayed delivery can be deduplicated safely on your side, see{" "}
+        <a href="/security/webhook-verification">Webhook signature verification</a>. That protection doesn&apos;t
+        extend to API writes yet, there&apos;s no <code className="inline">Idempotency-Key</code> support on
+        endpoints like subscription creation, see <a href="/developer/rate-limits">Rate limits</a> for what to do
+        about that on your end in the meantime.
       </p>
 
       <h2 id="h-audit">Everything material is audited</h2>

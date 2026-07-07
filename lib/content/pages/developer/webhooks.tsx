@@ -76,7 +76,7 @@ export default function DeveloperWebhooks() {
 
       <CodeBlock
         code={`curl -X POST https://api.nomba-subscriptions.com/webhooks \\
-  -H "Authorization: Bearer nse_live_..." \\
+  -H "Authorization: Bearer nsub_live_..." \\
   -H "Content-Type: application/json" \\
   -d '{
     "url": "https://efe-ledgerly.example.com/webhooks/nomba-subs",
@@ -97,7 +97,6 @@ export default function DeveloperWebhooks() {
         code={`{
   "id": "evt_01HMFB...",
   "type": "payment.failed",
-  "createdAt": "2026-08-14T11:02:33Z",
   "data": {
     "subscriptionId": "sub_01HMFC...",
     "customerId": "cus_01HMFD...",
@@ -106,16 +105,22 @@ export default function DeveloperWebhooks() {
     "currency": "NGN",
     "failureReason": "card_declined"
   },
-  "merchantId": "mrc_01HK...",
-  "apiVersion": "v1"
+  "createdAt": "2026-08-14T11:02:33Z",
+  "correlationId": "cor_01HMFB..."
 }`}
         language="json"
       />
+      <p className="body-secondary">
+        There&apos;s no <code className="inline">merchantId</code> or <code className="inline">apiVersion</code>{" "}
+        field in the body, the delivery itself is already scoped to your webhook, and there&apos;s one API
+        version today.
+      </p>
 
       <h2 id="h-retry">Delivery and retries</h2>
       <p>
         Order is not guaranteed across events for the same subscription, use <code className="inline">createdAt</code>{" "}
-        if ordering matters to your handler. On a non-2xx response, we retry with exponential backoff:
+        if ordering matters to your handler. On a non-2xx response, delivery retries on a fixed schedule, five
+        attempts total:
       </p>
       <table>
         <tbody>
@@ -125,7 +130,7 @@ export default function DeveloperWebhooks() {
           </tr>
           <tr>
             <td>1</td>
-            <td>30 seconds</td>
+            <td>1 minute</td>
           </tr>
           <tr>
             <td>2</td>
@@ -133,20 +138,20 @@ export default function DeveloperWebhooks() {
           </tr>
           <tr>
             <td>3</td>
-            <td>30 minutes</td>
+            <td>15 minutes</td>
           </tr>
           <tr>
             <td>4</td>
-            <td>2 hours</td>
+            <td>1 hour</td>
           </tr>
           <tr>
-            <td>5+</td>
-            <td>12-24 hours, up to 14 days total</td>
+            <td>5</td>
+            <td>4 hours</td>
           </tr>
         </tbody>
       </table>
       <p>
-        After 14 days of failed delivery, an event moves to a dead-letter state, visible in your dashboard, and
+        After the fifth attempt fails, the delivery moves to a dead-letter state, visible in your dashboard, and
         replayable manually once your endpoint is healthy again.
       </p>
 
@@ -158,7 +163,7 @@ export default function DeveloperWebhooks() {
 
       <CodeBlock
         code={`curl -X POST https://api.nomba-subscriptions.com/webhooks/replay \\
-  -H "Authorization: Bearer nse_live_..." \\
+  -H "Authorization: Bearer nsub_live_..." \\
   -H "Content-Type: application/json" \\
   -d '{
     "subscriptionId": "sub_01HMFC...",

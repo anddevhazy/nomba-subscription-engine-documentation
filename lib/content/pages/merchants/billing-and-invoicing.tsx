@@ -7,7 +7,7 @@ import { BarChart3, RefreshCw } from "lucide-react";
 export const meta: PageMeta = {
   eyebrow: "For merchants",
   title: "Billing & invoicing",
-  lede: "Invoices generate themselves. Charges fire themselves. Proration does the maths so you don't have to.",
+  lede: "Invoices generate themselves. Charges fire themselves. Proration on a plan change is previewed today, not yet charged automatically.",
 };
 
 export default function BillingAndInvoicing() {
@@ -43,14 +43,16 @@ export default function BillingAndInvoicing() {
       <h2 id="h-proration">Proration on plan changes</h2>
       <p>
         A customer upgrades from &quot;Lumen Monthly&quot; to &quot;Lumen Pro&quot; halfway through a billing cycle.
-        Rather than charging the full new price immediately or waiting until the next cycle, the engine prorates:
-        credits the unused portion of the old plan, charges the prorated cost of the new one for the remainder of
-        the current cycle, and the next full cycle bills at the new plan&apos;s full price.
+        The proration math itself is real: it works out the credit for the unused portion of the old plan and the
+        prorated cost of the new one for the remainder of the current cycle, and shows it to you before you confirm
+        the change.
       </p>
       <Callout variant="note">
         <p>
-          The same logic runs in reverse for a downgrade, the difference just shows up as a credit against the next
-          invoice rather than an immediate charge.
+          What&apos;s not automated yet is collecting that prorated amount, changing a plan today applies
+          immediately at the new price starting next cycle, but doesn&apos;t itself trigger a mid-cycle charge or
+          credit. Treat the proration preview as accurate math you&apos;ll need to reconcile manually for now, not
+          as a charge that already happened.
         </p>
       </Callout>
 

@@ -73,14 +73,13 @@ export default function ArchitectureOverview() {
 
       <CodeBlock
         code={`merchants
-  ├── users (role: owner | team_member)
+  ├── users (one per merchant today, no role tiers yet)
   ├── api_keys
   ├── plans
   ├── customers
   │     ├── subscriptions
   │           ├── invoices → invoice_items
   │           └── payments → payment_attempts
-  ├── transfers
   ├── webhooks → webhook_deliveries
   ├── audit_logs
   └── event_store`}
@@ -91,6 +90,10 @@ export default function ArchitectureOverview() {
         Every business entity below <code className="inline">Merchant</code> carries a{" "}
         <code className="inline">merchantId</code> for tenant isolation, enforced at the data-access layer, not only
         in application code. See <a href="/architecture/modules">Modules</a> for what owns each part of this.
+      </p>
+      <p className="body-secondary">
+        The schema has room for more than one user per merchant, but nothing in the API creates a second one yet,
+        there&apos;s no invite flow and no role differentiation today.
       </p>
 
       <h2 id="h-decisions">A few deliberate choices</h2>
@@ -112,10 +115,11 @@ export default function ArchitectureOverview() {
             <td>One data path means analytics and webhooks can never quietly drift apart from each other.</td>
           </tr>
           <tr>
-            <td>Recovery orchestration as one centralized component</td>
+            <td>Notification fan-out driven by the same event, not per-caller logic</td>
             <td>
-              Channel selection and fallback logic (email always, WhatsApp → SMS, USSD as pull) lives in one place,
-              not duplicated at every call site that needs to notify a subscriber.
+              A failed charge writes one event; email, WhatsApp, and SMS dispatch reads from that, not from
+              separate call sites scattered across the codebase, see{" "}
+              <a href="/concepts/recovery-orchestration">Recovery orchestration</a>.
             </td>
           </tr>
           <tr>
@@ -131,13 +135,13 @@ export default function ArchitectureOverview() {
           href="/architecture/modules"
           icon={Puzzle}
           title="Modules"
-          description="What each of the sixteen modules owns."
+          description="What each of the nineteen domain modules owns."
         />
         <CardLink
           href="/architecture/nomba-integration"
           icon={Plug}
           title="Nomba integration"
-          description="The four payment surfaces this is built on."
+          description="The three payment surfaces this is built on."
         />
         <CardLink
           href="/architecture/data-flow"

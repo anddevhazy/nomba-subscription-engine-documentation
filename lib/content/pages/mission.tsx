@@ -79,7 +79,7 @@ export default function Mission() {
           <p>
             View, pause, resume, cancel, and update a payment method, authenticated separately from the
             merchant&apos;s own account. See{" "}
-            <a href="/subscribers/manage-your-subscription">Manage your subscription</a>.
+            <a href="/concepts/recovery-orchestration">Recovery orchestration</a> for what&apos;s live today.
           </p>
         </Card>
         <Card icon={Bell} title="Webhooks for downstream systems">
@@ -202,9 +202,9 @@ export default function Mission() {
           <tr>
             <td>Expired card nobody noticed</td>
             <td>
-              The most common real-world failure mode, and the reason WhatsApp recovery leads with Retry Now, Pause,
-              and Downgrade rather than a bare &quot;payment failed&quot; notice. See{" "}
-              <a href="/subscribers/when-a-payment-fails">When a payment fails</a>.
+              The most common real-world failure mode, and the reason recovery leads with a retry link rather than
+              a bare &quot;payment failed&quot; notice. See{" "}
+              <a href="/concepts/recovery-orchestration">Recovery orchestration</a>.
             </td>
           </tr>
           <tr>
@@ -224,8 +224,8 @@ export default function Mission() {
           <tr>
             <td>A subscriber wants to pause, not cancel</td>
             <td>
-              A first-class action in the portal, on WhatsApp, and over USSD, not a support ticket. See{" "}
-              <a href="/subscribers/manage-your-subscription">Manage your subscription</a>.
+              A first-class action a merchant can take on a subscriber&apos;s behalf today, see{" "}
+              <a href="/concepts/subscription-lifecycle">Subscription lifecycle</a>.
             </td>
           </tr>
         </tbody>

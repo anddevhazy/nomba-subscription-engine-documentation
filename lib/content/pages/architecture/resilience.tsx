@@ -34,9 +34,10 @@ export default function Resilience() {
           A webhook delivery that exhausts its retry window moves to a dead-letter state, visible to the merchant
           and replayable once their endpoint is fixed.
         </Card>
-        <Card icon={KeySquare} title="Idempotency">
-          Replayed webhooks and retried charges carry stable identifiers so reprocessing is always safe, never a
-          duplicate side effect.
+        <Card icon={KeySquare} title="Idempotency, partial">
+          Replayed webhooks carry the original event&apos;s id, so a receiver deduping on it is safe by
+          construction. There&apos;s no <code className="inline">Idempotency-Key</code> support on write endpoints
+          yet, see <a href="/developer/rate-limits">Rate limits</a>.
         </Card>
         <Card icon={NotebookText} title="The event store as ground truth">
           Even if a queue drains unexpectedly, the underlying facts are durable in the event store and can be
@@ -52,25 +53,22 @@ export default function Resilience() {
             <th>What happens</th>
           </tr>
           <tr>
-            <td>WhatsApp provider outage</td>
+            <td>WhatsApp or SMS provider (Twilio) unreachable, or not configured</td>
             <td>
-              Recovery messages queue and retry; once the outage clears, queued messages send, or the orchestration
-              falls forward to SMS if the delay exceeds a threshold. Email has already reached the subscriber
-              regardless.
+              The send is simulated rather than failing the job outright, see{" "}
+              <a href="/concepts/recovery-orchestration">Recovery orchestration</a>. Email has already reached the
+              subscriber regardless, since it doesn&apos;t depend on Twilio at all.
             </td>
           </tr>
           <tr>
             <td>Email provider outage</td>
-            <td>
-              Queued and retried like any other job; WhatsApp and SMS still fire on their own schedule, so recovery
-              isn&apos;t blocked on a single provider.
-            </td>
+            <td>Notification jobs retry up to 3 times with backoff at the queue level, same as any other job.</td>
           </tr>
           <tr>
             <td>A merchant&apos;s webhook endpoint is down</td>
             <td>
-              Deliveries retry on the schedule in <a href="/developer/webhooks">Webhooks</a>, up to 14 days, then
-              move to dead-letter, replayable, not lost.
+              Deliveries retry on the schedule in <a href="/developer/webhooks">Webhooks</a>, five attempts over
+              roughly four hours, then move to dead-letter, replayable, not lost.
             </td>
           </tr>
           <tr>

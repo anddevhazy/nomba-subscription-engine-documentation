@@ -1,3 +1,4 @@
+import { Callout } from "@/components/docs/content/callout";
 import { CardGrid, CardLink } from "@/components/docs/content/card-grid";
 import { CodeBlock } from "@/components/docs/code-block";
 import { Steps, Step } from "@/components/docs/content/steps";
@@ -7,7 +8,7 @@ import { Bell, CheckCircle2, Lock } from "lucide-react";
 export const meta: PageMeta = {
   eyebrow: "Security & trust",
   title: "Webhook signature verification",
-  lede: "Every webhook we send is signed. Here's exactly how to verify one, in five languages.",
+  lede: "Every webhook is signed with HMAC-SHA256 over the raw body. Here's exactly how to verify one, and one gap worth knowing about.",
 };
 
 export default function WebhookVerification() {
@@ -15,54 +16,62 @@ export default function WebhookVerification() {
     <>
       <p>
         Anyone who knows your webhook URL can POST to it. Signature verification is what lets you tell the
-        difference between an event we actually sent and someone else&apos;s request pretending to be one.
+        difference between an event this platform actually sent and someone else&apos;s request pretending to be
+        one.
       </p>
 
       <h2 id="h-headers">What arrives with every delivery</h2>
       <CodeBlock
         language="text"
-        code={`X-Nomba-Subs-Signature: t=1755168153,v1=5d9c8...
-X-Nomba-Subs-Webhook-Id: whk_01HMFB...
-X-Nomba-Subs-Event-Id: evt_01HMFB...
+        code={`x-signature: 5d9c8f3a1b7e2d4c6a0f8b3e...
+x-timestamp: 1755168153000
+x-event-type: payment.failed
 Content-Type: application/json`}
       />
 
       <p>
-        The signature header carries two fields: <code className="inline">t</code>, the Unix timestamp when we
-        signed the payload, and <code className="inline">v1</code>, the HMAC-SHA256 of{" "}
-        <code className="inline">{"{timestamp}.{raw_body}"}</code> using your webhook secret.
+        <code className="inline">x-signature</code> is the HMAC-SHA256 of the raw request body, hex-encoded, using
+        your webhook&apos;s secret, the one shown once when you created the webhook. <code className="inline">x-timestamp</code>{" "}
+        is a Unix millisecond timestamp attached to the request; <code className="inline">x-event-type</code>{" "}
+        mirrors the <code className="inline">type</code> field already in the body.
       </p>
+
+      <Callout variant="note">
+        <p>
+          Precision worth having: the signature covers the raw body only, <code className="inline">HMAC(body, secret)</code>,
+          the timestamp is sent alongside it but isn&apos;t part of the signed material. That means checking{" "}
+          <code className="inline">x-timestamp</code> against a window doesn&apos;t give you cryptographic replay
+          protection the way it would if the timestamp were mixed into the signature. Dedupe on the event{" "}
+          <code className="inline">id</code> in the body instead, see the checklist below, that&apos;s what
+          actually protects you against a delivery being processed twice.
+        </p>
+      </Callout>
 
       <h2 id="h-verify">Verifying, step by step</h2>
       <Steps>
-        <Step number={1} title="Extract t and v1">
+        <Step number={1} title="Read the raw body">
+          <p>Before any JSON parsing. The signature is computed over the exact bytes sent, not a re-serialized copy.</p>
+        </Step>
+        <Step number={2} title="Compute the expected signature">
           <p>
-            Split the header on <code className="inline">,</code> and parse the key=value pairs.
+            <code className="inline">HMAC_SHA256(secret, raw_body)</code>, hex-encoded.
           </p>
         </Step>
-        <Step number={2} title="Check the timestamp">
-          <p>
-            Reject if <code className="inline">t</code> is more than 5 minutes off your server&apos;s clock, this is
-            replay protection.
-          </p>
-        </Step>
-        <Step number={3} title="Compute the expected signature">
-          <p>
-            <code className="inline">{'HMAC_SHA256(secret, "{t}." + raw_body)'}</code>, hex-encoded.
-          </p>
-        </Step>
-        <Step number={4} title="Compare in constant time">
+        <Step number={3} title="Compare in constant time">
           <p>
             <code className="inline">crypto.timingSafeEqual</code> in Node,{" "}
-            <code className="inline">hmac.compare_digest</code> in Python,{" "}
-            <code className="inline">hash_equals</code> in PHP,{" "}
-            <code className="inline">CryptographicOperations.FixedTimeEquals</code> in C#,{" "}
-            <code className="inline">MessageDigest.isEqual</code> in Java. Never plain string equality, timing
+            <code className="inline">hmac.compare_digest</code> in Python. Never plain string equality, timing
             differences leak information an attacker can use.
           </p>
         </Step>
-        <Step number={5} title="Process only on a match">
+        <Step number={4} title="Process only on a match">
           <p>Otherwise return 401 and log the event for investigation.</p>
+        </Step>
+        <Step number={5} title="Dedupe on the event id">
+          <p>
+            Deliveries are at-least-once. Store the event <code className="inline">id</code> after successful
+            processing; if you see it again, return 200 without reprocessing.
+          </p>
         </Step>
       </Steps>
 
@@ -71,53 +80,42 @@ Content-Type: application/json`}
         language="javascript"
         code={`const crypto = require('crypto');
 
-function verify(rawBody, header, secret) {
-  const [tPart, vPart] = header.split(',');
-  const t = tPart.split('=')[1];
-  const v1 = vPart.split('=')[1];
-
-  if (Math.abs(Date.now() / 1000 - Number(t)) > 300) return false;
-
+function verify(rawBody, signatureHeader, secret) {
   const expected = crypto
     .createHmac('sha256', secret)
-    .update(\`\${t}.\${rawBody}\`)
+    .update(rawBody)
     .digest('hex');
 
-  return crypto.timingSafeEqual(Buffer.from(expected), Buffer.from(v1));
+  return crypto.timingSafeEqual(
+    Buffer.from(expected),
+    Buffer.from(signatureHeader),
+  );
 }`}
       />
 
       <h2 id="h-python">Python</h2>
       <CodeBlock
         language="python"
-        code={`import hmac, hashlib, time
+        code={`import hmac, hashlib
 
-def verify(raw_body, header, secret):
-    parts = dict(p.split("=") for p in header.split(","))
-    t, v1 = parts["t"], parts["v1"]
-
-    if abs(time.time() - int(t)) > 300:
-        return False
-
+def verify(raw_body, signature_header, secret):
     expected = hmac.new(
-        secret.encode(), f"{t}.{raw_body}".encode(), hashlib.sha256
+        secret.encode(), raw_body, hashlib.sha256
     ).hexdigest()
 
-    return hmac.compare_digest(expected, v1)`}
+    return hmac.compare_digest(expected, signature_header)`}
       />
 
       <h2 id="h-checklist">Checklist</h2>
       <ul className="[&>li]:flex [&>li]:items-start [&>li]:gap-2 [&_svg]:mt-[3px] [&_svg]:shrink-0 [&_svg]:text-green-dark">
         <li>
-          <CheckCircle2 className="size-4" strokeWidth={2} /> Verify the signature on every request. Reject on
-          mismatch.
+          <CheckCircle2 className="size-4" strokeWidth={2} /> Verify the signature over the raw body on every
+          request. Reject on mismatch.
         </li>
         <li>
-          <CheckCircle2 className="size-4" strokeWidth={2} /> Reject events older than 5 minutes.
-        </li>
-        <li>
-          <CheckCircle2 className="size-4" strokeWidth={2} /> Check idempotency using the event{" "}
-          <code className="inline">id</code>, deliveries are at-least-once.
+          <CheckCircle2 className="size-4" strokeWidth={2} /> Dedupe using the event <code className="inline">id</code>,
+          this is your actual replay protection, deliveries are at-least-once and the timestamp header alone
+          doesn&apos;t prevent a resend.
         </li>
         <li>
           <CheckCircle2 className="size-4" strokeWidth={2} /> Return 2xx quickly. Push heavy processing to your own
@@ -141,7 +139,7 @@ def verify(raw_body, header, secret):
           href="/security/data-protection"
           icon={Lock}
           title="Data & encryption posture"
-          description="What's encrypted at rest, and why."
+          description="What's encrypted at rest today, and what isn't yet."
         />
       </CardGrid>
     </>

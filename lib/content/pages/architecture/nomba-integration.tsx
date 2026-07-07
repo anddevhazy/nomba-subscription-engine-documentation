@@ -1,3 +1,4 @@
+import { Callout } from "@/components/docs/content/callout";
 import { CardGrid, CardLink } from "@/components/docs/content/card-grid";
 import { Mermaid } from "@/components/docs/content/mermaid";
 import type { PageMeta } from "@/lib/content/types";
@@ -6,7 +7,7 @@ import { CreditCard, Lock } from "lucide-react";
 export const meta: PageMeta = {
   eyebrow: "Architecture",
   title: "Nomba integration",
-  lede: "Checkout, Tokenised Cards, Charge, Transfers. The four Nomba surfaces this engine is built on.",
+  lede: "Token issuance, Checkout, and Tokenised-card Charge. The three Nomba surfaces this engine is actually built on.",
 };
 
 export default function NombaIntegration() {
@@ -18,7 +19,7 @@ export default function NombaIntegration() {
         else in the codebase holds a Nomba credential or constructs a Nomba request.
       </p>
 
-      <h2 id="h-surfaces">The four surfaces</h2>
+      <h2 id="h-surfaces">The three surfaces</h2>
       <table>
         <tbody>
           <tr>
@@ -27,30 +28,46 @@ export default function NombaIntegration() {
           </tr>
           <tr>
             <td>
-              <strong>Checkout API</strong>
+              <strong>Auth token issuance</strong>
             </td>
-            <td>Initial card tokenisation at subscription signup, and portal-driven payment-method updates.</td>
+            <td>
+              <code className="inline">POST /v1/auth/token/issue</code>, client-credentials exchange, cached for
+              an hour with a five-minute refresh buffer.
+            </td>
           </tr>
           <tr>
             <td>
-              <strong>Tokenised Cards</strong>
+              <strong>Checkout</strong>
             </td>
-            <td>The stored reference reused for every recurring charge, never the raw card number.</td>
+            <td>
+              <code className="inline">POST /v1/checkout/order</code>. Initial card tokenisation at subscription
+              signup, requested with <code className="inline">tokenizeCard: true</code>.
+            </td>
           </tr>
           <tr>
             <td>
-              <strong>Charge API</strong>
+              <strong>Tokenised-card Charge</strong>
             </td>
-            <td>Executes every billing-cycle charge attempt and every dunning retry.</td>
-          </tr>
-          <tr>
             <td>
-              <strong>Transfers API</strong>
+              <code className="inline">POST /v1/tokenized-card/charge</code>. Executes every billing-cycle charge
+              attempt and every dunning retry against the stored card reference.
             </td>
-            <td>Payout-side handling for platform fee splits, where applicable.</td>
           </tr>
         </tbody>
       </table>
+      <p className="body-secondary">
+        There&apos;s no Transfers/payout surface wired up today, whatever platform-fee or payout handling exists
+        outside this integration isn&apos;t part of it yet.
+      </p>
+
+      <Callout variant="note">
+        <p>
+          If Nomba credentials aren&apos;t configured for an environment, both Checkout and Charge simulate a
+          response rather than failing outright, a fake checkout link, or a charge outcome with roughly an 85%
+          simulated success rate. Useful for demos and local development, worth ruling out first if a charge
+          behaves oddly in a non-production environment.
+        </p>
+      </Callout>
 
       <h2 id="h-inbound">Inbound webhooks from Nomba</h2>
       <p>

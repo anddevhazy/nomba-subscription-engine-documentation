@@ -25,7 +25,7 @@ export default function OnboardAndCollectPayment() {
         <Step number={1} title="Your app requests a Checkout session">
           <CodeBlock
             code={`curl -X POST https://api.nomba-subscriptions.com/customers/cus_01.../checkout-session \\
-  -H "Authorization: Bearer nse_live_..." \\
+  -H "Authorization: Bearer nsub_live_..." \\
   -d '{"planId": "plan_lumen_monthly"}'`}
             language="bash"
           />
@@ -54,10 +54,10 @@ export default function OnboardAndCollectPayment() {
 
       <h2 id="h-update-card">When a card changes</h2>
       <p>
-        A subscriber updates their payment method from the portal (
-        <a href="/subscribers/manage-your-subscription">Manage your subscription</a>), which runs the same Checkout
-        tokenisation flow and swaps the stored reference. The old token is discarded; nothing about the
-        subscription&apos;s billing cycle or history changes.
+        There&apos;s no subscriber-facing self-service flow for this yet, no customer portal exists today. A
+        merchant re-runs Checkout for that customer from the dashboard&apos;s &quot;Open checkout&quot; action,
+        which swaps the stored reference the same way the original onboarding did. The old token is discarded;
+        nothing about the subscription&apos;s billing cycle or history changes.
       </p>
 
       <Callout variant="note">
@@ -80,7 +80,7 @@ export default function OnboardAndCollectPayment() {
           href="/architecture/nomba-integration"
           icon={Plug}
           title="Nomba integration"
-          description="Checkout, Tokenised Cards, and the other three surfaces."
+          description="Checkout, Charge, and the token issuance surface underneath both."
         />
       </CardGrid>
     </>

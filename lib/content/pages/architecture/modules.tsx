@@ -5,7 +5,7 @@ import { Plug, RefreshCw } from "lucide-react";
 export const meta: PageMeta = {
   eyebrow: "Architecture",
   title: "Modules",
-  lede: "Sixteen modules, each owning one slice of the domain. What each one is responsible for, and who it talks to.",
+  lede: "Nineteen domain modules and five shared-infrastructure ones. What each is responsible for, and who it talks to.",
 };
 
 export default function ArchitectureModules() {
@@ -39,12 +39,6 @@ export default function ArchitectureModules() {
           </tr>
           <tr>
             <td>
-              <code className="inline">team</code>
-            </td>
-            <td>Owner/Team Member roles and membership management.</td>
-          </tr>
-          <tr>
-            <td>
               <code className="inline">api-keys</code>
             </td>
             <td>Live/test key issuance, rotation, revocation.</td>
@@ -71,7 +65,10 @@ export default function ArchitectureModules() {
             <td>
               <code className="inline">billing</code>
             </td>
-            <td>Invoice generation and proration math.</td>
+            <td>
+              Charge orchestration (invoice → Nomba charge → status transition) and proration math. Not exposed
+              through its own controller, called internally by subscriptions and dunning.
+            </td>
           </tr>
           <tr>
             <td>
@@ -83,25 +80,37 @@ export default function ArchitectureModules() {
             <td>
               <code className="inline">payments</code>
             </td>
-            <td>Checkout, the Nomba integration, inbound webhooks, and transfers.</td>
+            <td>
+              Checkout, the Nomba integration client, and Nomba&apos;s inbound webhook receiver, see{" "}
+              <a href="/architecture/nomba-integration">Nomba integration</a>.
+            </td>
           </tr>
           <tr>
             <td>
               <code className="inline">dunning</code>
             </td>
-            <td>Failed-payment retry logic and grace-period tracking.</td>
+            <td>The three-attempt retry schedule and grace-period transitions on a failed charge.</td>
           </tr>
           <tr>
             <td>
               <code className="inline">notifications</code>
             </td>
-            <td>Email, SMS, WhatsApp, and USSD delivery, the channel layer recovery orchestration sits on top of.</td>
+            <td>Email, SMS, and WhatsApp delivery, queued per domain event.</td>
           </tr>
           <tr>
             <td>
-              <code className="inline">portal</code>
+              <code className="inline">recovery-channels</code>
             </td>
-            <td>Customer-facing self-service, separate auth, separate surface, same underlying subscription data.</td>
+            <td>
+              Single-use recovery links (retry/pause/cancel), plus the WhatsApp-inbound and USSD-session endpoints,
+              see <a href="/concepts/recovery-orchestration">Recovery orchestration</a>.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <code className="inline">mail</code>
+            </td>
+            <td>SMTP delivery and email-template resolution, the transport underneath the Email channel.</td>
           </tr>
           <tr>
             <td>
@@ -113,7 +122,11 @@ export default function ArchitectureModules() {
             <td>
               <code className="inline">events</code>
             </td>
-            <td>The event store and its processor, the substrate every other module&apos;s history reads from.</td>
+            <td>
+              The event store and its processor, the substrate every other module&apos;s history reads from, plus a
+              nested Mission Control sub-module for live event streaming, see{" "}
+              <a href="/architecture/mission-control">Mission control</a>.
+            </td>
           </tr>
           <tr>
             <td>
@@ -129,6 +142,23 @@ export default function ArchitectureModules() {
             </td>
             <td>Workspace action history, who did what, queryable per merchant.</td>
           </tr>
+          <tr>
+            <td>
+              <code className="inline">service-info</code>
+            </td>
+            <td>
+              Diagnostics for the inbound Nomba webhook leg, see <a href="/developer/service-info">Service info</a>.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <code className="inline">queues</code>
+            </td>
+            <td>
+              Registers the four BullMQ queues (dunning, webhooks, notifications, events) shared across the
+              modules above, see <a href="/architecture/queues-and-async">Queues &amp; async processing</a>.
+            </td>
+          </tr>
         </tbody>
       </table>
 
@@ -141,18 +171,51 @@ export default function ArchitectureModules() {
           </tr>
           <tr>
             <td>
+              <code className="inline">common</code>
+            </td>
+            <td>
+              Global guards (<code className="inline">JwtAuthGuard</code>, <code className="inline">ApiKeyGuard</code>),
+              filters, and interceptors applied across every route.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <code className="inline">config</code>
+            </td>
+            <td>Environment configuration, typed and centralized.</td>
+          </tr>
+          <tr>
+            <td>
               <code className="inline">database</code>
             </td>
             <td>TypeORM configuration and migrations.</td>
           </tr>
           <tr>
             <td>
+              <code className="inline">health</code>
+            </td>
+            <td>Health-check endpoint for infrastructure monitoring.</td>
+          </tr>
+          <tr>
+            <td>
+              <code className="inline">redis</code>
+            </td>
+            <td>The Redis client provider BullMQ (and rate limiting) runs on.</td>
+          </tr>
+          <tr>
+            <td>
               <code className="inline">shared</code>
             </td>
-            <td>Enums and cross-cutting utilities used by more than one domain module.</td>
+            <td>Enums and cross-cutting utilities used by more than one domain module. Not a NestJS module itself.</td>
           </tr>
         </tbody>
       </table>
+
+      <p className="body-secondary">
+        A <code className="inline">chaos</code> module also exists, fault injection for QA and staging, disabled
+        outright in production. It&apos;s internal tooling, not part of the public surface this documentation
+        covers.
+      </p>
 
       <h2 id="h-discipline">Why the boundary matters even in one process</h2>
       <p>
