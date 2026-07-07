@@ -34,7 +34,7 @@ export function DocsSidebar({
                   href={`/${item.slug}`}
                   onClick={onNavigate}
                   className={cn(
-                    "mb-px flex items-center gap-2.5 rounded-[7px] px-2.5 py-1.5 text-sm text-text-secondary hover:bg-[#f7f6f2] hover:text-foreground",
+                    "mb-px flex items-center gap-2.5 rounded-[7px] px-2.5 py-1.5 text-sm text-text-secondary hover:bg-muted hover:text-foreground",
                     active && "bg-gold-light font-semibold text-gold-dark hover:bg-gold-light hover:text-gold-dark",
                   )}
                 >

@@ -16,7 +16,7 @@ export function Step({
   return (
     <div className="relative flex gap-3.5 pb-[22px] last:pb-0 [&:last-child_.step-line]:hidden">
       <span className="step-line absolute top-7 bottom-0 left-[13px] w-px bg-border" />
-      <div className="z-10 flex size-[26px] shrink-0 items-center justify-center rounded-full border border-border bg-[#f2f1ea] text-[13px] font-semibold text-foreground">
+      <div className="z-10 flex size-[26px] shrink-0 items-center justify-center rounded-full border border-border bg-muted text-[13px] font-semibold text-foreground">
         {number}
       </div>
       <div className="pt-0.5">

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
+import { ThemeProvider } from "@/providers/theme-provider";
 import { cn } from "@/lib/utils";
 import "./globals.css";
 
@@ -33,8 +34,11 @@ export default function RootLayout({
     <html
       lang="en"
       className={cn("h-full antialiased", inter.variable, jetbrainsMono.variable)}
+      suppressHydrationWarning
     >
-      <body className="min-h-full font-sans">{children}</body>
+      <body className="min-h-full font-sans">
+        <ThemeProvider>{children}</ThemeProvider>
+      </body>
     </html>
   );
 }

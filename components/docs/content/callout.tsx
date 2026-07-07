@@ -14,8 +14,8 @@ const defaultIcon: Record<CalloutProps["variant"], LucideIcon> = {
 };
 
 const variantClasses: Record<CalloutProps["variant"], string> = {
-  note: "border-[#d3e0fa] bg-blue-light text-blue-dark",
-  tip: "border-[#ccebd9] bg-green-light text-green-dark",
+  note: "border-blue/25 bg-blue-light text-blue-dark",
+  tip: "border-green/25 bg-green-light text-green-dark",
 };
 
 export function Callout({ variant, icon, children }: CalloutProps) {

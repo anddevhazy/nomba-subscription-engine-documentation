@@ -2,6 +2,8 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
+@custom-variant dark (&:is(.dark *));
+
 :root {
   /* Nomba brand palette (unchanged from the original design) */
   --gold: #c9971f;
@@ -39,6 +41,44 @@
   --input: #ebe8e0;
   --ring: var(--gold);
   --radius: 0.5rem;
+}
+
+.dark {
+  /* Nomba brand palette, dark-mode variants */
+  --gold: #e0b13a;
+  --gold-dark: #f2c968;
+  --gold-light: #2c2311;
+  --green: #34c37f;
+  --green-dark: #6bdba3;
+  --green-light: #12271c;
+  --blue: #6d9bf0;
+  --blue-dark: #9dbdf5;
+  --blue-light: #16243c;
+  --text: #f2f0e8;
+  --text-secondary: #b3ae9f;
+  --text-muted: #85806f;
+  --code-bg: #232019;
+  --code-text: #e8e5da;
+
+  /* shadcn semantic tokens, mapped onto the brand palette above */
+  --background: #15140f;
+  --foreground: var(--text);
+  --card: #1c1a13;
+  --card-foreground: var(--text);
+  --popover: #1c1a13;
+  --popover-foreground: var(--text);
+  --primary: var(--gold);
+  --primary-foreground: #1b1a17;
+  --secondary: var(--code-bg);
+  --secondary-foreground: var(--code-text);
+  --muted: #201e16;
+  --muted-foreground: var(--text-muted);
+  --accent: var(--gold-light);
+  --accent-foreground: var(--gold-dark);
+  --destructive: #e5584a;
+  --border: #332f22;
+  --input: #332f22;
+  --ring: var(--gold);
 }
 
 @theme inline {

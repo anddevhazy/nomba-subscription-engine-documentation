@@ -24,7 +24,7 @@ export function CardGrid({
 }
 
 const cardBase =
-  "rounded-xl border border-border bg-white px-5 py-[18px] text-[13.5px] leading-[1.55] text-text-secondary";
+  "rounded-xl border border-border bg-card px-5 py-[18px] text-[13.5px] leading-[1.55] text-text-secondary";
 const cardIconBase = "mb-3 flex size-7 items-center justify-center text-gold-dark";
 const cardTitleBase = "mb-1.5 text-[15.5px] font-semibold text-foreground";
 
