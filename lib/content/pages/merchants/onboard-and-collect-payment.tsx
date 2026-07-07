@@ -54,10 +54,12 @@ export default function OnboardAndCollectPayment() {
 
       <h2 id="h-update-card">When a card changes</h2>
       <p>
-        There&apos;s no subscriber-facing self-service flow for this yet, no customer portal exists today. A
-        merchant re-runs Checkout for that customer from the dashboard&apos;s &quot;Open checkout&quot; action,
-        which swaps the stored reference the same way the original onboarding did. The old token is discarded;
-        nothing about the subscription&apos;s billing cycle or history changes.
+There&apos;s no subscriber-facing self-service flow for this specifically, the{" "}
+        <a href="/merchants/customer-portal/overview">customer portal</a> has no update-payment-method action,
+        there&apos;s no card-on-file concept anywhere in the system to update. A merchant re-runs Checkout for
+        that customer from the dashboard&apos;s &quot;Open checkout&quot; action instead, which swaps the stored
+        reference the same way the original onboarding did. The old token is discarded; nothing about the
+        subscription&apos;s billing cycle or history changes.
       </p>
 
       <Callout variant="note">

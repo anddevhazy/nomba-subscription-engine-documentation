@@ -173,6 +173,154 @@ export const apiTagGroups: ApiTagGroup[] = [
     ],
   },
   {
+    tag: "Merchants",
+    slug: "merchants",
+    description:
+      "Your own merchant profile: business details, webhook URL, customer-portal settings, and the payout bank account that receives every settled payment automatically.",
+    endpoints: [
+      {
+        method: "GET",
+        path: "/merchants/me",
+        description: "Get the current merchant's profile.",
+        auth: "jwt",
+        exampleResponse: envelope({
+          id: "m1e2r3c4-h5a6-7890-merc-hant12345678",
+          businessName: "Acme SaaS Ltd",
+          phone: "+2348012345678",
+          webhookUrl: "https://acme.ng/webhooks/subflow",
+          bankCode: "058",
+          bankName: "Guaranty Trust Bank",
+          bankAccountNumber: "0123456789",
+          bankAccountName: "ACME SAAS LTD",
+          customerPortalSettings: { allowSwitchPlan: true, allowCancellation: true },
+          branding: {},
+        }),
+      },
+      {
+        method: "PATCH",
+        path: "/merchants/me",
+        description:
+          "Update business details, webhook URL, payout bank account, or customer-portal settings. Only fields you include are changed.",
+        auth: "jwt",
+        requestSchema: [
+          { field: "businessName", type: "string" },
+          { field: "phone", type: "string" },
+          { field: "branding", type: "object" },
+          { field: "webhookUrl", type: "string" },
+          { field: "bankCode", type: "string" },
+          { field: "bankName", type: "string" },
+          { field: "bankAccountNumber", type: "string" },
+          { field: "bankAccountName", type: "string" },
+          {
+            field: "customerPortalSettings",
+            type: "object",
+            description: "See Configure the customer portal for the current caveat on this field.",
+          },
+        ],
+        exampleRequest: `{
+  "bankCode": "058",
+  "bankAccountNumber": "0123456789",
+  "bankAccountName": "ACME SAAS LTD"
+}`,
+        exampleResponse: envelope(
+          {
+            id: "m1e2r3c4-h5a6-7890-merc-hant12345678",
+            bankCode: "058",
+            bankAccountNumber: "0123456789",
+            bankAccountName: "ACME SAAS LTD",
+          },
+          "Resource updated successfully",
+        ),
+      },
+      {
+        method: "GET",
+        path: "/merchants/banks",
+        description: "List Nigerian banks supported for payouts, sourced live from Nomba.",
+        auth: "jwt",
+        exampleResponse: envelope([
+          { code: "058", name: "Guaranty Trust Bank" },
+          { code: "011", name: "First Bank of Nigeria" },
+        ]),
+      },
+      {
+        method: "POST",
+        path: "/merchants/bank/lookup",
+        description: "Verify an account number against a bank before saving it as your payout account.",
+        auth: "jwt",
+        requestSchema: [
+          { field: "accountNumber", type: "string", required: true },
+          { field: "bankCode", type: "string", required: true },
+        ],
+        exampleRequest: `{ "accountNumber": "0123456789", "bankCode": "058" }`,
+        exampleResponse: envelope({ accountName: "ACME SAAS LTD" }),
+      },
+    ],
+  },
+  {
+    tag: "Portal",
+    slug: "portal",
+    description:
+      "The customer-facing self-service surface. Public, token-based, no password. A subscriber requests a magic-link email and gets a 24-hour reusable session, not a single-use link.",
+    endpoints: [
+      {
+        method: "POST",
+        path: "/portal/login",
+        description: "Request a magic login link for the customer portal, emailed to the customer.",
+        auth: "public",
+        requestSchema: [
+          { field: "email", type: "string", required: true },
+          { field: "merchantId", type: "string", required: true, description: "UUID" },
+        ],
+        exampleRequest: `{ "email": "chidi@example.com", "merchantId": "m1e2r3c4-h5a6-7890-merc-hant12345678" }`,
+        exampleResponse: envelope(
+          { message: "Login link has been successfully generated and sent via email." },
+          "Resource created successfully",
+        ),
+      },
+      {
+        method: "GET",
+        path: "/portal/session",
+        description: "Get session state: customer, subscription, invoices, payment history, and available plans.",
+        auth: "public",
+        queryParams: [{ field: "token", type: "string", description: "The session token from the emailed link, required" }],
+        exampleResponse: envelope({
+          customer: { id: "c1u2s3t4-d5e6-7890-cust-123456789abc", name: "Chidi Nwosu", email: "chidi@example.com" },
+          subscription: {
+            id: "s1u2b3s4-d5e6-7890-subs-123456789abc",
+            status: "active",
+            currentPeriodEnd: "2026-08-01T00:00:00.000Z",
+            plan: { id: "p1l2a3n4-d5e6-7890-plan-123456789abc", name: "Pro Plan", amount: 15000, currency: "NGN" },
+          },
+          invoices: [{ id: "i1n2v3o4-...", status: "paid", total: 15000 }],
+          payments: [{ id: "9a1b2c3d-...", status: "succeeded", createdAt: "2026-07-01T10:30:00.000Z" }],
+          plans: [{ id: "p1l2a3n4-...", name: "Pro Plan", amount: 15000, currency: "NGN" }],
+          config: {},
+          branding: {},
+        }),
+      },
+      {
+        method: "POST",
+        path: "/portal/session/action",
+        description:
+          "Execute an action: PAUSE_SUBSCRIPTION, RESUME_SUBSCRIPTION, CANCEL_SUBSCRIPTION, REACTIVATE_SUBSCRIPTION, SWITCH_PLAN, or UPDATE_CONTACT. No payment-method action exists. The API doesn't check the merchant's portal settings before executing, those are UI hints only.",
+        auth: "public",
+        queryParams: [{ field: "token", type: "string", description: "The session token from the emailed link, required" }],
+        requestSchema: [
+          { field: "action", type: "string", required: true },
+          { field: "data", type: "object", description: "e.g. { planId } for SWITCH_PLAN" },
+        ],
+        exampleRequest: `{ "action": "SWITCH_PLAN", "data": { "planId": "p1l2a3n4-d5e6-7890-plan-123456789abc" } }`,
+        exampleResponse: envelope(
+          {
+            customer: { id: "c1u2s3t4-d5e6-7890-cust-123456789abc", name: "Chidi Nwosu" },
+            subscription: { id: "s1u2b3s4-...", status: "active" },
+          },
+          "Resource created successfully",
+        ),
+      },
+    ],
+  },
+  {
     tag: "API Keys",
     slug: "api-keys",
     description:

@@ -17,7 +17,14 @@ import * as createAPlan from "./pages/merchants/create-a-plan";
 import * as onboardAndCollectPayment from "./pages/merchants/onboard-and-collect-payment";
 import * as billingAndInvoicing from "./pages/merchants/billing-and-invoicing";
 import * as merchantsPayments from "./pages/merchants/payments";
+import * as merchantsPayouts from "./pages/merchants/payouts";
 import * as merchantsAnalytics from "./pages/merchants/analytics";
+
+import * as portalOverview from "./pages/merchants/customer-portal/overview";
+import * as portalConfigure from "./pages/merchants/customer-portal/configure";
+
+import * as subscribersOverview from "./pages/subscribers/overview";
+import * as manageYourSubscription from "./pages/subscribers/manage-your-subscription";
 
 import * as developerAuthentication from "./pages/developer/authentication";
 import * as developerWebhooks from "./pages/developer/webhooks";
@@ -62,7 +69,14 @@ const modules: Record<string, PageModule> = {
   "merchants/onboard-and-collect-payment": onboardAndCollectPayment,
   "merchants/billing-and-invoicing": billingAndInvoicing,
   "merchants/payments": merchantsPayments,
+  "merchants/payouts": merchantsPayouts,
   "merchants/analytics": merchantsAnalytics,
+
+  "merchants/customer-portal/overview": portalOverview,
+  "merchants/customer-portal/configure": portalConfigure,
+
+  "subscribers/overview": subscribersOverview,
+  "subscribers/manage-your-subscription": manageYourSubscription,
 
   "developer/authentication": developerAuthentication,
   "developer/webhooks": developerWebhooks,

@@ -121,12 +121,15 @@ export default function HowItWorks() {
       <p>
         Within minutes, not days, an email goes out with a record of the
         failure, every time, no exceptions. If a phone number&apos;s on file, a
-        WhatsApp or SMS notice sends too, over a real Twilio integration. What
-        happens next is more limited than a full self-serve menu today: recovery
-        resolves through one of three single-use links, retry, pause, or cancel,
-        and right now those links are wired into WhatsApp and USSD interactions,
-        not yet into the email body itself or an SMS reply. There&apos;s no
-        Downgrade option and no customer portal to fall back into, see{" "}
+        WhatsApp or SMS notice sends too, over a real Twilio integration. The
+        automatic recovery path itself is more limited than a full self-serve
+        menu today: it resolves through one of three single-use links, retry,
+        pause, or cancel, wired into WhatsApp and USSD interactions, not yet
+        into the email body itself or an SMS reply. There&apos;s no Downgrade
+        option on that path, but a subscriber isn&apos;t stuck either way,
+        they can request a{" "}
+        <a href="/merchants/customer-portal/overview">customer portal</a>{" "}
+        link separately and pause, cancel, or switch plans there instead. See{" "}
         <a href="/concepts/recovery-orchestration">Recovery orchestration</a>{" "}
         for the exact, current shape of this, channel by channel.
       </p>

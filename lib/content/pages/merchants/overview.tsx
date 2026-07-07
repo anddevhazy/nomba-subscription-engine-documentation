@@ -1,6 +1,6 @@
 import { CardGrid, CardLink } from "@/components/docs/content/card-grid";
 import type { PageMeta } from "@/lib/content/types";
-import { BarChart3, CreditCard, FileText, Receipt, Wallet } from "lucide-react";
+import { BarChart3, CreditCard, DoorOpen, FileText, Receipt, Wallet } from "lucide-react";
 
 export const meta: PageMeta = {
   eyebrow: "For merchants",
@@ -44,6 +44,18 @@ export default function MerchantsOverview() {
           icon={Wallet}
           title="Payments"
           description="Checkout sessions, charges, and payment attempts, the money-movement record behind every invoice."
+        />
+        <CardLink
+          href="/merchants/payouts"
+          icon={Wallet}
+          title="Payouts"
+          description="Set a bank account once. Every settled payment moves out to it automatically."
+        />
+        <CardLink
+          href="/merchants/customer-portal/overview"
+          icon={DoorOpen}
+          title="Customer portal"
+          description="Let subscribers view, pause, resume, cancel, and switch plans themselves, no support ticket required."
         />
         <CardLink
           href="/merchants/analytics"

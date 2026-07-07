@@ -32,6 +32,10 @@ import {
   Radio,
   Server,
   TerminalSquare,
+  DoorOpen,
+  SlidersHorizontal,
+  Hand,
+  Settings,
 } from "lucide-react";
 
 export type NavItem = { slug: string; title: string };
@@ -49,7 +53,12 @@ export const ICONS: Record<string, LucideIcon> = {
   "merchants/onboard-and-collect-payment": CreditCard,
   "merchants/billing-and-invoicing": Receipt,
   "merchants/payments": Wallet,
+  "merchants/payouts": Wallet,
   "merchants/analytics": LineChart,
+  "merchants/customer-portal/overview": DoorOpen,
+  "merchants/customer-portal/configure": SlidersHorizontal,
+  "subscribers/overview": Hand,
+  "subscribers/manage-your-subscription": Settings,
   "concepts/subscription-lifecycle": RotateCw,
   "concepts/event-store": Book,
   "concepts/recovery-orchestration": Compass,
@@ -112,7 +121,28 @@ export const NAV: NavGroup[] = [
       },
       { slug: "merchants/billing-and-invoicing", title: "Billing & invoicing" },
       { slug: "merchants/payments", title: "Payments" },
+      { slug: "merchants/payouts", title: "Payouts" },
       { slug: "merchants/analytics", title: "Analytics" },
+    ],
+  },
+  {
+    group: "Customer portal",
+    items: [
+      { slug: "merchants/customer-portal/overview", title: "Customer portal" },
+      {
+        slug: "merchants/customer-portal/configure",
+        title: "Configure the portal",
+      },
+    ],
+  },
+  {
+    group: "For subscribers",
+    items: [
+      { slug: "subscribers/overview", title: "For subscribers" },
+      {
+        slug: "subscribers/manage-your-subscription",
+        title: "Manage your subscription",
+      },
     ],
   },
   {
@@ -184,8 +214,14 @@ export const DESCRIPTIONS: Record<string, string> = {
     "Invoices generate themselves. Charges fire themselves. Proration on a plan change is previewed today, not yet charged automatically.",
   "merchants/payments":
     "Checkout sessions, charges, and payment attempts, the money-movement record underneath every invoice.",
+  "merchants/payouts":
+    "Set a bank account once. Every settled payment moves out to it automatically, no manual withdrawal step.",
   "merchants/analytics":
     "MRR, churn, recovery rate, plan performance, computed from the same event store that powers your webhooks.",
+  "merchants/customer-portal/overview":
+    "A magic-link email and a 24-hour session. View, pause, resume, cancel, reactivate, switch plan, update contact details.",
+  "merchants/customer-portal/configure":
+    "Toggles for plan switching, cancellation, and what a subscriber can edit. One of them doesn't reach the live portal yet.",
   "concepts/subscription-lifecycle":
     "Eight states. One state machine. Why `past_due` and `grace_period` are different states, not the same failure twice.",
   "concepts/event-store":
@@ -193,7 +229,11 @@ export const DESCRIPTIONS: Record<string, string> = {
   "concepts/recovery-orchestration":
     "One event triggers a real email, a Twilio-backed WhatsApp or SMS send, and three single-use links. What's live today, and what's still a stand-in.",
   "channels/web":
-    "The API and docs site, and the merchant dashboard, two applications, one API underneath. There's no separate subscriber-facing app yet.",
+    "The API and docs site, the merchant dashboard, and a customer portal, three applications, one API underneath.",
+  "subscribers/overview":
+    "Request a link by email. View, pause, resume, cancel, reactivate, or switch plan yourself, no support ticket, no password.",
+  "subscribers/manage-your-subscription":
+    "One email, one link, a 24-hour session. No password, and it doesn't touch the merchant's own dashboard login.",
   "channels/email":
     "The baseline channel. Every recovery sequence sends one, whether or not WhatsApp or SMS also fire.",
   "channels/whatsapp":
@@ -217,7 +257,7 @@ export const DESCRIPTIONS: Record<string, string> = {
   "architecture/modules":
     "Nineteen domain modules and five shared-infrastructure ones. What each is responsible for, and who it talks to.",
   "architecture/nomba-integration":
-    "Token issuance, Checkout, and Tokenised-card Charge. The three Nomba surfaces this engine is actually built on.",
+    "Token issuance, Checkout, Tokenised-card Charge, and Transfers. Money moves in through Charge and back out through Transfers, automatically.",
   "architecture/data-flow":
     "How a single event, a payment failing, a subscription renewing, reaches webhooks, notifications, and analytics without three separate write paths.",
   "architecture/queues-and-async":

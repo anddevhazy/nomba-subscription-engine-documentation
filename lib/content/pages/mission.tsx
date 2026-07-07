@@ -45,9 +45,9 @@ export default function Mission() {
       <h2 id="h-must-include">The six things the brief requires</h2>
       <p>
         The Infrastructure Track listing is specific about what &quot;managed recurring-billing layer&quot; has to
-        include. Five of the six are real, working surfaces today. The sixth, a customer-facing self-service
-        portal, is scoped and partly designed, but not yet a shipped surface, and this page says so directly rather
-        than count it as done.
+        include. All six are real, working surfaces today, though not every one is finished: proration is
+        preview-only, and the customer portal has a real settings bug where merchant-configured toggles don&apos;t
+        yet reach the live portal. Both are called out plainly below, not glossed over.
       </p>
 
       <CardGrid cols={2}>
@@ -81,10 +81,11 @@ export default function Mission() {
         </Card>
         <Card icon={UserCheck} title="Customer self-service portal">
           <p>
-            Not shipped yet. What exists today is three single-use links (retry, pause, cancel), not a logged-in
-            account a subscriber manages themselves. See{" "}
-            <a href="/concepts/recovery-orchestration">Recovery orchestration</a> for exactly what a subscriber can
-            do right now.
+            Shipped: a subscriber requests a magic-link email and gets a 24-hour portal session, view, pause,
+            resume, cancel, reactivate, switch plan, update contact details. No payment-method update yet, there&apos;s
+            no card-on-file concept anywhere in the system. See{" "}
+            <a href="/merchants/customer-portal/overview">Customer portal</a> for the honest detail, including the
+            current gap between what a merchant configures and what the portal actually enforces.
           </p>
         </Card>
         <Card icon={Bell} title="Webhooks for downstream systems">
@@ -97,9 +98,11 @@ export default function Mission() {
 
       <h2 id="h-key-apis">The Nomba primitives underneath</h2>
       <p>
-        The brief names Nomba&apos;s payment primitives as the foundation. Three surfaces are actually wired in
-        today, token issuance, Checkout, and Tokenised-card Charge. There&apos;s no Transfers/payout integration in
-        this build.
+        The brief names Nomba&apos;s payment primitives as the foundation. Four surfaces are wired in today, token
+        issuance, Checkout, Tokenised-card Charge, and Transfers, the last of these closes the loop: a settled
+        payment automatically moves out to a merchant&apos;s bank account, not just in. See{" "}
+        <a href="/architecture/nomba-integration">Nomba integration</a> for the precise detail, and{" "}
+        <a href="/merchants/payouts">Payouts</a> for how it reaches a merchant&apos;s account.
       </p>
 
       <table>
