@@ -45,7 +45,9 @@ export default function Mission() {
       <h2 id="h-must-include">The six things the brief requires</h2>
       <p>
         The Infrastructure Track listing is specific about what &quot;managed recurring-billing layer&quot; has to
-        include. Each one is a real, working surface in this submission today.
+        include. Five of the six are real, working surfaces today. The sixth, a customer-facing self-service
+        portal, is scoped and partly designed, but not yet a shipped surface, and this page says so directly rather
+        than count it as done.
       </p>
 
       <CardGrid cols={2}>
@@ -64,22 +66,25 @@ export default function Mission() {
         </Card>
         <Card icon={Divide} title="Proration">
           <p>
-            A mid-cycle upgrade credits the unused portion of the old plan and charges the prorated remainder of the
-            new one, in the same motion. See <a href="/merchants/billing-and-invoicing">Billing &amp; invoicing</a>.
+            The math is real: a mid-cycle upgrade computes the credit for the unused portion of the old plan and the
+            prorated cost of the new one. Collecting that amount automatically isn&apos;t wired up yet, today it&apos;s
+            a preview, not a charge. See <a href="/merchants/billing-and-invoicing">Billing &amp; invoicing</a>.
           </p>
         </Card>
         <Card icon={Repeat} title="Dunning & failed-payment recovery">
           <p>
-            A failed charge starts a recovery sequence on email, WhatsApp, SMS, and USSD within minutes, not a daily
-            batch job that catches it a day late. See{" "}
-            <a href="/concepts/recovery-orchestration">Recovery orchestration</a>.
+            Three scheduled retries, and a real notification on the failure, email every time, WhatsApp and SMS via
+            Twilio where a number&apos;s on file. USSD and inbound replies exist as endpoints but aren&apos;t
+            connected to a real telco yet. See <a href="/concepts/recovery-orchestration">Recovery orchestration</a>{" "}
+            for the honest breakdown.
           </p>
         </Card>
         <Card icon={UserCheck} title="Customer self-service portal">
           <p>
-            View, pause, resume, cancel, and update a payment method, authenticated separately from the
-            merchant&apos;s own account. See{" "}
-            <a href="/concepts/recovery-orchestration">Recovery orchestration</a> for what&apos;s live today.
+            Not shipped yet. What exists today is three single-use links (retry, pause, cancel), not a logged-in
+            account a subscriber manages themselves. See{" "}
+            <a href="/concepts/recovery-orchestration">Recovery orchestration</a> for exactly what a subscriber can
+            do right now.
           </p>
         </Card>
         <Card icon={Bell} title="Webhooks for downstream systems">
@@ -92,8 +97,9 @@ export default function Mission() {
 
       <h2 id="h-key-apis">The Nomba primitives underneath</h2>
       <p>
-        The brief names four Nomba surfaces as the foundation. All four are wired in, and none of them are used
-        decoratively.
+        The brief names Nomba&apos;s payment primitives as the foundation. Three surfaces are actually wired in
+        today, token issuance, Checkout, and Tokenised-card Charge. There&apos;s no Transfers/payout integration in
+        this build.
       </p>
 
       <table>
@@ -105,35 +111,29 @@ export default function Mission() {
         </thead>
         <tbody>
           <tr>
+            <td>Auth token issuance</td>
+            <td>Client-credentials exchange, cached for an hour, everything else below depends on it.</td>
+          </tr>
+          <tr>
             <td>Checkout API</td>
             <td>
-              Hosted card entry at subscription signup, and at every payment-method update from the portal. The raw
-              card number never touches our servers.
+              Hosted card entry at subscription signup, requested with tokenisation on. The raw card number never
+              touches this platform&apos;s servers.
             </td>
           </tr>
           <tr>
-            <td>Tokenised cards</td>
+            <td>Tokenised-card Charge</td>
             <td>
               The stored reference reused for every billing-cycle charge and every dunning retry, so a subscriber
               enters a card once and never again unless it changes.
             </td>
           </tr>
-          <tr>
-            <td>Charge API</td>
-            <td>
-              Executes every recurring charge attempt. Its outcome, confirmed by webhook, is what drives the
-              subscription state machine forward or into recovery.
-            </td>
-          </tr>
-          <tr>
-            <td>Transfers API</td>
-            <td>Payout-side handling for platform fee splits, where a merchant&apos;s plan calls for one.</td>
-          </tr>
         </tbody>
       </table>
 
       <p>
-        Full detail: <a href="/architecture/nomba-integration">Nomba integration</a>.
+        Full detail, including what happens if Nomba credentials aren&apos;t configured in an environment:{" "}
+        <a href="/architecture/nomba-integration">Nomba integration</a>.
       </p>
 
       <h2 id="h-judged-on">How we address each judging criterion</h2>
@@ -150,27 +150,28 @@ export default function Mission() {
         </Card>
         <Card icon={Repeat} title="Dunning sophistication">
           <p>
-            Not a single retry-and-forget email. A centralized recovery-orchestration component sends email as the
-            always-on baseline, reaches for WhatsApp first when a phone&apos;s on file with three inline actions,
-            falls back to SMS automatically, keeps USSD available regardless, and degrades gracefully, queuing and
-            retrying rather than dropping a notification, if a provider has an outage. See{" "}
-            <a href="/concepts/recovery-orchestration">Recovery orchestration</a>.
+            Not a single retry-and-forget email. Three scheduled retries over a week, a real notification fan-out
+            driven by one event, not per-channel call sites, and jobs that queue and retry rather than drop on a
+            provider hiccup. Not every channel is equally live yet, see{" "}
+            <a href="/concepts/recovery-orchestration">Recovery orchestration</a> for the specific, honest
+            breakdown rather than a rounded-up summary.
           </p>
         </Card>
         <Card icon={Building2} title="Multi-tenant cleanliness">
           <p>
             Every business entity below the merchant carries a merchantId, enforced at the data-access layer, not
-            only in application-level checks. Owner and Team Member roles keep account-level actions, API keys,
-            webhook configuration, team membership, separate from day-to-day operations. See{" "}
+            only in application-level checks, so a bug in one controller can&apos;t leak another merchant&apos;s
+            data. There&apos;s one user per merchant account today, no role tiers yet, that&apos;s a real gap
+            against a &quot;team&quot; expectation, not a design choice. See{" "}
             <a href="/architecture/overview">Architecture</a>.
           </p>
         </Card>
         <Card icon={Puzzle} title="API ergonomics for downstream developers">
           <p>
-            A documented resource model, signed and replayable webhooks, idempotency keys on writes, and an
-            interactive Swagger reference served straight from the API. A developer should be able to integrate from
-            documentation alone. See <a href="/developer/webhooks">Webhooks</a> and{" "}
-            <a href="/api-reference/introduction">API Reference</a>.
+            A documented resource model, signed and replayable webhooks, and an interactive Swagger reference
+            served straight from the API. Idempotency-key support on writes isn&apos;t built yet, see{" "}
+            <a href="/developer/rate-limits">Rate limits</a> for what that means for a retry today. See also{" "}
+            <a href="/developer/webhooks">Webhooks</a>.
           </p>
         </Card>
       </CardGrid>
@@ -217,8 +218,8 @@ export default function Mission() {
           <tr>
             <td>A merchant&apos;s webhook endpoint is down</td>
             <td>
-              Deliveries retry with backoff for up to fourteen days, then dead-letter, then replay on demand once the
-              endpoint is fixed. See <a href="/developer/webhooks">Webhooks</a>.
+              Deliveries retry with backoff across five attempts over roughly four hours, then dead-letter, then
+              replay on demand once the endpoint is fixed. See <a href="/developer/webhooks">Webhooks</a>.
             </td>
           </tr>
           <tr>
@@ -297,24 +298,26 @@ export default function Mission() {
           <tr>
             <td>Every webhook we send is provably ours.</td>
             <td>
-              HMAC-SHA256 signatures on every delivery, verifiable independently by the receiving service, with
-              replay protection on the timestamp. See{" "}
-              <a href="/security/webhook-verification">Webhook signature verification</a>.
+              HMAC-SHA256 signatures on every delivery, verifiable independently by the receiving service. The
+              signature covers the raw body, not the timestamp, see{" "}
+              <a href="/security/webhook-verification">Webhook signature verification</a> for the precise scheme
+              and why you should dedupe on the event id rather than lean on the timestamp header for replay
+              protection.
             </td>
           </tr>
           <tr>
             <td>A retried or replayed request never becomes a duplicate charge.</td>
             <td>
-              Idempotency keys on writes, stable event IDs on replay. Reprocessing is always safe by construction,
-              not by convention.
+              True for webhook replay, stable event IDs make reprocessing safe by construction. Not yet true for
+              API writes, there&apos;s no idempotency-key support on endpoints like subscription creation today.
             </td>
           </tr>
           <tr>
-            <td>Sensitive data is encrypted, and access to it is narrow.</td>
+            <td>Sensitive data is protected, and access to it is narrow.</td>
             <td>
-              Stored payment references are encrypted at rest with AES-256-GCM, and there&apos;s no endpoint or
-              dashboard view that surfaces a raw reference, only the ability to use it. See{" "}
-              <a href="/security/data-protection">Data &amp; encryption posture</a>.
+              Passwords and secrets are hashed today. AES-256-GCM encryption for stored payment references exists
+              as a utility in the codebase but isn&apos;t wired to any field yet, that&apos;s a real gap, not a
+              documentation nuance. See <a href="/security/data-protection">Data &amp; encryption posture</a>.
             </td>
           </tr>
         </tbody>
@@ -323,10 +326,10 @@ export default function Mission() {
       <h2 id="h-next">What to read next</h2>
       <CardGrid cols={2}>
         <CardLink
-          href="/introduction"
+          href="/introduction-tolu"
           icon={DoorOpen}
           title="Introduction"
-          description="Adaeze's story. The thesis. The four channels."
+          description="Tolu's story. The thesis. The recovery channels, as they actually stand today."
         />
         <CardLink
           href="/how-it-works"

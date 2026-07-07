@@ -67,11 +67,11 @@ export default function CreateAPlan() {
         <Step number={2} title="Or via the API">
           <CodeBlock
             code={`curl -X POST https://api.nomba-subscriptions.com/plans \\
-  -H "Authorization: Bearer nse_live_..." \\
+  -H "Authorization: Bearer nsub_live_..." \\
   -H "Content-Type: application/json" \\
   -d '{
     "name": "Lumen Monthly",
-    "amount": 1500000,
+    "amount": 15000,
     "currency": "NGN",
     "interval": "monthly",
     "trialDays": 7
@@ -84,8 +84,7 @@ export default function CreateAPlan() {
         </Step>
       </Steps>
       <p className="body-secondary">
-        Amounts are handled in the smallest currency unit (kobo, for NGN) end to end, the API never accepts or
-        returns a decimal naira amount, to avoid rounding drift across proration and refunds.
+        Amounts are in major currency units, naira, not kobo, so a ₦15,000 plan is <code className="inline">amount: 15000</code>.
       </p>
 
       <h2 id="h-update">Updating and retiring a plan</h2>

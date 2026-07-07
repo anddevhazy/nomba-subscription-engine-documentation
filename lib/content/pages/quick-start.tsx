@@ -18,12 +18,12 @@ export default function QuickStart() {
         <Card icon={FileText} title="Create a plan and subscribe a test customer">
           <p>
             Sign up at the merchant dashboard, verify your email, and land in an empty plans screen. Create a plan,
-            name, price, interval, optional trial, and grab your sandbox API key from Settings → API Keys.
+            name, price, interval, optional trial, and grab your test API key from API Keys.
           </p>
-          <p>Then create a test customer and subscription against the sandbox:</p>
+          <p>Then create a test customer and subscription against your test key:</p>
           <CodeBlock
             code={`curl -X POST https://api.nomba-subscriptions.com/subscriptions \\
-  -H "Authorization: Bearer nse_sandbox_..." \\
+  -H "Authorization: Bearer nsub_test_..." \\
   -H "Content-Type: application/json" \\
   -d '{
     "customerId": "cus_test_01",
@@ -40,23 +40,21 @@ export default function QuickStart() {
       </CardGrid>
 
       <CardGrid cols={1}>
-        <Card icon={Repeat} title="Break a payment on purpose and watch recovery fire">
+        <Card icon={Repeat} title="Force a decline and watch the failure notice fire">
           <p>
-            Sandbox card tokens include one that always declines:{" "}
-            <code className="inline">tok_test_visa_decline</code>. Subscribe a test customer with it, then trigger
-            a billing cycle manually:
+            Nomba&apos;s test rails include a card that always declines. Subscribe a test customer with it and let
+            the first charge attempt fail.
           </p>
-          <CodeBlock
-            code={`curl -X POST https://api.nomba-subscriptions.com/subscriptions/sub_test_01/charge-now \\
-  -H "Authorization: Bearer nse_sandbox_..."`}
-            language="bash"
-          />
           <p>
             The subscription flips to <code className="inline">past_due</code>, a{" "}
-            <code className="inline">PaymentFailed</code> event lands in the event store, and a recovery email
-            fires within a minute regardless of what else is configured. If you&apos;ve also set a sandbox WhatsApp
-            or SMS number on the test customer, those fire too. Reply, or hit the retry endpoint yourself, and watch
-            the subscription return to <code className="inline">active</code>.
+            <code className="inline">PaymentFailed</code> event lands in the event store, and an email fires within
+            a minute, whatever else is configured. If you&apos;ve also set a test WhatsApp or SMS number on the
+            customer, those send too, over a real Twilio call. What doesn&apos;t happen instantly is the retry
+            itself: dunning runs on a fixed schedule, 24 hours, 72 hours, then 7 days, so recovery in this
+            walkthrough means watching the notification arrive, not watching the subscription flip back to{" "}
+            <code className="inline">active</code> inside your five minutes. See{" "}
+            <a href="/concepts/recovery-orchestration">Recovery orchestration</a> for exactly what&apos;s live on
+            each channel today.
           </p>
         </Card>
       </CardGrid>
@@ -69,7 +67,7 @@ export default function QuickStart() {
           </p>
           <CodeBlock
             code={`curl -X POST https://api.nomba-subscriptions.com/webhooks \\
-  -H "Authorization: Bearer nse_sandbox_..." \\
+  -H "Authorization: Bearer nsub_test_..." \\
   -H "Content-Type: application/json" \\
   -d '{
     "url": "https://webhook.site/your-id",
@@ -80,7 +78,7 @@ export default function QuickStart() {
           <p>Then fetch your merchant analytics snapshot:</p>
           <CodeBlock
             code={`curl https://api.nomba-subscriptions.com/analytics/metrics \\
-  -H "Authorization: Bearer nse_sandbox_..."`}
+  -H "Authorization: Bearer nsub_test_..."`}
             language="bash"
           />
           <p>

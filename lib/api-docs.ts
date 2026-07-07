@@ -27,7 +27,7 @@ export type ApiTagGroup = {
   endpoints: ApiEndpointDoc[];
 };
 
-const envelope = (data: unknown, message = "Operation successful") =>
+const envelope = (data: unknown, message = "Request successful") =>
   JSON.stringify({ status: "success", data, message }, null, 2);
 
 export const apiTagGroups: ApiTagGroup[] = [
@@ -62,20 +62,23 @@ export const apiTagGroups: ApiTagGroup[] = [
   "firstName": "Ada",
   "lastName": "Okafor"
 }`,
-        exampleResponse: envelope({
-          user: {
-            id: "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
-            email: "founder@acme.ng",
-            merchantId: "m1e2r3c4-h5a6-7890-merc-hant12345678",
-            firstName: "Ada",
-            lastName: "Okafor",
+        exampleResponse: envelope(
+          {
+            user: {
+              id: "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+              email: "founder@acme.ng",
+              merchantId: "m1e2r3c4-h5a6-7890-merc-hant12345678",
+              firstName: "Ada",
+              lastName: "Okafor",
+            },
+            tokens: {
+              accessToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+              refreshToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+              expiresIn: "15m",
+            },
           },
-          tokens: {
-            accessToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-            refreshToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-            expiresIn: 900,
-          },
-        }),
+          "Resource created successfully",
+        ),
         swaggerPath: `${SWAGGER_URL}#/Auth/AuthController_signup`,
       },
       {
@@ -91,18 +94,21 @@ export const apiTagGroups: ApiTagGroup[] = [
   "email": "founder@acme.ng",
   "password": "securePass123"
 }`,
-        exampleResponse: envelope({
-          user: {
-            id: "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
-            email: "founder@acme.ng",
-            merchantId: "m1e2r3c4-h5a6-7890-merc-hant12345678",
+        exampleResponse: envelope(
+          {
+            user: {
+              id: "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+              email: "founder@acme.ng",
+              merchantId: "m1e2r3c4-h5a6-7890-merc-hant12345678",
+            },
+            tokens: {
+              accessToken: "eyJhbG...",
+              refreshToken: "eyJhbG...",
+              expiresIn: "15m",
+            },
           },
-          tokens: {
-            accessToken: "eyJhbG...",
-            refreshToken: "eyJhbG...",
-            expiresIn: 900,
-          },
-        }),
+          "Resource created successfully",
+        ),
         swaggerPath: `${SWAGGER_URL}#/Auth/AuthController_login`,
       },
       {
@@ -114,18 +120,53 @@ export const apiTagGroups: ApiTagGroup[] = [
           { field: "refreshToken", type: "string", required: true },
         ],
         exampleRequest: `{ "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." }`,
-        exampleResponse: envelope({
-          user: {
-            id: "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
-            email: "founder@acme.ng",
-            merchantId: "m1e2r3c4-h5a6-7890-merc-hant12345678",
+        exampleResponse: envelope(
+          {
+            user: {
+              id: "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+              email: "founder@acme.ng",
+              merchantId: "m1e2r3c4-h5a6-7890-merc-hant12345678",
+            },
+            tokens: {
+              accessToken: "eyJhbG...",
+              refreshToken: "eyJhbG...",
+              expiresIn: "15m",
+            },
           },
-          tokens: {
-            accessToken: "eyJhbG...",
-            refreshToken: "eyJhbG...",
-            expiresIn: 900,
+          "Resource created successfully",
+        ),
+      },
+      {
+        method: "POST",
+        path: "/auth/password-reset/request",
+        description: "Request a password-reset email for a merchant account.",
+        auth: "public",
+        requestSchema: [{ field: "email", type: "string", required: true }],
+        exampleRequest: `{ "email": "founder@acme.ng" }`,
+        exampleResponse: envelope(
+          { message: "If that email exists, a reset link has been sent." },
+          "Resource created successfully",
+        ),
+      },
+      {
+        method: "POST",
+        path: "/auth/password-reset/confirm",
+        description: "Confirm a password reset using the token emailed to the merchant.",
+        auth: "public",
+        requestSchema: [
+          { field: "token", type: "string", required: true },
+          {
+            field: "newPassword",
+            type: "string",
+            required: true,
+            description: "Min 8 characters",
           },
-        }),
+        ],
+        exampleRequest: `{ "token": "prt_9f3a1c...", "newPassword": "aNewSecurePass456" }`,
+        exampleResponse: envelope(
+          { message: "Password updated." },
+          "Resource created successfully",
+        ),
       },
     ],
   },
@@ -133,7 +174,7 @@ export const apiTagGroups: ApiTagGroup[] = [
     tag: "API Keys",
     slug: "api-keys",
     description:
-      "Programmatic access keys for server-to-server integrations. Keys use the format nsub_live_ or nsub_test_ prefixes.",
+      "Programmatic access keys for server-to-server integrations. Keys use nsub_live_ or nsub_test_ prefixes. Issuing, listing, rotating, and revoking keys works today; authenticating a request WITH one of these keys does not yet, every protected endpoint below still expects a JWT bearer token, not an API key, until that guard is wired up.",
     endpoints: [
       {
         method: "POST",
@@ -150,17 +191,20 @@ export const apiTagGroups: ApiTagGroup[] = [
           { field: "name", type: "string", description: "Friendly label" },
         ],
         exampleRequest: `{ "environment": "test", "name": "Production Backend" }`,
-        exampleResponse: envelope({
-          apiKey: {
-            id: "k1e2y3i4-d5e6-7890-key1-234567890abc",
-            prefix: "nsub_test_",
-            lastFour: "9c2e",
-            environment: "test",
-            name: "Production Backend",
-            isActive: true,
+        exampleResponse: envelope(
+          {
+            apiKey: {
+              id: "k1e2y3i4-d5e6-7890-key1-234567890abc",
+              prefix: "nsub_test_",
+              lastFour: "9c2e",
+              environment: "test",
+              name: "Production Backend",
+              isActive: true,
+            },
+            rawKey: "nsub_test_7f3a9c2e1b8d4f6a0e5c3d2b1a9f8e7d6c5b4a3f",
           },
-          rawKey: "nsub_test_sk_live_demo_7f3a9c2e1b8d4f6a",
-        }),
+          "Resource created successfully",
+        ),
       },
       {
         method: "GET",
@@ -184,25 +228,31 @@ export const apiTagGroups: ApiTagGroup[] = [
         path: "/api-keys/:id",
         description: "Revoke an API key immediately.",
         auth: "jwt",
-        exampleResponse: envelope({
-          id: "k1e2y3i4-d5e6-7890-key1-234567890abc",
-          isActive: false,
-          revokedAt: "2026-07-02T14:30:00.000Z",
-        }),
+        exampleResponse: envelope(
+          {
+            id: "k1e2y3i4-d5e6-7890-key1-234567890abc",
+            isActive: false,
+            revokedAt: "2026-07-02T14:30:00.000Z",
+          },
+          "Resource deleted successfully",
+        ),
       },
       {
         method: "POST",
         path: "/api-keys/:id/rotate",
         description: "Revoke the current key and issue a new one atomically.",
         auth: "jwt",
-        exampleResponse: envelope({
-          apiKey: {
-            id: "k2e3y4i5-d6e7-8901-key2-345678901bcd",
-            prefix: "nsub_test_",
-            lastFour: "4f6a",
+        exampleResponse: envelope(
+          {
+            apiKey: {
+              id: "k2e3y4i5-d6e7-8901-key2-345678901bcd",
+              prefix: "nsub_test_",
+              lastFour: "4f6a",
+            },
+            rawKey: "nsub_test_8b1d4e7f2a9c3e6d1f0b5a4c8e7d2f1b0a9c8e7d",
           },
-          rawKey: "nsub_test_sk_new_rotated_key_8b1d4e7f",
-        }),
+          "Resource created successfully",
+        ),
       },
     ],
   },
@@ -239,6 +289,11 @@ export const apiTagGroups: ApiTagGroup[] = [
             type: "number",
             description: "Required when interval is custom",
           },
+          {
+            field: "isActive",
+            type: "boolean",
+            description: "Default: true. Also settable on PATCH.",
+          },
         ],
         exampleRequest: `{
   "name": "Pro Plan",
@@ -248,15 +303,18 @@ export const apiTagGroups: ApiTagGroup[] = [
   "interval": "monthly",
   "trialDays": 14
 }`,
-        exampleResponse: envelope({
-          id: "p1l2a3n4-d5e6-7890-plan-123456789abc",
-          name: "Pro Plan",
-          amount: "15000.00",
-          currency: "NGN",
-          interval: "monthly",
-          trialDays: 14,
-          isActive: true,
-        }),
+        exampleResponse: envelope(
+          {
+            id: "p1l2a3n4-d5e6-7890-plan-123456789abc",
+            name: "Pro Plan",
+            amount: "15000.00",
+            currency: "NGN",
+            interval: "monthly",
+            trialDays: 14,
+            isActive: true,
+          },
+          "Resource created successfully",
+        ),
       },
       {
         method: "GET",
@@ -281,8 +339,6 @@ export const apiTagGroups: ApiTagGroup[] = [
             },
           ],
           total: 1,
-          page: 1,
-          limit: 20,
         }),
       },
       {
@@ -306,11 +362,14 @@ export const apiTagGroups: ApiTagGroup[] = [
         description: "Update plan details. Partial updates supported.",
         auth: "jwt",
         exampleRequest: `{ "amount": 18000, "description": "Updated pricing" }`,
-        exampleResponse: envelope({
-          id: "p1l2a3n4-d5e6-7890-plan-123456789abc",
-          name: "Pro Plan",
-          amount: "18000.00",
-        }),
+        exampleResponse: envelope(
+          {
+            id: "p1l2a3n4-d5e6-7890-plan-123456789abc",
+            name: "Pro Plan",
+            amount: "18000.00",
+          },
+          "Resource updated successfully",
+        ),
       },
       {
         method: "DELETE",
@@ -318,10 +377,13 @@ export const apiTagGroups: ApiTagGroup[] = [
         description:
           "Soft-deactivate a plan. Existing subscriptions are unaffected.",
         auth: "jwt",
-        exampleResponse: envelope({
-          id: "p1l2a3n4-d5e6-7890-plan-123456789abc",
-          isActive: false,
-        }),
+        exampleResponse: envelope(
+          {
+            id: "p1l2a3n4-d5e6-7890-plan-123456789abc",
+            isActive: false,
+          },
+          "Resource deleted successfully",
+        ),
       },
     ],
   },
@@ -347,13 +409,16 @@ export const apiTagGroups: ApiTagGroup[] = [
   "phone": "+2348012345678",
   "metadata": { "company": "Nwosu Ventures" }
 }`,
-        exampleResponse: envelope({
-          id: "c1u2s3t4-d5e6-7890-cust-123456789abc",
-          name: "Chidi Nwosu",
-          email: "chidi@example.com",
-          phone: "+2348012345678",
-          metadata: { company: "Nwosu Ventures" },
-        }),
+        exampleResponse: envelope(
+          {
+            id: "c1u2s3t4-d5e6-7890-cust-123456789abc",
+            name: "Chidi Nwosu",
+            email: "chidi@example.com",
+            phone: "+2348012345678",
+            metadata: { company: "Nwosu Ventures" },
+          },
+          "Resource created successfully",
+        ),
       },
       {
         method: "GET",
@@ -373,8 +438,6 @@ export const apiTagGroups: ApiTagGroup[] = [
             },
           ],
           total: 1,
-          page: 1,
-          limit: 20,
         }),
       },
       {
@@ -394,10 +457,13 @@ export const apiTagGroups: ApiTagGroup[] = [
         description: "Update customer details.",
         auth: "jwt",
         exampleRequest: `{ "phone": "+2348098765432" }`,
-        exampleResponse: envelope({
-          id: "c1u2s3t4-d5e6-7890-cust-123456789abc",
-          phone: "+2348098765432",
-        }),
+        exampleResponse: envelope(
+          {
+            id: "c1u2s3t4-d5e6-7890-cust-123456789abc",
+            phone: "+2348098765432",
+          },
+          "Resource updated successfully",
+        ),
       },
     ],
   },
@@ -425,17 +491,20 @@ export const apiTagGroups: ApiTagGroup[] = [
   "callbackUrl": "https://acme.ng/billing/callback",
   "metadata": { "source": "onboarding" }
 }`,
-        exampleResponse: envelope({
-          subscription: {
-            id: "s1u2b3s4-d5e6-7890-subs-123456789abc",
-            status: "pending",
-            customerId: "c1u2s3t4-d5e6-7890-cust-123456789abc",
-            planId: "p1l2a3n4-d5e6-7890-plan-123456789abc",
+        exampleResponse: envelope(
+          {
+            subscription: {
+              id: "s1u2b3s4-d5e6-7890-subs-123456789abc",
+              status: "pending",
+              customerId: "c1u2s3t4-d5e6-7890-cust-123456789abc",
+              planId: "p1l2a3n4-d5e6-7890-plan-123456789abc",
+            },
+            checkoutUrl: "https://checkout.nomba.com/pay/abc123",
+            paymentId: "9a1b2c3d-e4f5-6789-paym-123456789abc",
+            invoiceId: "i1n2v3o4-d5e6-7890-inv1-234567890abc",
           },
-          checkoutUrl: "https://checkout.nomba.com/pay/abc123",
-          paymentId: "pay_789xyz",
-          invoiceId: "inv_456def",
-        }),
+          "Resource created successfully",
+        ),
       },
       {
         method: "GET",
@@ -468,57 +537,73 @@ export const apiTagGroups: ApiTagGroup[] = [
         path: "/subscriptions/:id/pause",
         description: "Pause an active subscription. Sets status to suspended.",
         auth: "jwt",
-        exampleResponse: envelope({
-          id: "s1u2b3s4-d5e6-7890-subs-123456789abc",
-          status: "suspended",
-          pausedAt: "2026-07-15T10:00:00.000Z",
-        }),
+        exampleResponse: envelope(
+          {
+            id: "s1u2b3s4-d5e6-7890-subs-123456789abc",
+            status: "suspended",
+            pausedAt: "2026-07-15T10:00:00.000Z",
+          },
+          "Resource created successfully",
+        ),
       },
       {
         method: "POST",
         path: "/subscriptions/:id/resume",
         description: "Resume a paused subscription. Sets status to active.",
         auth: "jwt",
-        exampleResponse: envelope({
-          id: "s1u2b3s4-d5e6-7890-subs-123456789abc",
-          status: "active",
-        }),
+        exampleResponse: envelope(
+          {
+            id: "s1u2b3s4-d5e6-7890-subs-123456789abc",
+            status: "active",
+          },
+          "Resource created successfully",
+        ),
       },
       {
         method: "POST",
         path: "/subscriptions/:id/cancel",
         description: "Cancel a subscription at period end or immediately.",
         auth: "jwt",
-        exampleResponse: envelope({
-          id: "s1u2b3s4-d5e6-7890-subs-123456789abc",
-          status: "cancelled",
-          cancelledAt: "2026-07-20T12:00:00.000Z",
-        }),
+        exampleResponse: envelope(
+          {
+            id: "s1u2b3s4-d5e6-7890-subs-123456789abc",
+            status: "cancelled",
+            cancelledAt: "2026-07-20T12:00:00.000Z",
+          },
+          "Resource created successfully",
+        ),
       },
       {
         method: "POST",
         path: "/subscriptions/:id/reactivate",
         description: "Reactivate a cancelled subscription.",
         auth: "jwt",
-        exampleResponse: envelope({
-          id: "s1u2b3s4-d5e6-7890-subs-123456789abc",
-          status: "active",
-        }),
+        exampleResponse: envelope(
+          {
+            id: "s1u2b3s4-d5e6-7890-subs-123456789abc",
+            status: "active",
+          },
+          "Resource created successfully",
+        ),
       },
       {
         method: "PATCH",
         path: "/subscriptions/:id/plan",
-        description: "Upgrade or downgrade subscription plan with proration.",
+        description:
+          "Change a subscription's plan. Computes a proration preview; today this does not itself collect or credit a mid-cycle charge, see Billing & invoicing in the guide docs.",
         auth: "jwt",
         requestSchema: [{ field: "newPlanId", type: "uuid", required: true }],
         exampleRequest: `{ "newPlanId": "p2l3a4n5-d6e7-8901-plan-234567890bcd" }`,
-        exampleResponse: envelope({
-          subscription: {
-            id: "s1u2b3s4-d5e6-7890-subs-123456789abc",
-            planId: "p2l3a4n5-d6e7-8901-plan-234567890bcd",
+        exampleResponse: envelope(
+          {
+            subscription: {
+              id: "s1u2b3s4-d5e6-7890-subs-123456789abc",
+              planId: "p2l3a4n5-d6e7-8901-plan-234567890bcd",
+            },
+            proration: { creditAmount: "5000.00", chargeAmount: "25000.00" },
           },
-          proration: { creditAmount: "5000.00", chargeAmount: "25000.00" },
-        }),
+          "Resource updated successfully",
+        ),
       },
     ],
   },
@@ -548,8 +633,6 @@ export const apiTagGroups: ApiTagGroup[] = [
             },
           ],
           total: 1,
-          page: 1,
-          limit: 20,
         }),
       },
       {
@@ -562,6 +645,7 @@ export const apiTagGroups: ApiTagGroup[] = [
           invoiceNumber: "INV-2026-00042",
           status: "paid",
           subtotal: "15000.00",
+          tax: "0.00",
           total: "15000.00",
           currency: "NGN",
           items: [
@@ -597,10 +681,13 @@ export const apiTagGroups: ApiTagGroup[] = [
   "invoiceId": "i1n2v3o4-d5e6-7890-inv1-234567890abc",
   "callbackUrl": "https://acme.ng/billing/callback"
 }`,
-        exampleResponse: envelope({
-          checkoutUrl: "https://checkout.nomba.com/pay/def456",
-          paymentId: "pay_retry_001",
-        }),
+        exampleResponse: envelope(
+          {
+            checkoutUrl: "https://checkout.nomba.com/pay/def456",
+            paymentId: "9b2c3d4e-f5a6-7890-paym-234567890bcd",
+          },
+          "Resource created successfully",
+        ),
       },
       {
         method: "GET",
@@ -610,7 +697,7 @@ export const apiTagGroups: ApiTagGroup[] = [
         exampleResponse: envelope({
           data: [
             {
-              id: "pay_789xyz",
+              id: "9a1b2c3d-e4f5-6789-paym-123456789abc",
               status: "succeeded",
               amount: "15000.00",
               currency: "NGN",
@@ -625,7 +712,7 @@ export const apiTagGroups: ApiTagGroup[] = [
         description: "Get payment details including attempt history.",
         auth: "jwt",
         exampleResponse: envelope({
-          id: "pay_789xyz",
+          id: "9a1b2c3d-e4f5-6789-paym-123456789abc",
           status: "succeeded",
           amount: "15000.00",
           nombaTransactionId: "TXN-NOMBA-001234",
@@ -639,7 +726,7 @@ export const apiTagGroups: ApiTagGroup[] = [
     tag: "Webhooks",
     slug: "webhooks",
     description:
-      "Register webhook endpoints to receive real-time events. Outbound deliveries are signed with HMAC-SHA256 and retried via BullMQ.",
+      "Register webhook endpoints to receive real-time events. Outbound deliveries are signed with HMAC-SHA256 over the raw request body and retried via BullMQ, five attempts over roughly four hours, then dead-lettered.",
     endpoints: [
       {
         method: "POST",
@@ -663,52 +750,73 @@ export const apiTagGroups: ApiTagGroup[] = [
   ],
   "description": "Production webhook handler"
 }`,
-        exampleResponse: envelope({
-          id: "w1h2o3o4-d5e6-7890-hook-123456789abc",
-          url: "https://acme.ng/webhooks/nse",
-          events: ["subscription.created", "payment.failed", "invoice.paid"],
-          secret: "whsec_auto_generated_secret",
-          isActive: true,
-        }),
+        exampleResponse: envelope(
+          {
+            id: "w1h2o3o4-d5e6-7890-hook-123456789abc",
+            url: "https://acme.ng/webhooks/nse",
+            events: ["subscription.created", "payment.failed", "invoice.paid"],
+            secret: "whsec_auto_generated_secret",
+            isActive: true,
+          },
+          "Resource created successfully",
+        ),
       },
       {
         method: "GET",
         path: "/webhooks",
         description: "List registered webhook endpoints.",
         auth: "jwt",
-        exampleResponse: envelope({
-          data: [
-            {
-              id: "w1h2o3o4-d5e6-7890-hook-123456789abc",
-              url: "https://acme.ng/webhooks/nse",
-              isActive: true,
-            },
-          ],
-        }),
+        exampleResponse: envelope([
+          {
+            id: "w1h2o3o4-d5e6-7890-hook-123456789abc",
+            url: "https://acme.ng/webhooks/nse",
+            isActive: true,
+          },
+        ]),
       },
       {
         method: "GET",
         path: "/webhooks/:id/deliveries",
-        description: "View delivery logs for a webhook (last 50 attempts).",
+        description: "View delivery logs for a webhook.",
         auth: "jwt",
-        exampleResponse: envelope({
-          data: [
-            {
-              id: "d1e2l3i4-d5e6-7890-del1-234567890abc",
-              eventType: "invoice.paid",
-              status: "delivered",
-              attemptCount: 1,
-              responseStatusCode: 200,
-              deliveredAt: "2026-07-01T10:31:00.000Z",
-            },
-          ],
-        }),
+        exampleResponse: envelope([
+          {
+            id: "d1e2l3i4-d5e6-7890-del1-234567890abc",
+            webhookId: "w1h2o3o4-d5e6-7890-hook-123456789abc",
+            eventType: "invoice.paid",
+            status: "delivered",
+            attemptCount: 1,
+            responseStatusCode: 200,
+            deliveredAt: "2026-07-01T10:31:00.000Z",
+          },
+        ]),
+      },
+      {
+        method: "POST",
+        path: "/webhooks/replay",
+        description:
+          "Re-dispatch past events to your registered webhooks, filtered by subscription ID and/or a time range. Reads back from the event store, not a cache.",
+        auth: "jwt",
+        requestSchema: [
+          { field: "subscriptionId", type: "uuid" },
+          { field: "from", type: "string", description: "ISO 8601 date" },
+          { field: "to", type: "string", description: "ISO 8601 date" },
+        ],
+        exampleRequest: `{
+  "subscriptionId": "s1u2b3s4-d5e6-7890-subs-123456789abc",
+  "from": "2026-08-01T00:00:00Z",
+  "to": "2026-08-14T00:00:00Z"
+}`,
+        exampleResponse: envelope(
+          { eventsMatched: 3 },
+          "Resource created successfully",
+        ),
       },
       {
         method: "POST",
         path: "/webhooks/nomba",
         description:
-          "Inbound Nomba payment webhook (HMAC-verified, public endpoint).",
+          "Inbound Nomba payment webhook (HMAC-verified against Nomba's own signing scheme, a public route so Nomba can reach it, not open to arbitrary callers who lack the secret).",
         auth: "hmac",
         exampleRequest: `{
   "event_type": "payment_success",
@@ -716,13 +824,13 @@ export const apiTagGroups: ApiTagGroup[] = [
   "data": {
     "transaction": {
       "transactionId": "TXN-NOMBA-001234",
-      "merchantTxRef": "pay_789xyz",
+      "merchantTxRef": "9a1b2c3d-e4f5-6789-paym-123456789abc",
       "transactionAmount": 15000,
       "responseCode": "00"
     }
   }
 }`,
-        exampleResponse: JSON.stringify({ received: true }, null, 2),
+        exampleResponse: envelope({ received: true }, "Webhook received"),
       },
     ],
   },
@@ -730,7 +838,7 @@ export const apiTagGroups: ApiTagGroup[] = [
     tag: "Analytics",
     slug: "analytics",
     description:
-      "Merchant-facing business metrics computed on demand from the event store: revenue, churn, recovery, plan performance, and activity feed.",
+      "Merchant-facing business metrics computed on demand from the event store: revenue, churn, recovery, plan performance, and activity feed. Rate fields (churnRate, recoveryRate, paymentSuccessRate, successRate, trialConversionRate) are percentages on a 0-100 scale, not 0-1 fractions.",
     endpoints: [
       {
         method: "GET",
@@ -740,8 +848,8 @@ export const apiTagGroups: ApiTagGroup[] = [
         exampleResponse: envelope({
           mrr: 4250000,
           arr: 51000000,
-          churnRate: 0.032,
-          recoveryRate: 0.61,
+          churnRate: 3.2,
+          recoveryRate: 61,
           activeSubscriptions: 284,
           failedPayments: 19,
           trialingSubscriptions: 12,
@@ -757,9 +865,9 @@ export const apiTagGroups: ApiTagGroup[] = [
           totalRevenue: 128400000,
           revenueLast30Days: 4250000,
           successfulPayments: 302,
-          paymentSuccessRate: 0.94,
+          paymentSuccessRate: 94,
           arpu: 14964,
-          trialConversionRate: 0.68,
+          trialConversionRate: 68,
           outstandingInvoices: 5,
           outstandingInvoiceAmount: 75000,
           dunningSubscriptions: 11,
@@ -773,13 +881,13 @@ export const apiTagGroups: ApiTagGroup[] = [
           "Get the full analytics payload for the merchant dashboard: metrics, payments, customers, dunning, webhooks, and plan breakdown in one call.",
         auth: "jwt",
         exampleResponse: envelope({
-          metrics: { mrr: 4250000, arr: 51000000, churnRate: 0.032 },
+          metrics: { mrr: 4250000, arr: 51000000, churnRate: 3.2 },
           payments: {
             totalPayments: 321,
             succeededPayments: 302,
             failedPayments: 19,
-            successRate: 0.94,
-            recoveryRate: 0.61,
+            successRate: 94,
+            recoveryRate: 61,
           },
           customers: {
             totalCustomers: 271,
@@ -811,7 +919,7 @@ export const apiTagGroups: ApiTagGroup[] = [
             deliveredCount: 1178,
             failedCount: 26,
             pendingCount: 0,
-            successRate: 0.978,
+            successRate: 97.8,
           },
           planBreakdown: [
             {
@@ -906,8 +1014,8 @@ export const apiTagGroups: ApiTagGroup[] = [
           failedPayments: 19,
           pendingPayments: 0,
           refundedPayments: 2,
-          successRate: 0.94,
-          recoveryRate: 0.61,
+          successRate: 94,
+          recoveryRate: 61,
           totalRevenue: 128400000,
           revenueLast30Days: 4250000,
           averagePaymentAmount: 15230,
@@ -963,7 +1071,7 @@ export const apiTagGroups: ApiTagGroup[] = [
           deliveredCount: 1178,
           failedCount: 26,
           pendingCount: 0,
-          successRate: 0.978,
+          successRate: 97.8,
         }),
       },
       {
@@ -1021,8 +1129,6 @@ export const apiTagGroups: ApiTagGroup[] = [
             },
           ],
           total: 1,
-          page: 1,
-          limit: 20,
         }),
       },
     ],
@@ -1052,10 +1158,25 @@ export const webhookEvents = [
     },
   },
   {
+    type: "subscription.updated",
+    description: "Fired on a plan change, pause, or resume.",
+    payload: {
+      id: "evt_002",
+      type: "subscription.updated",
+      data: {
+        subscription: {
+          id: "s1u2b3s4-d5e6-7890-subs-123456789abc",
+          status: "active",
+        },
+      },
+      createdAt: "2026-07-10T08:00:00.000Z",
+    },
+  },
+  {
     type: "subscription.renewed",
     description: "Fired when a subscription successfully renews.",
     payload: {
-      id: "evt_002",
+      id: "evt_003",
       type: "subscription.renewed",
       data: {
         subscription: {
@@ -1074,11 +1195,11 @@ export const webhookEvents = [
     type: "payment.failed",
     description: "Fired when a payment attempt fails.",
     payload: {
-      id: "evt_003",
+      id: "evt_004",
       type: "payment.failed",
       data: {
         payment: {
-          id: "pay_789xyz",
+          id: "9a1b2c3d-e4f5-6789-paym-123456789abc",
           status: "failed",
           failureReason: "Insufficient funds",
         },
@@ -1094,10 +1215,10 @@ export const webhookEvents = [
     type: "payment.recovered",
     description: "Fired when a previously failed payment succeeds.",
     payload: {
-      id: "evt_004",
+      id: "evt_005",
       type: "payment.recovered",
       data: {
-        payment: { id: "pay_789xyz", status: "succeeded" },
+        payment: { id: "9a1b2c3d-e4f5-6789-paym-123456789abc", status: "succeeded" },
         invoice: { id: "i1n2v3o4-d5e6-7890-inv1-234567890abc", status: "paid" },
       },
       createdAt: "2026-08-03T14:00:00.000Z",
@@ -1107,7 +1228,7 @@ export const webhookEvents = [
     type: "invoice.paid",
     description: "Fired when an invoice is marked as paid.",
     payload: {
-      id: "evt_005",
+      id: "evt_006",
       type: "invoice.paid",
       data: {
         invoice: {
@@ -1115,7 +1236,10 @@ export const webhookEvents = [
           status: "paid",
           total: "15000.00",
         },
-        payment: { id: "pay_789xyz", nombaTransactionId: "TXN-NOMBA-001234" },
+        payment: {
+          id: "9a1b2c3d-e4f5-6789-paym-123456789abc",
+          nombaTransactionId: "TXN-NOMBA-001234",
+        },
         subscription: {
           id: "s1u2b3s4-d5e6-7890-subs-123456789abc",
           status: "active",
@@ -1128,7 +1252,7 @@ export const webhookEvents = [
     type: "subscription.cancelled",
     description: "Fired when a subscription is cancelled.",
     payload: {
-      id: "evt_006",
+      id: "evt_007",
       type: "subscription.cancelled",
       data: {
         subscription: {

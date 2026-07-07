@@ -55,19 +55,19 @@ export default function IntroductionTolu() {
       <p>
         On the 25th, the charge fails. Instead of silently dropping the subscription, the engine moves it to{" "}
         <code className="inline">past_due</code> and opens a grace period. A WhatsApp message goes to Tolu the same
-        hour: <em>&quot;Your payment for [Adaeze&apos;s platform] didn&apos;t go through. Retry Now / Pause /
-        Downgrade.&quot;</em> Three days later, payday behind her, Tolu replies <strong>Retry Now</strong>. The
-        charge succeeds. The subscription returns to <code className="inline">active</code>, no gap, no re-signup,
-        no lost course progress.
+        hour: <em>&quot;Your payment for [Adaeze&apos;s platform] didn&apos;t go through.&quot;</em> Payday lands
+        three days later. The scheduled retry on the dunning timeline fires against her card, now funded, and it
+        succeeds. The subscription returns to <code className="inline">active</code>, no gap, no re-signup, no lost
+        course progress, and no action Tolu had to take at all.
       </p>
       <p>
-        Every transition (the failed charge, the grace period, the WhatsApp exchange, the successful retry) is
-        written to an append-only event store. A webhook fires to Adaeze&apos;s system the moment the subscription
-        recovers, so her platform re-grants access automatically, with no manual check on her end.
+        Every transition (the failed charge, the grace period, the retry, the recovery) is written to an
+        append-only event store. A webhook fires to Adaeze&apos;s system the moment the subscription recovers, so
+        her platform re-grants access automatically, with no manual check on her end.
       </p>
       <p>
-        Adaeze opens her dashboard that evening and sees it in the numbers: one past-due subscription, recovered
-        via WhatsApp, MRR unaffected.
+        Adaeze opens her dashboard that evening and sees it in the numbers: one past-due subscription, recovered on
+        schedule, MRR unaffected.
       </p>
       <p>That is Subflow.</p>
 
@@ -92,9 +92,9 @@ export default function IntroductionTolu() {
           support ticket required for a standard integration.
         </Card>
         <Card icon={UserCheck} title="Subscribers">
-          The merchant&apos;s end customers. They get a self-service portal to pause, cancel, or update payment
-          methods on their own terms, and, when a charge fails, a recovery message on whichever channel they
-          actually check: email, WhatsApp, SMS, or USSD.
+          The merchant&apos;s end customers. A self-service portal to pause, cancel, or update payment methods on
+          their own terms isn&apos;t shipped yet, today what they get is a real-time notice when a charge fails,
+          email always, WhatsApp or SMS where a number&apos;s on file, and the automatic retries that follow it.
         </Card>
       </CardGrid>
       <p>
@@ -107,8 +107,8 @@ export default function IntroductionTolu() {
       <h2 id="h-underneath">What is underneath</h2>
       <p>
         Every payment runs through the <strong>Nomba API</strong>, Checkout for tokenisation, the Charge API for
-        each billing-cycle attempt, Transfers where a merchant&apos;s fee structure requires payout handling, and
-        inbound Nomba webhooks that trigger internal state transitions the moment a payment event lands.
+        each billing-cycle attempt, and inbound Nomba webhooks that trigger internal state transitions the moment a
+        payment event lands, confirmed asynchronously, not guessed at from a synchronous response.
       </p>
       <p>
         The service itself is a NestJS API on PostgreSQL, with BullMQ and Redis running recovery and
@@ -125,9 +125,8 @@ export default function IntroductionTolu() {
           title="Web"
           description={
             <>
-              <strong>For everyone.</strong> Merchant dashboard for plan and subscription management, analytics, API
-              keys, and webhooks. A separately authenticated customer portal for self-service pause, resume, cancel,
-              and payment-method updates.
+              <strong>For merchants and developers.</strong> Merchant dashboard for plan and subscription
+              management, analytics, API keys, and webhooks. There&apos;s no separate subscriber-facing app yet.
             </>
           }
         />
@@ -137,8 +136,8 @@ export default function IntroductionTolu() {
           title="Email"
           description={
             <>
-              <strong>For subscribers, always.</strong> The durable baseline. Fires on every recovery attempt with
-              the same Retry Now / Pause / Downgrade links, whether or not WhatsApp or SMS also reach them.
+              <strong>For subscribers, always.</strong> The durable, fully-live baseline. Fires on every recovery
+              attempt, no configuration dependency, no simulated fallback.
             </>
           }
         />
@@ -148,9 +147,8 @@ export default function IntroductionTolu() {
           title="WhatsApp"
           description={
             <>
-              <strong>For subscribers, on charge failure.</strong> A recovery message with inline Retry Now / Pause
-              / Downgrade actions. The subscriber&apos;s reply is processed directly against the subscription state
-              machine, no app, no login.
+              <strong>For subscribers, on charge failure.</strong> A real Twilio-backed notice. Acting on it today
+              happens through other means, not yet a tap on the message itself.
             </>
           }
         />
@@ -160,9 +158,8 @@ export default function IntroductionTolu() {
           title="SMS"
           description={
             <>
-              <strong>For subscribers, as guaranteed fallback.</strong> If WhatsApp delivery fails or isn&apos;t
-              available, the same recovery message goes out over SMS with a reply-based retry (&quot;Reply YES to
-              retry&quot;), so recovery never depends on a single provider being up.
+              <strong>For subscribers without WhatsApp.</strong> The same Twilio-backed notice over a rail every
+              handset supports. Replying to it doesn&apos;t do anything yet, there&apos;s no inbound receiver.
             </>
           }
         />
@@ -172,18 +169,18 @@ export default function IntroductionTolu() {
           title="USSD"
           description={
             <>
-              <strong>For subscribers without reliable data.</strong> A menu flow to check subscription status,
-              pause, or cancel, built behind an interface that can run against a real short-code provider or a
-              simulator, so the recovery workflow isn&apos;t blocked on a telco integration timeline.
+              <strong>Designed, not yet live.</strong> A menu flow to check subscription status, pause, or cancel,
+              correctly shaped for a real short-code provider, but with no telco arrangement behind it today.
             </>
           }
         />
       </CardGrid>
 
       <p>
-        Behind the channels: one recovery-orchestration path that picks the channel and handles fallback, rather
-        than duplicated logic per provider. One event store that webhooks, notifications, and analytics all read
-        from, rather than three systems slowly drifting out of sync with each other.
+        Behind the channels: notification fan-out driven by one event, not duplicated logic per provider. One event
+        store that webhooks, notifications, and analytics all read from, rather than three systems slowly drifting
+        out of sync with each other. See <a href="/concepts/recovery-orchestration">Recovery orchestration</a> for
+        exactly what&apos;s live today versus what&apos;s still a stand-in.
       </p>
 
       <h2 id="h-next">Where to go from here</h2>
@@ -198,7 +195,7 @@ export default function IntroductionTolu() {
           href="/how-it-works"
           icon={Compass}
           title="How it works"
-          description="Adaeze creates a plan. Tolu subscribes. A charge fails. WhatsApp recovers it. The event store, end to end."
+          description="Adaeze creates a plan. Tolu subscribes. A charge fails. The scheduled retry recovers it. The event store, end to end."
         />
         <CardLink
           href="/architecture/overview"
