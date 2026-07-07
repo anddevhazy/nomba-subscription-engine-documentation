@@ -61,13 +61,42 @@ export default function ArchitectureOverview() {
 
       <Mermaid
         chart={`flowchart LR
-    A["Merchant / Customer / Developer"] --> B["NestJS API"]:::accent --> C["Postgres (TypeORM)"]
-    B --> D["BullMQ / Redis"]:::accent2 --> E["Webhook delivery · Dunning · Invoicing"]
+    subgraph "API layer"
+        C[Controllers]
+        S[Services]
+    end
+    subgraph Domain
+        E[Event store]:::accent2
+        SM[Subscription state machine]
+    end
+    subgraph Workers
+        BQ[BullMQ]:::accent
+        DW[Dunning worker]
+        WW[Webhook worker]
+    end
+    subgraph External
+        N[Nomba API]
+        MW[Merchant webhooks]
+    end
+
+    C --> S
+    S --> SM
+    S --> E
+    E --> BQ
+    BQ --> DW
+    BQ --> WW
+    WW --> MW
+    N --> S
+    DW --> S
 
     classDef accent fill:#c9971f,stroke:#8a6416,color:#ffffff,font-weight:600;
     classDef accent2 fill:#1e9a5a,stroke:#166e42,color:#ffffff,font-weight:600;
 `}
       />
+      <p className="body-secondary">
+        Postgres backs the API and Domain layers via TypeORM; Redis backs the BullMQ layer. Both omitted above to
+        keep the module relationships legible.
+      </p>
 
       <h2 id="h-domain">The domain model</h2>
 

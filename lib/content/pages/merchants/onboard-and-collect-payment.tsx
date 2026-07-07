@@ -24,7 +24,7 @@ export default function OnboardAndCollectPayment() {
       <Steps>
         <Step number={1} title="Your app requests a Checkout session">
           <CodeBlock
-            code={`curl -X POST https://api.nomba-subscriptions.com/customers/cus_01.../checkout-session \\
+            code={`curl -X POST https://nomba-subscription-engine.onrender.com/customers/cus_01.../checkout-session \\
   -H "Authorization: Bearer nsub_live_..." \\
   -d '{"planId": "plan_lumen_monthly"}'`}
             language="bash"

@@ -31,6 +31,7 @@ import {
   Wallet,
   Radio,
   Server,
+  TerminalSquare,
 } from "lucide-react";
 
 export type NavItem = { slug: string; title: string };
@@ -61,6 +62,7 @@ export const ICONS: Record<string, LucideIcon> = {
   "developer/webhooks": Bell,
   "developer/rate-limits": Timer,
   "developer/service-info": Server,
+  "developer/playground": TerminalSquare,
   "architecture/overview": Building2,
   "architecture/modules": Puzzle,
   "architecture/nomba-integration": Plug,
@@ -120,6 +122,7 @@ export const NAV: NavGroup[] = [
       { slug: "developer/webhooks", title: "Webhooks" },
       { slug: "developer/rate-limits", title: "Rate limits" },
       { slug: "developer/service-info", title: "Service info" },
+      { slug: "developer/playground", title: "Playground" },
     ],
   },
   {
@@ -166,7 +169,7 @@ export const DESCRIPTIONS: Record<string, string> = {
   "how-it-works":
     "A merchant creates a plan. A customer subscribes. Nomba collects the charge. If it fails, recovery kicks in. The whole arc, end to end, in one page.",
   "quick-start":
-    "Three ways to feel the engine in five minutes. Create a plan, break a payment on purpose, replay a webhook.",
+    "Five real API calls: create a key, a plan, a customer, a subscription, and a webhook. No fabricated shortcuts, no endpoints that don't exist.",
   mission:
     "The objectives behind the build, and the six things explicitly left out of this release.",
   "the-team":
@@ -207,6 +210,8 @@ export const DESCRIPTIONS: Record<string, string> = {
     "One global limit, 100 requests per 60 seconds, shared by every caller. No per-key tiers yet.",
   "developer/service-info":
     "A debug console for the one webhook direction that's easy to get wrong: Nomba calling into you, not you calling out.",
+  "developer/playground":
+    "Code samples in four languages, five payment scenarios with the exact webhook they produce, and the full event catalog.",
   "architecture/overview":
     "One NestJS API. Postgres for the ledger. Redis and BullMQ for everything that shouldn't block a response.",
   "architecture/modules":

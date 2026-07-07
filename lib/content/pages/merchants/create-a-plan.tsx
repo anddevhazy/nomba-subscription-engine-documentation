@@ -66,7 +66,7 @@ export default function CreateAPlan() {
         </Step>
         <Step number={2} title="Or via the API">
           <CodeBlock
-            code={`curl -X POST https://api.nomba-subscriptions.com/plans \\
+            code={`curl -X POST https://nomba-subscription-engine.onrender.com/plans \\
   -H "Authorization: Bearer nsub_live_..." \\
   -H "Content-Type: application/json" \\
   -d '{

@@ -1,4 +1,5 @@
 import { Card, CardGrid, CardLink } from "@/components/docs/content/card-grid";
+import { Mermaid } from "@/components/docs/content/mermaid";
 import { Steps, Step } from "@/components/docs/content/steps";
 import type { PageMeta } from "@/lib/content/types";
 import { CheckCircle2, FolderOpen, Mail, MessageCircle, TestTube2 } from "lucide-react";
@@ -28,6 +29,28 @@ export default function RecoveryOrchestration() {
         <code className="inline">suspended</code> if the third attempt fails too. Each attempt is a real charge
         against Nomba&apos;s Charge API, not a simulated retry, see{" "}
         <a href="/concepts/subscription-lifecycle">Subscription lifecycle</a>.
+      </p>
+
+      <Mermaid
+        chart={`flowchart TD
+    A["Charge fails"]:::accent --> B["subscription -> past_due"]
+    B --> C["Retry scheduled: 24h later"]
+    C --> D{"Attempt 2"}
+    D -->|Success| Z["payment.recovered -> active"]:::accent2
+    D -->|Fail too| E["subscription -> grace_period"]
+    E --> F["Retry scheduled: 7 days later"]
+    F --> G{"Attempt 3"}
+    G -->|Success| Z
+    G -->|Fail too| H["subscription -> suspended"]
+
+    classDef accent fill:#c9971f,stroke:#8a6416,color:#ffffff,font-weight:600;
+    classDef accent2 fill:#1e9a5a,stroke:#166e42,color:#ffffff,font-weight:600;
+`}
+      />
+      <p className="body-secondary">
+        Note there&apos;s no <code className="inline">grace_period</code> stop between the first failure and the
+        second attempt, that state only appears once the second attempt has also failed, see{" "}
+        <a href="/concepts/subscription-lifecycle">Subscription lifecycle</a> for why they&apos;re kept separate.
       </p>
 
       <h2 id="h-channels">What actually fires, channel by channel</h2>

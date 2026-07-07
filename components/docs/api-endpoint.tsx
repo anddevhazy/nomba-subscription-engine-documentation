@@ -368,7 +368,7 @@ export function ApiEndpoint({ endpoint, id }: ApiEndpointProps) {
 
         <div>
           <h4 className="mb-3 text-sm font-semibold">Example Response</h4>
-          <CodeBlock code={endpoint.exampleResponse} language="json" />
+          <CodeBlock code={endpoint.exampleResponse} language={endpoint.responseLanguage ?? "json"} />
         </div>
       </CardContent>
     </Card>

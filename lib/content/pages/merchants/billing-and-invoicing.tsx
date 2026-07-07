@@ -1,5 +1,6 @@
 import { Callout } from "@/components/docs/content/callout";
 import { CardGrid, CardLink } from "@/components/docs/content/card-grid";
+import { Mermaid } from "@/components/docs/content/mermaid";
 import { Steps, Step } from "@/components/docs/content/steps";
 import type { PageMeta } from "@/lib/content/types";
 import { BarChart3, RefreshCw } from "lucide-react";
@@ -21,6 +22,25 @@ export default function BillingAndInvoicing() {
       </p>
 
       <h2 id="h-cycle">How a billing cycle runs</h2>
+      <Mermaid
+        chart={`sequenceDiagram
+    participant App as Merchant app
+    participant API as Subflow API
+    participant Nomba as Nomba Checkout
+    participant WH as Nomba webhook
+    participant ES as Event store
+
+    App->>API: POST /subscriptions
+    API->>API: Create invoice + payment
+    API-->>App: checkoutUrl
+    App->>Nomba: Redirect customer
+    Nomba->>WH: POST /webhooks/nomba (payment_success)
+    WH->>WH: Verify Nomba signature
+    WH->>API: Mark payment succeeded
+    API->>API: Activate subscription
+    API->>ES: Emit invoice.paid event
+    ES->>App: Deliver webhook (x-signature)`}
+      />
       <Steps>
         <Step number={1} title="The cycle boundary arrives">
           <p>Determined by the plan&apos;s interval and the subscription&apos;s anchor date, the date the subscription first went active.</p>

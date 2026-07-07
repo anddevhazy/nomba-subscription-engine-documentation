@@ -29,7 +29,7 @@ export default function ServiceInfo() {
   "environment": "production",
   "serverTime": "2026-08-14T11:02:33Z",
   "nodeVersion": "v20.14.0",
-  "nombaWebhookUrl": "https://api.nomba-subscriptions.com/webhooks/nomba",
+  "nombaWebhookUrl": "https://nomba-subscription-engine.onrender.com/webhooks/nomba",
   "webhookSecretConfigured": true,
   "nombaApiUrl": "https://api.nomba.com"
 }`}

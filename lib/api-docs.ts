@@ -17,6 +17,8 @@ export type ApiEndpointDoc = {
   queryParams?: { field: string; type: string; description?: string }[];
   exampleRequest?: string;
   exampleResponse: string;
+  /** Defaults to "json". Set when exampleResponse isn't JSON, e.g. the HTML/plain-text recovery-channel endpoints. */
+  responseLanguage?: "json" | "html" | "text";
   swaggerPath?: string;
 };
 
@@ -144,7 +146,7 @@ export const apiTagGroups: ApiTagGroup[] = [
         requestSchema: [{ field: "email", type: "string", required: true }],
         exampleRequest: `{ "email": "founder@acme.ng" }`,
         exampleResponse: envelope(
-          { message: "If that email exists, a reset link has been sent." },
+          { message: "If the email exists, a reset link has been sent" },
           "Resource created successfully",
         ),
       },
@@ -164,7 +166,7 @@ export const apiTagGroups: ApiTagGroup[] = [
         ],
         exampleRequest: `{ "token": "prt_9f3a1c...", "newPassword": "aNewSecurePass456" }`,
         exampleResponse: envelope(
-          { message: "Password updated." },
+          { message: "Password reset successfully" },
           "Resource created successfully",
         ),
       },
@@ -562,7 +564,7 @@ export const apiTagGroups: ApiTagGroup[] = [
       {
         method: "POST",
         path: "/subscriptions/:id/cancel",
-        description: "Cancel a subscription at period end or immediately.",
+        description: "Cancel a subscription immediately. Takes no body; there's no period-end option today.",
         auth: "jwt",
         exampleResponse: envelope(
           {
@@ -1130,6 +1132,165 @@ export const apiTagGroups: ApiTagGroup[] = [
           ],
           total: 1,
         }),
+      },
+    ],
+  },
+  {
+    tag: "Service info",
+    slug: "service-info",
+    description:
+      "Diagnostics for the inbound Nomba webhook leg: what URL to hand Nomba, whether a webhook secret is configured, and the raw request log for debugging a delivery that never showed up.",
+    endpoints: [
+      {
+        method: "GET",
+        path: "/service-info",
+        description: "A snapshot of this service's runtime info and Nomba webhook configuration.",
+        auth: "jwt",
+        exampleResponse: envelope({
+          serviceName: "Subflow",
+          environment: "production",
+          serverTime: "2026-08-14T11:02:33.000Z",
+          nodeVersion: "v20.14.0",
+          nombaWebhookUrl: "https://nomba-subscription-engine.onrender.com/webhooks/nomba",
+          webhookSecretConfigured: true,
+          nombaApiUrl: "https://api.nomba.com",
+        }),
+      },
+      {
+        method: "GET",
+        path: "/service-info/requests",
+        description: "Paginated log of the most recent incoming requests this service has received, capped at 500.",
+        auth: "jwt",
+        queryParams: [
+          { field: "page", type: "number", description: "Default: 1" },
+          { field: "limit", type: "number", description: "Default: 20, max: 100" },
+          { field: "category", type: "string", description: "Filter by request category, e.g. nomba-webhook" },
+        ],
+        exampleResponse: envelope({
+          data: [
+            {
+              category: "nomba-webhook",
+              method: "POST",
+              path: "/webhooks/nomba",
+              ipAddress: "34.201.22.10",
+              statusCode: 200,
+              nombaTimestamp: "2026-08-14T11:02:30.000Z",
+            },
+          ],
+          total: 1,
+        }),
+      },
+      {
+        method: "POST",
+        path: "/service-info/echo",
+        description:
+          "Unauthenticated connectivity check. Echoes request metadata back so you can confirm a request from a given network path actually reaches this service.",
+        auth: "public",
+        exampleResponse: envelope({
+          received: true,
+          method: "POST",
+          path: "/service-info/echo",
+          timestamp: "2026-08-14T11:02:33.000Z",
+        }),
+      },
+    ],
+  },
+  {
+    tag: "Mission control",
+    slug: "mission-control",
+    description:
+      "The REST half of the live event feed. The same events are also broadcast over a per-merchant Socket.IO namespace at /mission-control.",
+    endpoints: [
+      {
+        method: "GET",
+        path: "/events",
+        description: "Paginated timeline of domain events for the current merchant, most recent first.",
+        auth: "jwt",
+        queryParams: [
+          { field: "page", type: "number", description: "Default: 1" },
+          { field: "limit", type: "number", description: "Default: 20, max: 100" },
+        ],
+        exampleResponse: envelope({
+          data: [
+            {
+              id: "e1v2e3n4-t5i6-7890-evnt-123456789abc",
+              eventType: "PaymentFailedEvent",
+              aggregateType: "Subscription",
+              aggregateId: "s1u2b3s4-d5e6-7890-subs-123456789abc",
+              createdAt: "2026-08-14T11:02:33.000Z",
+            },
+          ],
+          total: 1,
+        }),
+      },
+      {
+        method: "GET",
+        path: "/events/:id",
+        description: "A single timeline event by id, including its full payload.",
+        auth: "jwt",
+        exampleResponse: envelope({
+          id: "e1v2e3n4-t5i6-7890-evnt-123456789abc",
+          eventType: "PaymentFailedEvent",
+          aggregateType: "Subscription",
+          aggregateId: "s1u2b3s4-d5e6-7890-subs-123456789abc",
+          payload: { failureReason: "card_declined" },
+          createdAt: "2026-08-14T11:02:33.000Z",
+        }),
+      },
+    ],
+  },
+  {
+    tag: "Recovery channels",
+    slug: "recovery-channels",
+    description:
+      "Public, non-JSON endpoints that redeem a single-use recovery link or accept an inbound recovery interaction. These deliberately bypass the standard envelope, an HTML page and a plain-text USSD response aren't meant for a JSON client.",
+    endpoints: [
+      {
+        method: "GET",
+        path: "/recovery/email",
+        description:
+          "Redeems a single-use retry, pause, or cancel link and returns a minimal HTML confirmation page, not JSON.",
+        auth: "public",
+        queryParams: [
+          { field: "token", type: "string", description: "The single-use token from a recovery link, required" },
+        ],
+        exampleResponse: `<!doctype html>
+<html>
+  <body>
+    <h1>Payment retried successfully</h1>
+    <p>Your subscription is active again.</p>
+  </body>
+</html>`,
+        responseLanguage: "html",
+      },
+      {
+        method: "POST",
+        path: "/ussd/session",
+        description:
+          "USSD aggregator session endpoint. Simulated only today, no telco is actually wired up. Returns plain text in the CON/END format a USSD gateway expects, not JSON.",
+        auth: "public",
+        requestSchema: [
+          { field: "sessionId", type: "string", required: true },
+          { field: "phoneNumber", type: "string", required: true },
+          { field: "text", type: "string", description: "Accumulated menu input for this session" },
+        ],
+        exampleResponse: `CON Welcome to Subflow
+1. Check status
+2. Pause subscription
+3. Cancel subscription`,
+        responseLanguage: "text",
+      },
+      {
+        method: "POST",
+        path: "/webhooks/whatsapp",
+        description:
+          "Inbound receiver for a WhatsApp recovery button tap. Accepts a simplified payload shape, not Twilio's real form-encoded webhook body.",
+        auth: "public",
+        requestSchema: [
+          { field: "from", type: "string", required: true, description: "The subscriber's phone number" },
+          { field: "action", type: "string", required: true, description: "retry | pause | cancel" },
+        ],
+        exampleResponse: envelope({ received: true }),
       },
     ],
   },

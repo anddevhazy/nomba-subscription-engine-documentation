@@ -23,6 +23,7 @@ import * as developerAuthentication from "./pages/developer/authentication";
 import * as developerWebhooks from "./pages/developer/webhooks";
 import * as rateLimits from "./pages/developer/rate-limits";
 import * as serviceInfo from "./pages/developer/service-info";
+import * as playground from "./pages/developer/playground";
 
 import * as channelsWeb from "./pages/channels/web";
 import * as channelsEmail from "./pages/channels/email";
@@ -67,6 +68,7 @@ const modules: Record<string, PageModule> = {
   "developer/webhooks": developerWebhooks,
   "developer/rate-limits": rateLimits,
   "developer/service-info": serviceInfo,
+  "developer/playground": playground,
 
   "channels/web": channelsWeb,
   "channels/email": channelsEmail,

@@ -20,17 +20,51 @@ export default function SubscriptionLifecycle() {
 
       <h2 id="h-states">The eight states</h2>
       <Mermaid
-        chart={`flowchart LR
-    A[pending]:::accent --> B[trialing] --> C[active]:::accent2 --> D[past_due] --> E[grace_period] --> F[suspended]
+        chart={`flowchart TD
+    subgraph Intake ["Initial setup"]
+        direction LR
+        Start([Start]) --> Pending[pending]
+        Pending -->|Has trial| Trialing[trialing]
+    end
 
-    classDef accent fill:#c9971f,stroke:#8a6416,color:#ffffff,font-weight:600;
+    subgraph Service ["Active service"]
+        Active[active]:::accent2 <-->|Merchant pause / resume| Suspended[suspended]
+    end
+
+    subgraph Retry ["Dunning"]
+        PastDue[past_due] -->|2nd attempt also fails| GracePeriod[grace_period]
+    end
+
+    subgraph Terminal ["End states"]
+        Expired[expired]
+        Cancelled[cancelled]
+    end
+
+    Pending -->|First charge succeeds| Active
+    Trialing -->|Trial ends, charge succeeds| Active
+
+    Active -->|Charge fails| PastDue
+    PastDue -->|Retried charge succeeds| Active
+    GracePeriod -->|Retried charge succeeds| Active
+    GracePeriod -->|Third attempt fails too| Suspended
+
+    Pending -->|Cancel| Cancelled
+    Trialing -->|Cancel| Cancelled
+    Active -->|Cancel| Cancelled
+    PastDue -->|Cancel| Cancelled
+    Suspended -->|Cancel| Cancelled
+
+    Cancelled -->|Reactivate| Active
+    Active -->|Fixed term ends| Expired
+
     classDef accent2 fill:#1e9a5a,stroke:#166e42,color:#ffffff,font-weight:600;
 `}
       />
       <p className="body-secondary">
-        Plus two terminal states reachable from most points in the flow: <code className="inline">cancelled</code>{" "}
-        (subscriber or merchant ends it) and <code className="inline">expired</code> (a fixed-term subscription runs
-        its course).
+        Note the one overload in this machine: <code className="inline">suspended</code> is reached two different
+        ways, either a merchant-initiated pause, or a grace period that lapsed with no successful retry. Both set
+        the same status value today, so a merchant reading &quot;suspended&quot; off a subscription can&apos;t tell
+        which one happened from the status alone, see the note below.
       </p>
 
       <table>
@@ -73,7 +107,10 @@ export default function SubscriptionLifecycle() {
             <td>
               <code className="inline">suspended</code>
             </td>
-            <td>The grace period lapsed without recovery. Access is paused, but the subscription record and history are intact.</td>
+            <td>
+              Either a grace period that lapsed without recovery, or a merchant-initiated pause, both land here.
+              Access is paused, but the subscription record and history are intact either way.
+            </td>
           </tr>
           <tr>
             <td>
@@ -114,10 +151,14 @@ export default function SubscriptionLifecycle() {
           A retried charge succeeds, recovery worked.
         </Card>
         <Card icon={Ban} title="grace_period → suspended">
-          The grace period lapses with no successful retry.
+          The grace period lapses with no successful retry, the third dunning attempt has also failed.
+        </Card>
+        <Card icon={Repeat} title="active → suspended → active">
+          A merchant pauses a subscription (billing stops) and later resumes it, the same status value dunning
+          exhaustion lands on, reused rather than duplicated.
         </Card>
         <Card icon={DoorOpen} title="any → cancelled">
-          Subscriber cancels from the portal, or a merchant cancels on their behalf.
+          Cancelled via the API or dashboard, immediately or at period end.
         </Card>
       </CardGrid>
 

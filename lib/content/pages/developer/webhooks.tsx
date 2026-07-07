@@ -1,5 +1,6 @@
 import { CardGrid, CardLink } from "@/components/docs/content/card-grid";
 import { CodeBlock } from "@/components/docs/code-block";
+import { Mermaid } from "@/components/docs/content/mermaid";
 import type { PageMeta } from "@/lib/content/types";
 import { Check, Timer } from "lucide-react";
 
@@ -75,7 +76,7 @@ export default function DeveloperWebhooks() {
       <h2 id="h-subscribe">Subscribing</h2>
 
       <CodeBlock
-        code={`curl -X POST https://api.nomba-subscriptions.com/webhooks \\
+        code={`curl -X POST https://nomba-subscription-engine.onrender.com/webhooks \\
   -H "Authorization: Bearer nsub_live_..." \\
   -H "Content-Type: application/json" \\
   -d '{
@@ -122,6 +123,30 @@ export default function DeveloperWebhooks() {
         if ordering matters to your handler. On a non-2xx response, delivery retries on a fixed schedule, five
         attempts total:
       </p>
+      <Mermaid
+        chart={`sequenceDiagram
+    participant ES as Event store
+    participant Q as BullMQ queue
+    participant W as Webhook worker
+    participant M as Your endpoint
+
+    ES->>Q: Enqueue delivery job
+    Q->>W: Process job
+    W->>W: Sign payload (HMAC-SHA256)
+    W->>M: POST with x-signature, x-timestamp, x-event-type
+    alt 2xx response
+        M-->>W: 200 OK
+        W->>ES: Mark delivered
+    else Non-2xx or timeout
+        M-->>W: Error
+        W->>Q: Schedule retry
+        Note over Q: 1m, 5m, 15m, 1h, 4h
+        Q->>W: Retry attempt
+        alt 5 attempts exhausted
+            W->>ES: Mark dead_letter
+        end
+    end`}
+      />
       <table>
         <tbody>
           <tr>
@@ -162,7 +187,7 @@ export default function DeveloperWebhooks() {
       </p>
 
       <CodeBlock
-        code={`curl -X POST https://api.nomba-subscriptions.com/webhooks/replay \\
+        code={`curl -X POST https://nomba-subscription-engine.onrender.com/webhooks/replay \\
   -H "Authorization: Bearer nsub_live_..." \\
   -H "Content-Type: application/json" \\
   -d '{

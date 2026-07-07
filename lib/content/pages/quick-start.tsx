@@ -1,73 +1,123 @@
-import { CardGrid, Card, CardLink } from "@/components/docs/content/card-grid";
+import { CardGrid, CardLink } from "@/components/docs/content/card-grid";
 import { CodeBlock } from "@/components/docs/code-block";
+import { Steps, Step } from "@/components/docs/content/steps";
 import type { PageMeta } from "@/lib/content/types";
-import { BarChart3, Bell, Compass, FileText, RefreshCw, Repeat } from "lucide-react";
+import { BarChart3, Bell, Compass, RefreshCw } from "lucide-react";
 
 export const meta: PageMeta = {
   eyebrow: "Get started",
   title: "Quick start",
-  lede: "Three ways to feel the engine in five minutes. Create a plan, break a payment on purpose, replay a webhook.",
+  lede: "Five real API calls: create a key, a plan, a customer, a subscription, and a webhook. No fabricated shortcuts, no endpoints that don't exist.",
 };
 
 export default function QuickStart() {
   return (
     <>
-      <p>Pick one of these and go. Each takes about five minutes and shows a different side of the platform.</p>
+      <p>
+        Every call below hits the real API. Responses are wrapped in the standard envelope,{" "}
+        <code className="inline">{"{ status, data, message }"}</code>, trimmed here to the parts that matter.
+      </p>
 
-      <CardGrid cols={1}>
-        <Card icon={FileText} title="Create a plan and subscribe a test customer">
-          <p>
-            Sign up at the merchant dashboard, verify your email, and land in an empty plans screen. Create a plan,
-            name, price, interval, optional trial, and grab your test API key from API Keys.
-          </p>
-          <p>Then create a test customer and subscription against your test key:</p>
+      <Steps>
+        <Step number={1} title="Sign in, then create a test API key">
           <CodeBlock
-            code={`curl -X POST https://api.nomba-subscriptions.com/subscriptions \\
-  -H "Authorization: Bearer nsub_test_..." \\
+            code={`curl -X POST https://nomba-subscription-engine.onrender.com/auth/login \\
+  -H "Content-Type: application/json" \\
+  -d '{"email": "founder@acme.ng", "password": "securePass123"}'
+
+curl -X POST https://nomba-subscription-engine.onrender.com/api-keys \\
+  -H "Authorization: Bearer <access_token>" \\
+  -H "Content-Type: application/json" \\
+  -d '{"environment": "test", "name": "Integration Key"}'`}
+            language="bash"
+          />
+          <CodeBlock
+            code={`{
+  "status": "success",
+  "data": {
+    "apiKey": { "id": "k1e2y3i4-...", "prefix": "nsub_test_", "lastFour": "9c2e" },
+    "rawKey": "nsub_test_7f3a9c2e1b8d4f6a0e5c3d2b1a9f8e7d6c5b4a3f"
+  },
+  "message": "Resource created successfully"
+}`}
+            language="json"
+          />
+          <p className="body-secondary">
+            Save <code className="inline">rawKey</code> now, it&apos;s shown once. One caveat worth knowing before
+            you build around it: issuing and rotating keys works today, but no endpoint currently authenticates a
+            request with one, every call below still needs the JWT bearer token from login. See{" "}
+            <a href="/developer/authentication">Authentication</a>.
+          </p>
+        </Step>
+
+        <Step number={2} title="Create a plan">
+          <CodeBlock
+            code={`curl -X POST https://nomba-subscription-engine.onrender.com/plans \\
+  -H "Authorization: Bearer <access_token>" \\
   -H "Content-Type: application/json" \\
   -d '{
-    "customerId": "cus_test_01",
-    "planId": "plan_lumen_monthly",
-    "paymentMethod": "tok_test_visa_4242"
+    "name": "Pro Plan",
+    "amount": 15000,
+    "currency": "NGN",
+    "interval": "monthly",
+    "trialDays": 14
   }'`}
             language="bash"
           />
-          <p>
-            You&apos;ll get back a subscription in <code className="inline">trialing</code> or{" "}
-            <code className="inline">active</code> state, depending on whether the plan has a trial.
-          </p>
-        </Card>
-      </CardGrid>
+          <p className="body-secondary">Amounts are major currency units, ₦15,000 is 15000, not kobo.</p>
+        </Step>
 
-      <CardGrid cols={1}>
-        <Card icon={Repeat} title="Force a decline and watch the failure notice fire">
-          <p>
-            Nomba&apos;s test rails include a card that always declines. Subscribe a test customer with it and let
-            the first charge attempt fail.
-          </p>
-          <p>
-            The subscription flips to <code className="inline">past_due</code>, a{" "}
-            <code className="inline">PaymentFailed</code> event lands in the event store, and an email fires within
-            a minute, whatever else is configured. If you&apos;ve also set a test WhatsApp or SMS number on the
-            customer, those send too, over a real Twilio call. What doesn&apos;t happen instantly is the retry
-            itself: dunning runs on a fixed schedule, 24 hours, 72 hours, then 7 days, so recovery in this
-            walkthrough means watching the notification arrive, not watching the subscription flip back to{" "}
-            <code className="inline">active</code> inside your five minutes. See{" "}
-            <a href="/concepts/recovery-orchestration">Recovery orchestration</a> for exactly what&apos;s live on
-            each channel today.
-          </p>
-        </Card>
-      </CardGrid>
-
-      <CardGrid cols={1}>
-        <Card icon={Bell} title="Subscribe a webhook and pull analytics">
-          <p>
-            Point a webhook at a throwaway URL (<a href="https://webhook.site">webhook.site</a> works well for this)
-            and subscribe to the events from the first two steps:
-          </p>
+        <Step number={3} title="Create a customer">
           <CodeBlock
-            code={`curl -X POST https://api.nomba-subscriptions.com/webhooks \\
-  -H "Authorization: Bearer nsub_test_..." \\
+            code={`curl -X POST https://nomba-subscription-engine.onrender.com/customers \\
+  -H "Authorization: Bearer <access_token>" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "name": "Chidi Nwosu",
+    "email": "chidi@example.com",
+    "phone": "+2348012345678"
+  }'`}
+            language="bash"
+          />
+        </Step>
+
+        <Step number={4} title="Create a subscription and redirect to checkout">
+          <CodeBlock
+            code={`curl -X POST https://nomba-subscription-engine.onrender.com/subscriptions \\
+  -H "Authorization: Bearer <access_token>" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "customerId": "<customer id from step 3>",
+    "planId": "<plan id from step 2>",
+    "callbackUrl": "https://acme.ng/billing/callback"
+  }'`}
+            language="bash"
+          />
+          <CodeBlock
+            code={`{
+  "status": "success",
+  "data": {
+    "subscription": { "id": "s1u2b3s4-...", "status": "pending" },
+    "checkoutUrl": "https://checkout.nomba.com/pay/abc123",
+    "paymentId": "9a1b2c3d-...",
+    "invoiceId": "i1n2v3o4-..."
+  },
+  "message": "Resource created successfully"
+}`}
+            language="json"
+          />
+          <p className="body-secondary">
+            Redirect your customer to <code className="inline">checkoutUrl</code>. Nomba confirms the outcome by
+            webhook, not by the checkout redirect alone, before the subscription moves to{" "}
+            <code className="inline">trialing</code> or <code className="inline">active</code>. See{" "}
+            <a href="/architecture/nomba-integration">Nomba integration</a>.
+          </p>
+        </Step>
+
+        <Step number={5} title="Register a webhook and pull analytics">
+          <CodeBlock
+            code={`curl -X POST https://nomba-subscription-engine.onrender.com/webhooks \\
+  -H "Authorization: Bearer <access_token>" \\
   -H "Content-Type: application/json" \\
   -d '{
     "url": "https://webhook.site/your-id",
@@ -75,18 +125,18 @@ export default function QuickStart() {
   }'`}
             language="bash"
           />
-          <p>Then fetch your merchant analytics snapshot:</p>
+          <p>Then pull your merchant analytics snapshot:</p>
           <CodeBlock
-            code={`curl https://api.nomba-subscriptions.com/analytics/metrics \\
-  -H "Authorization: Bearer nsub_test_..."`}
+            code={`curl https://nomba-subscription-engine.onrender.com/analytics/metrics \\
+  -H "Authorization: Bearer <access_token>"`}
             language="bash"
           />
-          <p>
-            You&apos;ll see MRR, churn, and recovery rate computed from the exact same event store your webhook just
-            read from.
+          <p className="body-secondary">
+            MRR, churn, and recovery rate, computed from the same event store your webhook just read from, rate
+            fields are 0-100 percentages, not fractions.
           </p>
-        </Card>
-      </CardGrid>
+        </Step>
+      </Steps>
 
       <h2 id="h-next">What&apos;s next</h2>
       <CardGrid cols={2}>
