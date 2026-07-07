@@ -1,6 +1,6 @@
 import { CardGrid, CardLink } from "@/components/docs/content/card-grid";
 import { CodeBlock } from "@/components/docs/code-block";
-import { Flow, FlowArrow, FlowNode } from "@/components/docs/content/flow";
+import { Mermaid } from "@/components/docs/content/mermaid";
 import type { PageMeta } from "@/lib/content/types";
 import { Blocks, Plug, Puzzle, RefreshCw } from "lucide-react";
 
@@ -59,20 +59,15 @@ export default function ArchitectureOverview() {
         BullMQ queue backed by Redis instead of running inline.
       </p>
 
-      <Flow>
-        <FlowNode>Merchant / Customer / Developer</FlowNode>
-        <FlowArrow />
-        <FlowNode variant="accent">NestJS API</FlowNode>
-        <FlowArrow />
-        <FlowNode>Postgres (TypeORM)</FlowNode>
-      </Flow>
-      <Flow>
-        <FlowNode variant="accent">NestJS API</FlowNode>
-        <FlowArrow />
-        <FlowNode variant="accent2">BullMQ / Redis</FlowNode>
-        <FlowArrow />
-        <FlowNode>Webhook delivery · Dunning · Invoicing</FlowNode>
-      </Flow>
+      <Mermaid
+        chart={`flowchart LR
+    A["Merchant / Customer / Developer"] --> B["NestJS API"]:::accent --> C["Postgres (TypeORM)"]
+    B --> D["BullMQ / Redis"]:::accent2 --> E["Webhook delivery · Dunning · Invoicing"]
+
+    classDef accent fill:#c9971f,stroke:#8a6416,color:#ffffff,font-weight:600;
+    classDef accent2 fill:#1e9a5a,stroke:#166e42,color:#ffffff,font-weight:600;
+`}
+      />
 
       <h2 id="h-domain">The domain model</h2>
 

@@ -1,5 +1,5 @@
 import { CardGrid, CardLink } from "@/components/docs/content/card-grid";
-import { Flow, FlowArrow, FlowNode } from "@/components/docs/content/flow";
+import { Mermaid } from "@/components/docs/content/mermaid";
 import type { PageMeta } from "@/lib/content/types";
 import { Compass, Settings } from "lucide-react";
 
@@ -19,21 +19,15 @@ export default function ChannelsUssd() {
       </p>
 
       <h2 id="h-menu">The menu</h2>
-      <Flow>
-        <FlowNode variant="accent">Dial short code</FlowNode>
-        <FlowArrow />
-        <FlowNode>1. Check status</FlowNode>
-      </Flow>
-      <Flow>
-        <FlowNode variant="accent">Dial short code</FlowNode>
-        <FlowArrow />
-        <FlowNode>2. Pause subscription</FlowNode>
-      </Flow>
-      <Flow>
-        <FlowNode variant="accent">Dial short code</FlowNode>
-        <FlowArrow />
-        <FlowNode>3. Cancel subscription</FlowNode>
-      </Flow>
+      <Mermaid
+        chart={`flowchart TD
+    A["Dial short code"]:::accent --> B["1. Check status"]
+    A --> C["2. Pause subscription"]
+    A --> D["3. Cancel subscription"]
+
+    classDef accent fill:#c9971f,stroke:#8a6416,color:#ffffff,font-weight:600;
+`}
+      />
 
       <table>
         <tbody>

@@ -1,5 +1,5 @@
 import { CardGrid, CardLink } from "@/components/docs/content/card-grid";
-import { Flow, FlowArrow, FlowNode } from "@/components/docs/content/flow";
+import { Mermaid } from "@/components/docs/content/mermaid";
 import type { PageMeta } from "@/lib/content/types";
 import { FolderOpen, NotebookText } from "lucide-react";
 
@@ -18,42 +18,17 @@ export default function DataFlow() {
       </p>
 
       <h2 id="h-path">One write, three reads</h2>
-      <Flow>
-        <FlowNode variant="accent">
-          Domain action
-          <br />
-          (e.g. charge fails)
-        </FlowNode>
-        <FlowArrow />
-        <FlowNode variant="accent2">Event written to event store</FlowNode>
-      </Flow>
-      <Flow>
-        <FlowNode variant="accent2">Event store</FlowNode>
-        <FlowArrow />
-        <FlowNode>
-          webhooks module
-          <br />
-          (delivers to subscribers)
-        </FlowNode>
-      </Flow>
-      <Flow>
-        <FlowNode variant="accent2">Event store</FlowNode>
-        <FlowArrow />
-        <FlowNode>
-          dunning module
-          <br />
-          (triggers recovery orchestration)
-        </FlowNode>
-      </Flow>
-      <Flow>
-        <FlowNode variant="accent2">Event store</FlowNode>
-        <FlowArrow />
-        <FlowNode>
-          analytics module
-          <br />
-          (read-model aggregation)
-        </FlowNode>
-      </Flow>
+      <Mermaid
+        chart={`flowchart TD
+    A["Domain action\n(e.g. charge fails)"]:::accent --> B["Event written to event store"]:::accent2
+    B --> C["webhooks module\n(delivers to subscribers)"]
+    B --> D["dunning module\n(triggers recovery orchestration)"]
+    B --> E["analytics module\n(read-model aggregation)"]
+
+    classDef accent fill:#c9971f,stroke:#8a6416,color:#ffffff,font-weight:600;
+    classDef accent2 fill:#1e9a5a,stroke:#166e42,color:#ffffff,font-weight:600;
+`}
+      />
 
       <h2 id="h-why-one">Why this isn&apos;t three separate write paths</h2>
       <p>

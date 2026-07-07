@@ -1,5 +1,5 @@
 import { CardGrid, Card, CardLink } from "@/components/docs/content/card-grid";
-import { Flow, FlowNode, FlowArrow } from "@/components/docs/content/flow";
+import { Mermaid } from "@/components/docs/content/mermaid";
 import type { PageMeta } from "@/lib/content/types";
 import { Ban, CheckCircle2, Compass, DoorOpen, NotebookText, RefreshCw, Repeat, XCircle } from "lucide-react";
 
@@ -19,19 +19,14 @@ export default function SubscriptionLifecycle() {
       </p>
 
       <h2 id="h-states">The eight states</h2>
-      <Flow>
-        <FlowNode variant="accent">pending</FlowNode>
-        <FlowArrow />
-        <FlowNode>trialing</FlowNode>
-        <FlowArrow />
-        <FlowNode variant="accent2">active</FlowNode>
-        <FlowArrow />
-        <FlowNode>past_due</FlowNode>
-        <FlowArrow />
-        <FlowNode>grace_period</FlowNode>
-        <FlowArrow />
-        <FlowNode>suspended</FlowNode>
-      </Flow>
+      <Mermaid
+        chart={`flowchart LR
+    A[pending]:::accent --> B[trialing] --> C[active]:::accent2 --> D[past_due] --> E[grace_period] --> F[suspended]
+
+    classDef accent fill:#c9971f,stroke:#8a6416,color:#ffffff,font-weight:600;
+    classDef accent2 fill:#1e9a5a,stroke:#166e42,color:#ffffff,font-weight:600;
+`}
+      />
       <p className="body-secondary">
         Plus two terminal states reachable from most points in the flow: <code className="inline">cancelled</code>{" "}
         (subscriber or merchant ends it) and <code className="inline">expired</code> (a fixed-term subscription runs

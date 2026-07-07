@@ -1,5 +1,5 @@
 import { CardGrid, CardLink } from "@/components/docs/content/card-grid";
-import { Flow, FlowArrow, FlowNode } from "@/components/docs/content/flow";
+import { Mermaid } from "@/components/docs/content/mermaid";
 import type { PageMeta } from "@/lib/content/types";
 import { CreditCard, Lock } from "lucide-react";
 
@@ -62,15 +62,14 @@ export default function NombaIntegration() {
       </p>
 
       <h2 id="h-shape">The shape of a charge attempt</h2>
-      <Flow>
-        <FlowNode variant="accent">Billing cycle fires</FlowNode>
-        <FlowArrow />
-        <FlowNode>Charge API call</FlowNode>
-        <FlowArrow />
-        <FlowNode>Nomba webhook confirms outcome</FlowNode>
-        <FlowArrow />
-        <FlowNode variant="accent2">Event written · subscription updated</FlowNode>
-      </Flow>
+      <Mermaid
+        chart={`flowchart LR
+    A["Billing cycle fires"]:::accent --> B["Charge API call"] --> C["Nomba webhook confirms outcome"] --> D["Event written · subscription updated"]:::accent2
+
+    classDef accent fill:#c9971f,stroke:#8a6416,color:#ffffff,font-weight:600;
+    classDef accent2 fill:#1e9a5a,stroke:#166e42,color:#ffffff,font-weight:600;
+`}
+      />
 
       <h2 id="h-why-webhook">Why the webhook is authoritative, not the initial response</h2>
       <p>
