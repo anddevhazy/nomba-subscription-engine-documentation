@@ -13,7 +13,7 @@ export default function TheTeam() {
   return (
     <>
       <p>
-        The Nomba Subscription Engine is built by{" "}
+        Subflow is built by{" "}
         <strong className="font-extrabold">Team Sentry</strong>, 2 fresh
         graduates, for the{" "}
         <strong className="font-extrabold">
@@ -70,7 +70,7 @@ export default function TheTeam() {
         customers who live on their phones, not their inboxes.
       </p>
       <p>
-        Nomba Subscription Engine is the version built for that reality, the
+        Subflow is the version built for that reality, the
         Nigerian reality: recurring billing that works the way payment behaviour
         actually works here, and recovery that reaches people on the rails
         they&apos;re already using.

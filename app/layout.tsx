@@ -17,8 +17,8 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Nomba Subscription Engine | Docs",
-    template: "%s | Nomba Subscription Engine",
+    default: "Subflow | Docs",
+    template: "%s | Subflow",
   },
   description:
     "Multi-tenant Subscription-as-a-Service, built on Nomba's payment rails.",

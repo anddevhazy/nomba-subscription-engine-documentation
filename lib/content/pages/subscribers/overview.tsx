@@ -12,7 +12,7 @@ export default function SubscribersOverview() {
   return (
     <>
       <p>
-        If you&apos;re paying for something on the Nomba Subscription Engine, a fitness app, a SaaS tool, a media
+        If you&apos;re paying for something on Subflow, a fitness app, a SaaS tool, a media
         subscription, this is the side built for you. You shouldn&apos;t have to email a merchant and wait to pause
         a subscription you&apos;re not using this month, and you shouldn&apos;t find out your card expired only when
         the app stops working.

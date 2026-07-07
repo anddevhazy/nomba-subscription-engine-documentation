@@ -3,6 +3,7 @@
 import { ChevronRight, Search } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Logo } from "@/components/logo";
 import { MobileNav } from "@/components/docs/mobile-nav";
 import { DASHBOARD_URL, SWAGGER_URL } from "@/lib/constants";
 import { cn } from "@/lib/utils";
@@ -13,14 +14,10 @@ export function DocsHeader() {
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 h-[106px] border-b border-border bg-white">
-      <div className="flex h-[62px] items-center gap-[18px] border-b border-border px-6">
+      <div className="mx-auto flex h-[62px] max-w-[1440px] items-center gap-[18px] border-b border-border px-6">
         <MobileNav />
-        <Link
-          href="/introduction-tolu"
-          className="flex items-center gap-2 text-lg font-bold whitespace-nowrap"
-        >
-          <img src="/brand/nomba-icon-dark.svg" alt="Nomba" className="h-[26px] w-[22px]" />
-          Nomba Subscriptions
+        <Link href="/introduction-tolu" className="whitespace-nowrap">
+          <Logo />
         </Link>
         <div className="mx-auto hidden max-w-[420px] flex-1 items-center gap-2 rounded-[10px] border border-border bg-[#f7f6f2] px-3.5 py-2.5 text-sm text-text-muted max-[820px]:hidden sm:flex">
           <Search className="size-4" strokeWidth={2} />
@@ -49,7 +46,7 @@ export function DocsHeader() {
           </a>
         </div>
       </div>
-      <div className="flex h-11 items-center gap-2 px-6">
+      <div className="mx-auto flex h-11 max-w-[1440px] items-center gap-2 px-6">
         <div className="flex h-full gap-[26px]">
           <Link
             href="/introduction-tolu"

@@ -40,11 +40,11 @@ export default function IntroductionTolu() {
         lapsed, it&apos;s often too late to win them back with anything better than a cold &quot;hey, did you mean
         to cancel?&quot; email.
       </p>
-      <p>Nomba Subscription Engine is for both of them.</p>
+      <p>Subflow is for both of them.</p>
 
-      <h2 id="h-what-it-is">What Nomba Subscription Engine is</h2>
+      <h2 id="h-what-it-is">What Subflow is</h2>
       <p>
-        Nomba Subscription Engine gives Adaeze a billing layer that doesn&apos;t lose Tolu over a bad-timing
+        Subflow gives Adaeze a billing layer that doesn&apos;t lose Tolu over a bad-timing
         decline.
       </p>
       <p>
@@ -69,7 +69,7 @@ export default function IntroductionTolu() {
         Adaeze opens her dashboard that evening and sees it in the numbers: one past-due subscription, recovered
         via WhatsApp, MRR unaffected.
       </p>
-      <p>That is Nomba Subscription Engine.</p>
+      <p>That is Subflow.</p>
 
       <Callout variant="note">
         <p>
@@ -78,7 +78,7 @@ export default function IntroductionTolu() {
         </p>
       </Callout>
 
-      <h2 id="h-connects">What Nomba Subscription Engine actually connects</h2>
+      <h2 id="h-connects">What Subflow actually connects</h2>
       <p>Three sides. One event store.</p>
       <CardGrid cols={3}>
         <Card icon={Store} title="Merchants">

@@ -89,8 +89,8 @@ export const NAV: NavGroup[] = [
   {
     group: "Get started",
     items: [
-      { slug: "introduction-tolu", title: "Introduction (Tolu option)" },
-      { slug: "introduction", title: "Introduction (GOTV option" },
+      { slug: "introduction-tolu", title: "Introduction" },
+      // { slug: "introduction", title: "Introduction" },
       { slug: "mission", title: "The mission" },
       { slug: "how-it-works", title: "How it works" },
       { slug: "the-team", title: "The team" },
@@ -222,7 +222,7 @@ export const DESCRIPTIONS: Record<string, string> = {
   mission:
     "The objectives behind the build, and the six things explicitly left out of this release.",
   "the-team":
-    "The people behind the Nomba Subscription Engine, and why recurring billing in Nigeria needed a second look.",
+    "The people behind Subflow, and why recurring billing in Nigeria needed a second look.",
   "merchants/overview":
     "Stop building billing logic in-house. Plans, customers, invoices, recovery, analytics, one API, one dashboard.",
   "merchants/create-a-plan":

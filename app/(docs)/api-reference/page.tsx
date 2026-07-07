@@ -7,7 +7,7 @@ import { API_BASE_URL, SWAGGER_URL } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "API Reference",
-  description: "Complete API documentation for Nomba Subscription Engine.",
+  description: "Complete API documentation for Subflow.",
 };
 
 export default function ApiReferencePage() {

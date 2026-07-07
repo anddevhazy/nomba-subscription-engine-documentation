@@ -43,7 +43,7 @@ export default function Introduction() {
         tens of millions of subscribers.
       </p>
       <p>
-        The Nomba Subscription Engine is built for exactly that gap. Plans, customers, and subscriptions have a real
+        Subflow is built for exactly that gap. Plans, customers, and subscriptions have a real
         lifecycle. A lapsed or failed payment doesn&apos;t wait for someone to notice, it starts a recovery sequence
         on email, WhatsApp, SMS, or USSD within minutes, on whichever rail the subscriber actually uses. Every event
         is written once, to one place, and read by webhooks, notifications, and analytics alike.

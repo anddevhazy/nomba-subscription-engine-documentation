@@ -25,7 +25,7 @@ export function MobileNav() {
       </SheetTrigger>
       <SheetContent side="left" className="w-72 p-0">
         <SheetHeader className="border-b border-border">
-          <SheetTitle>Nomba Subscriptions</SheetTitle>
+          <SheetTitle>Subflow</SheetTitle>
         </SheetHeader>
         <DocsSidebar className="flex-1" onNavigate={() => setOpen(false)} />
       </SheetContent>

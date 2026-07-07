@@ -32,7 +32,7 @@ export async function generateMetadata({
   if (!resolved) return {};
   const { meta } = resolvePage(resolved);
   return {
-    title: `${meta.title} | Nomba Subscription Engine`,
+    title: `${meta.title} | Subflow`,
     description: meta.lede,
   };
 }
@@ -63,7 +63,7 @@ export default async function DocPage({
             <Content />
           </div>
           <div className="mt-[60px] flex justify-between border-t border-border pt-6 text-sm text-text-muted">
-            <span>Nomba Subscription Engine</span>
+            <span>Subflow</span>
             <span>Edit this page on GitHub</span>
           </div>
         </main>
