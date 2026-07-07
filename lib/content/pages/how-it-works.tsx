@@ -3,6 +3,7 @@ import { CardGrid, CardLink } from "@/components/docs/content/card-grid";
 import { Mermaid } from "@/components/docs/content/mermaid";
 import { Steps, Step } from "@/components/docs/content/steps";
 import type { PageMeta } from "@/lib/content/types";
+import { Bell, Store, UserCheck } from "lucide-react";
 
 export const meta: PageMeta = {
   eyebrow: "Get started",
@@ -131,19 +132,19 @@ export default function HowItWorks() {
       <CardGrid cols={3}>
         <CardLink
           href="/merchants/overview"
-          icon="🏬"
+          icon={Store}
           title="Merchants"
           description="Plans, billing, and analytics from the operator's side."
         />
         <CardLink
           href="/subscribers/overview"
-          icon="🙋"
+          icon={UserCheck}
           title="Subscribers"
           description="The portal and the recovery experience from the customer's side."
         />
         <CardLink
           href="/developer/webhooks"
-          icon="🔔"
+          icon={Bell}
           title="Developers"
           description="The events that let you build on top of any of this."
         />

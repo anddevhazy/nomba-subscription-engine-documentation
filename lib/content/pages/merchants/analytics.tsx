@@ -1,5 +1,6 @@
 import { Card, CardGrid, CardLink } from "@/components/docs/content/card-grid";
 import type { PageMeta } from "@/lib/content/types";
+import { Compass, NotebookText, Repeat, TrendingDown, User, Wallet } from "lucide-react";
 
 export const meta: PageMeta = {
   eyebrow: "For merchants",
@@ -19,17 +20,17 @@ export default function MerchantsAnalytics() {
 
       <h2 id="h-core">Core metrics</h2>
       <CardGrid cols={2}>
-        <Card icon="💰" title="MRR / ARR">
+        <Card icon={Wallet} title="MRR / ARR">
           Monthly and annualised recurring revenue, computed from active subscriptions at their current plan price.
         </Card>
-        <Card icon="📉" title="Churn rate">
+        <Card icon={TrendingDown} title="Churn rate">
           Share of subscribers who cancelled or lapsed into <code className="inline">expired</code> in the period.
         </Card>
-        <Card icon="🔁" title="Recovery rate">
+        <Card icon={Repeat} title="Recovery rate">
           Share of failed payments recovered within the grace period, broken down by channel, email vs. WhatsApp vs.
           SMS vs. USSD.
         </Card>
-        <Card icon="👤" title="ARPU">
+        <Card icon={User} title="ARPU">
           Average revenue per active subscriber.
         </Card>
       </CardGrid>
@@ -92,13 +93,13 @@ export default function MerchantsAnalytics() {
       <CardGrid cols={2}>
         <CardLink
           href="/concepts/event-store"
-          icon="📒"
+          icon={NotebookText}
           title="The event store"
           description="Where every number on this page actually comes from."
         />
         <CardLink
           href="/concepts/recovery-orchestration"
-          icon="🧭"
+          icon={Compass}
           title="Recovery orchestration"
           description="What feeds the dunning metrics specifically."
         />

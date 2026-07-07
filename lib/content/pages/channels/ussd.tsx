@@ -1,6 +1,7 @@
 import { CardGrid, CardLink } from "@/components/docs/content/card-grid";
 import { Flow, FlowArrow, FlowNode } from "@/components/docs/content/flow";
 import type { PageMeta } from "@/lib/content/types";
+import { Compass, Settings } from "lucide-react";
 
 export const meta: PageMeta = {
   eyebrow: "Channels",
@@ -83,13 +84,13 @@ export default function ChannelsUssd() {
       <CardGrid cols={2}>
         <CardLink
           href="/subscribers/manage-your-subscription"
-          icon="⚙️"
+          icon={Settings}
           title="Manage your subscription"
           description="The full-featured equivalent, from the portal."
         />
         <CardLink
           href="/concepts/recovery-orchestration"
-          icon="🧭"
+          icon={Compass}
           title="Recovery orchestration"
           description="Where USSD fits as a fallback, not just a self-serve channel."
         />

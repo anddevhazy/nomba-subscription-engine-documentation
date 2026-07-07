@@ -1,5 +1,6 @@
 import { CardGrid, CardLink } from "@/components/docs/content/card-grid";
 import type { PageMeta } from "@/lib/content/types";
+import { Plug, RefreshCw } from "lucide-react";
 
 export const meta: PageMeta = {
   eyebrow: "Architecture",
@@ -165,13 +166,13 @@ export default function ArchitectureModules() {
       <CardGrid cols={2}>
         <CardLink
           href="/architecture/nomba-integration"
-          icon="🔌"
+          icon={Plug}
           title="Nomba integration"
           description="A closer look at what the payments module actually wraps."
         />
         <CardLink
           href="/architecture/data-flow"
-          icon="🔄"
+          icon={RefreshCw}
           title="Data flow"
           description="How events and webhooks connect across module boundaries."
         />

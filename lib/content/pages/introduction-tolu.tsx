@@ -1,6 +1,7 @@
 import { Callout } from "@/components/docs/content/callout";
 import { CardGrid, Card, CardLink } from "@/components/docs/content/card-grid";
 import type { PageMeta } from "@/lib/content/types";
+import { Code2, Compass, Construction, Mail, MessageCircle, Monitor, Phone, Store, Target, UserCheck, Zap } from "lucide-react";
 
 export const meta: PageMeta = {
   eyebrow: "Get started",
@@ -80,17 +81,17 @@ export default function IntroductionTolu() {
       <h2 id="h-connects">What Nomba Subscription Engine actually connects</h2>
       <p>Three sides. One event store.</p>
       <CardGrid cols={3}>
-        <Card icon="🏬" title="Merchants">
+        <Card icon={Store} title="Merchants">
           Businesses running recurring revenue, SaaS platforms, gyms, streaming services, content subscriptions,
           recurring giving. They get plan management, automated invoicing, multi-channel recovery, and a real-time
           view of MRR, churn, and recovery performance, without building any of it themselves.
         </Card>
-        <Card icon="🧑‍💻" title="Downstream developers">
+        <Card icon={Code2} title="Downstream developers">
           Engineers integrating the engine into a merchant&apos;s product, or building a customer-facing billing
           experience on top of it. They get a documented API, signed webhooks, and on-demand event replay, no
           support ticket required for a standard integration.
         </Card>
-        <Card icon="🙋" title="Subscribers">
+        <Card icon={UserCheck} title="Subscribers">
           The merchant&apos;s end customers. They get a self-service portal to pause, cancel, or update payment
           methods on their own terms, and, when a charge fails, a recovery message on whichever channel they
           actually check: email, WhatsApp, SMS, or USSD.
@@ -120,7 +121,7 @@ export default function IntroductionTolu() {
       <CardGrid cols={2}>
         <CardLink
           href="/channels/web"
-          icon="🖥️"
+          icon={Monitor}
           title="Web"
           description={
             <>
@@ -132,7 +133,7 @@ export default function IntroductionTolu() {
         />
         <CardLink
           href="/channels/email"
-          icon="✉️"
+          icon={Mail}
           title="Email"
           description={
             <>
@@ -143,7 +144,7 @@ export default function IntroductionTolu() {
         />
         <CardLink
           href="/channels/whatsapp"
-          icon="💬"
+          icon={MessageCircle}
           title="WhatsApp"
           description={
             <>
@@ -155,7 +156,7 @@ export default function IntroductionTolu() {
         />
         <CardLink
           href="/channels/sms"
-          icon="✉️"
+          icon={Mail}
           title="SMS"
           description={
             <>
@@ -167,7 +168,7 @@ export default function IntroductionTolu() {
         />
         <CardLink
           href="/channels/ussd"
-          icon="☎️"
+          icon={Phone}
           title="USSD"
           description={
             <>
@@ -189,25 +190,25 @@ export default function IntroductionTolu() {
       <CardGrid cols={2}>
         <CardLink
           href="/mission"
-          icon="🎯"
+          icon={Target}
           title="The mission"
           description="Five business objectives, six things deliberately left out of this release, and how the build maps to the hackathon brief."
         />
         <CardLink
           href="/how-it-works"
-          icon="🧭"
+          icon={Compass}
           title="How it works"
           description="Adaeze creates a plan. Tolu subscribes. A charge fails. WhatsApp recovers it. The event store, end to end."
         />
         <CardLink
           href="/architecture/overview"
-          icon="🏗️"
+          icon={Construction}
           title="Architecture"
           description="Modules, the event store, and where webhooks and analytics both read from one source of truth."
         />
         <CardLink
           href="/quick-start"
-          icon="⚡"
+          icon={Zap}
           title="Quick start"
           description="Create a plan, subscribe a test customer, and trigger a failed charge to watch recovery happen live."
         />

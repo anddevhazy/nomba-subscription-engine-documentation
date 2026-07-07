@@ -1,6 +1,7 @@
 import { CardGrid, CardLink } from "@/components/docs/content/card-grid";
 import { Step, Steps } from "@/components/docs/content/steps";
 import type { PageMeta } from "@/lib/content/types";
+import { Blocks, Compass } from "lucide-react";
 
 export const meta: PageMeta = {
   eyebrow: "Architecture",
@@ -78,13 +79,13 @@ export default function QueuesAndAsync() {
       <CardGrid cols={2}>
         <CardLink
           href="/architecture/resilience"
-          icon="🧱"
+          icon={Blocks}
           title="Resilience & scale"
           description="What happens when a queued job's target is unreachable."
         />
         <CardLink
           href="/concepts/recovery-orchestration"
-          icon="🧭"
+          icon={Compass}
           title="Recovery orchestration"
           description="The specific job type this infrastructure was built to run reliably."
         />

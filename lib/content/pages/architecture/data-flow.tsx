@@ -1,6 +1,7 @@
 import { CardGrid, CardLink } from "@/components/docs/content/card-grid";
 import { Flow, FlowArrow, FlowNode } from "@/components/docs/content/flow";
 import type { PageMeta } from "@/lib/content/types";
+import { FolderOpen, NotebookText } from "lucide-react";
 
 export const meta: PageMeta = {
   eyebrow: "Architecture",
@@ -89,13 +90,13 @@ export default function DataFlow() {
       <CardGrid cols={2}>
         <CardLink
           href="/concepts/event-store"
-          icon="📒"
+          icon={NotebookText}
           title="The event store"
           description="The conceptual version of this page."
         />
         <CardLink
           href="/architecture/queues-and-async"
-          icon="🗂️"
+          icon={FolderOpen}
           title="Queues & async processing"
           description="How the dispatch step actually runs."
         />

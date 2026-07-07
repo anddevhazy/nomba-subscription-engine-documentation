@@ -2,7 +2,7 @@
 
 import { useEffect, useReducer, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, RotateCcw } from "lucide-react";
+import { ArrowLeft, Dumbbell, RotateCcw } from "lucide-react";
 import {
   PLANS,
   CANCELLATION_REASONS,
@@ -62,7 +62,7 @@ export function PortalDemo() {
       <aside className="flex w-full shrink-0 flex-col justify-between gap-8 bg-[#4B5568] p-6 text-white sm:p-8 md:w-[360px] md:p-10">
         <div>
           <div className="flex items-center gap-2">
-            <span className="text-xl">🏋️</span>
+            <Dumbbell className="size-5" strokeWidth={2} />
             <span className="font-semibold">Lumen</span>
             <Badge variant="outline" className={cn(AMBER_PILL, "ml-auto")}>
               Demo mode

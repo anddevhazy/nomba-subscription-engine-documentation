@@ -1,6 +1,7 @@
 import { CardGrid, CardLink } from "@/components/docs/content/card-grid";
 import { Flow, FlowArrow, FlowNode } from "@/components/docs/content/flow";
 import type { PageMeta } from "@/lib/content/types";
+import { CreditCard, Lock } from "lucide-react";
 
 export const meta: PageMeta = {
   eyebrow: "Architecture",
@@ -83,13 +84,13 @@ export default function NombaIntegration() {
       <CardGrid cols={2}>
         <CardLink
           href="/merchants/onboard-and-collect-payment"
-          icon="💳"
+          icon={CreditCard}
           title="Onboard a customer"
           description="Checkout and tokenisation, from the merchant's side."
         />
         <CardLink
           href="/security/data-protection"
-          icon="🔐"
+          icon={Lock}
           title="Data & encryption posture"
           description="How stored payment references are protected."
         />

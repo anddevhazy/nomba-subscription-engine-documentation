@@ -1,6 +1,7 @@
 import { CardGrid, CardLink } from "@/components/docs/content/card-grid";
 import { Steps, Step } from "@/components/docs/content/steps";
 import type { PageMeta } from "@/lib/content/types";
+import { FolderOpen, Mail, MessageCircle } from "lucide-react";
 
 export const meta: PageMeta = {
   eyebrow: "Core concepts",
@@ -84,19 +85,19 @@ export default function RecoveryOrchestration() {
       <CardGrid cols={3}>
         <CardLink
           href="/channels/email"
-          icon="✉️"
+          icon={Mail}
           title="Email"
           description="The always-on baseline, in detail."
         />
         <CardLink
           href="/channels/whatsapp"
-          icon="💬"
+          icon={MessageCircle}
           title="WhatsApp"
           description="The primary push channel, in detail."
         />
         <CardLink
           href="/architecture/queues-and-async"
-          icon="🗂️"
+          icon={FolderOpen}
           title="Queues & async processing"
           description="How retries and fallbacks are actually scheduled."
         />

@@ -1,5 +1,6 @@
 import { CardGrid, CardLink } from "@/components/docs/content/card-grid";
 import type { PageMeta } from "@/lib/content/types";
+import { Mail, Repeat, Smartphone } from "lucide-react";
 
 export const meta: PageMeta = {
   eyebrow: "Channels",
@@ -77,19 +78,19 @@ export default function ChannelsWhatsapp() {
       <CardGrid cols={3}>
         <CardLink
           href="/channels/sms"
-          icon="📱"
+          icon={Smartphone}
           title="SMS"
           description="The fallback channel, and where it's the primary one instead."
         />
         <CardLink
           href="/channels/email"
-          icon="✉️"
+          icon={Mail}
           title="Email"
           description="The channel that fires no matter what happens here."
         />
         <CardLink
           href="/subscribers/when-a-payment-fails"
-          icon="🔁"
+          icon={Repeat}
           title="When a payment fails"
           description="The same flow, from the subscriber's side."
         />

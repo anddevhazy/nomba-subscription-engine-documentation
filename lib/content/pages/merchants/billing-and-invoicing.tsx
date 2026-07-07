@@ -2,6 +2,7 @@ import { Callout } from "@/components/docs/content/callout";
 import { CardGrid, CardLink } from "@/components/docs/content/card-grid";
 import { Steps, Step } from "@/components/docs/content/steps";
 import type { PageMeta } from "@/lib/content/types";
+import { BarChart3, RefreshCw } from "lucide-react";
 
 export const meta: PageMeta = {
   eyebrow: "For merchants",
@@ -73,13 +74,13 @@ export default function BillingAndInvoicing() {
       <CardGrid cols={2}>
         <CardLink
           href="/concepts/subscription-lifecycle"
-          icon="🔄"
+          icon={RefreshCw}
           title="Subscription lifecycle"
           description="The full state machine, including grace periods and suspension."
         />
         <CardLink
           href="/merchants/analytics"
-          icon="📊"
+          icon={BarChart3}
           title="Analytics"
           description="How billing outcomes roll up into MRR, churn, and recovery rate."
         />

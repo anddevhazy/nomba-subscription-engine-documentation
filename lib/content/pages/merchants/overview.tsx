@@ -1,5 +1,6 @@
 import { CardGrid, CardLink } from "@/components/docs/content/card-grid";
 import type { PageMeta } from "@/lib/content/types";
+import { BarChart3, CreditCard, DoorOpen, FileText, Lock, Receipt } from "lucide-react";
 
 export const meta: PageMeta = {
   eyebrow: "For merchants",
@@ -22,37 +23,37 @@ export default function MerchantsOverview() {
       <CardGrid cols={2}>
         <CardLink
           href="/merchants/create-a-plan"
-          icon="📝"
+          icon={FileText}
           title="Create a plan"
           description="Name, price, interval, monthly, quarterly, yearly, or custom, with optional trial support."
         />
         <CardLink
           href="/merchants/onboard-and-collect-payment"
-          icon="💳"
+          icon={CreditCard}
           title="Onboard a customer"
           description="Tokenise a card once via Nomba Checkout. Charge it automatically on every billing cycle after."
         />
         <CardLink
           href="/merchants/billing-and-invoicing"
-          icon="🧾"
+          icon={Receipt}
           title="Billing & invoicing"
           description="Invoices generate themselves. Proration handles upgrades and downgrades mid-cycle."
         />
         <CardLink
           href="/merchants/team-and-roles"
-          icon="🔐"
+          icon={Lock}
           title="Team & roles"
           description="Bring on a Team Member for day-to-day support without handing over API keys."
         />
         <CardLink
           href="/merchants/analytics"
-          icon="📊"
+          icon={BarChart3}
           title="Analytics"
           description="MRR, churn, recovery rate, and plan performance, computed on demand, always current."
         />
         <CardLink
           href="/merchants/customer-portal/overview"
-          icon="🚪"
+          icon={DoorOpen}
           title="Customer portal"
           description="Let subscribers manage themselves. Setup, configuration, deep links, and cancellation, in one subsection."
         />

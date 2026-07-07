@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
+import { Menu } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type Heading = { id: string; text: string };
@@ -34,7 +35,7 @@ export function Toc() {
   return (
     <aside className="sticky top-[146px] h-fit w-[220px] shrink-0 py-0 pr-5 pb-10 text-[13px] max-[1100px]:hidden">
       <div className="mb-2.5 flex items-center gap-1.5 text-xs font-semibold text-text-muted">
-        ☰ On this page
+        <Menu className="size-3.5" strokeWidth={2} /> On this page
       </div>
       {headings.map((h) => (
         <a

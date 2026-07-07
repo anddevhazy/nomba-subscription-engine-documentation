@@ -2,6 +2,7 @@ import { CardGrid, CardLink } from "@/components/docs/content/card-grid";
 import { CodeBlock } from "@/components/docs/code-block";
 import { Steps, Step } from "@/components/docs/content/steps";
 import type { PageMeta } from "@/lib/content/types";
+import { AlertTriangle, Bell } from "lucide-react";
 
 export const meta: PageMeta = {
   eyebrow: "Developer",
@@ -95,13 +96,13 @@ export default function DeveloperAuthentication() {
       <CardGrid cols={2}>
         <CardLink
           href="/developer/webhooks"
-          icon="🔔"
+          icon={Bell}
           title="Webhooks"
           description="What to subscribe to once you're authenticated."
         />
         <CardLink
           href="/api-reference/errors"
-          icon="⚠️"
+          icon={AlertTriangle}
           title="Errors"
           description="Every auth-related error code, explained."
         />

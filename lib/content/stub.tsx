@@ -1,3 +1,4 @@
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import { groupFor, titleFor, DESCRIPTIONS } from "@/lib/nav";
 import { CardGrid, CardLink } from "@/components/docs/content/card-grid";
 import type { PageMeta } from "./types";
@@ -26,8 +27,13 @@ export function StubBody() {
       </p>
       <div className="mt-7">
         <CardGrid cols={2}>
-          <CardLink href="/introduction" icon="←" title="Introduction" description="Back to the start." />
-          <CardLink href="/how-it-works" icon="→" title="How it works" description="See the full arc end to end." />
+          <CardLink href="/introduction" icon={ArrowLeft} title="Introduction" description="Back to the start." />
+          <CardLink
+            href="/how-it-works"
+            icon={ArrowRight}
+            title="How it works"
+            description="See the full arc end to end."
+          />
         </CardGrid>
       </div>
     </>

@@ -1,5 +1,6 @@
 import { Card, CardGrid, CardLink } from "@/components/docs/content/card-grid";
 import type { PageMeta } from "@/lib/content/types";
+import { BookOpen, Store, UserCheck } from "lucide-react";
 
 export const meta: PageMeta = {
   eyebrow: "Channels",
@@ -17,15 +18,15 @@ export default function ChannelsWeb() {
 
       <h2 id="h-three">The three applications</h2>
       <CardGrid cols={3}>
-        <Card icon="📘" title="API & docs">
+        <Card icon={BookOpen} title="API & docs">
           This site, plus the interactive Swagger reference at <code className="inline">/docs</code> on the API
           itself. For developers integrating the platform into their own product.
         </Card>
-        <Card icon="🏬" title="Merchant dashboard">
+        <Card icon={Store} title="Merchant dashboard">
           Plans, customers, invoices, analytics, webhooks, API keys, team management. Where a merchant runs the
           business day to day.
         </Card>
-        <Card icon="🙋" title="Customer portal">
+        <Card icon={UserCheck} title="Customer portal">
           Where a subscriber views and manages their own subscription, authenticated separately from the
           merchant&apos;s account.
         </Card>
@@ -72,13 +73,13 @@ export default function ChannelsWeb() {
       <CardGrid cols={2}>
         <CardLink
           href="/merchants/overview"
-          icon="🏬"
+          icon={Store}
           title="For merchants"
           description="What the dashboard actually does."
         />
         <CardLink
           href="/subscribers/overview"
-          icon="🙋"
+          icon={UserCheck}
           title="For subscribers"
           description="What the portal actually does."
         />

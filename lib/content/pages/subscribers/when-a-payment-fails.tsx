@@ -2,6 +2,7 @@ import { Callout } from "@/components/docs/content/callout";
 import { CardGrid, CardLink } from "@/components/docs/content/card-grid";
 import { Steps, Step } from "@/components/docs/content/steps";
 import type { PageMeta } from "@/lib/content/types";
+import { Compass, Settings } from "lucide-react";
 
 export const meta: PageMeta = {
   eyebrow: "For subscribers",
@@ -95,13 +96,13 @@ export default function WhenAPaymentFails() {
       <CardGrid cols={2}>
         <CardLink
           href="/subscribers/manage-your-subscription"
-          icon="⚙️"
+          icon={Settings}
           title="Manage your subscription"
           description="Update your card before the next cycle, and avoid this altogether."
         />
         <CardLink
           href="/concepts/recovery-orchestration"
-          icon="🧭"
+          icon={Compass}
           title="Recovery orchestration"
           description="How the system decides which channel to try, and in what order."
         />

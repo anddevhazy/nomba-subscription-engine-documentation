@@ -1,5 +1,6 @@
 import { CardGrid, Card, CardLink } from "@/components/docs/content/card-grid";
 import type { PageMeta } from "@/lib/content/types";
+import { BarChart3, Bell, Megaphone, RefreshCw } from "lucide-react";
 
 export const meta: PageMeta = {
   eyebrow: "Core concepts",
@@ -77,15 +78,15 @@ export default function EventStore() {
 
       <h2 id="h-consumers">Three consumers, one store</h2>
       <CardGrid cols={3}>
-        <Card icon="🔔" title="Webhooks">
+        <Card icon={Bell} title="Webhooks">
           Every subscribed event is delivered to your endpoint the moment it&apos;s written, see{" "}
           <a href="/developer/webhooks">Webhooks</a>.
         </Card>
-        <Card icon="📣" title="Notifications">
+        <Card icon={Megaphone} title="Notifications">
           Email, WhatsApp, SMS, and USSD recovery messages are triggered by the same events, read by the
           recovery-orchestration component.
         </Card>
-        <Card icon="📊" title="Analytics">
+        <Card icon={BarChart3} title="Analytics">
           MRR, churn, and recovery rate are computed on demand directly from event aggregates, not a separately
           maintained rollup table that can drift out of sync.
         </Card>
@@ -119,13 +120,13 @@ export default function EventStore() {
       <CardGrid cols={2}>
         <CardLink
           href="/developer/webhooks"
-          icon="🔔"
+          icon={Bell}
           title="Webhooks"
           description="Subscribing to events, delivery, retry, and replay."
         />
         <CardLink
           href="/architecture/data-flow"
-          icon="🔄"
+          icon={RefreshCw}
           title="Data flow"
           description="The engineering-level view of how an event reaches each consumer."
         />

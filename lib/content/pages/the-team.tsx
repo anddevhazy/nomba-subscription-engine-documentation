@@ -1,6 +1,7 @@
 import { Callout } from "@/components/docs/content/callout";
 import { CardGrid, Card, CardLink } from "@/components/docs/content/card-grid";
 import type { PageMeta } from "@/lib/content/types";
+import { Compass, CreditCard, Target } from "lucide-react";
 
 export const meta: PageMeta = {
   eyebrow: "Get started",
@@ -44,12 +45,12 @@ export default function TheTeam() {
 
       <h2 id="h-builders">The builders</h2>
       <CardGrid cols={2}>
-        <Card icon="🧭" title="Benjamin Nkem - Team lead & Software Engineer">
+        <Card icon={Compass} title="Benjamin Nkem - Team lead & Software Engineer">
           Owns the subscription lifecycle, the event store, and the backend as a
           whole, all the pieces everything else is built on top of and the
           merchant dashboard.
         </Card>
-        <Card icon="💳" title="Ayowole Sodipe - Software Engineer">
+        <Card icon={CreditCard} title="Ayowole Sodipe - Software Engineer">
           Owns the frontend and the Nomba integration, Customer Portal,
           Documentation and API Reference.
         </Card>
@@ -79,13 +80,13 @@ export default function TheTeam() {
       <CardGrid cols={2}>
         <CardLink
           href="/mission"
-          icon="🎯"
+          icon={Target}
           title="The mission"
           description="The objectives behind the build, and what's explicitly out of scope."
         />
         <CardLink
           href="/how-it-works"
-          icon="🧭"
+          icon={Compass}
           title="How it works"
           description="The full arc, end to end."
         />

@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, Search } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { MobileNav } from "@/components/docs/mobile-nav";
@@ -23,7 +23,8 @@ export function DocsHeader() {
           Nomba Subscriptions
         </Link>
         <div className="mx-auto hidden max-w-[420px] flex-1 items-center gap-2 rounded-[10px] border border-border bg-[#f7f6f2] px-3.5 py-2.5 text-sm text-text-muted max-[820px]:hidden sm:flex">
-          🔎 Search docs...
+          <Search className="size-4" strokeWidth={2} />
+          Search docs...
           <kbd className="ml-auto rounded border border-border bg-white px-1.5 py-px text-[11px] text-text-muted">
             ⌘K
           </kbd>

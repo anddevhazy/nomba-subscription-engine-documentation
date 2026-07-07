@@ -1,5 +1,6 @@
 import { Card, CardGrid, CardLink } from "@/components/docs/content/card-grid";
 import type { PageMeta } from "@/lib/content/types";
+import { FolderOpen, KeySquare, Mailbox, NotebookText, Repeat, Shield } from "lucide-react";
 
 export const meta: PageMeta = {
   eyebrow: "Architecture",
@@ -25,19 +26,19 @@ export default function Resilience() {
 
       <h2 id="h-layers">Where resilience lives</h2>
       <CardGrid cols={2}>
-        <Card icon="🔁" title="Retry with backoff">
+        <Card icon={Repeat} title="Retry with backoff">
           Every async job, webhook delivery, notification send, retries on failure rather than failing once and
           giving up.
         </Card>
-        <Card icon="📬" title="Dead-letter handling">
+        <Card icon={Mailbox} title="Dead-letter handling">
           A webhook delivery that exhausts its retry window moves to a dead-letter state, visible to the merchant
           and replayable once their endpoint is fixed.
         </Card>
-        <Card icon="🗝️" title="Idempotency">
+        <Card icon={KeySquare} title="Idempotency">
           Replayed webhooks and retried charges carry stable identifiers so reprocessing is always safe, never a
           duplicate side effect.
         </Card>
-        <Card icon="📒" title="The event store as ground truth">
+        <Card icon={NotebookText} title="The event store as ground truth">
           Even if a queue drains unexpectedly, the underlying facts are durable in the event store and can be
           re-dispatched.
         </Card>
@@ -91,13 +92,13 @@ export default function Resilience() {
       <CardGrid cols={2}>
         <CardLink
           href="/architecture/queues-and-async"
-          icon="🗂️"
+          icon={FolderOpen}
           title="Queues & async processing"
           description="The mechanism underneath this page."
         />
         <CardLink
           href="/security/overview"
-          icon="🛡️"
+          icon={Shield}
           title="Security overview"
           description="The defence-in-depth posture alongside resilience."
         />

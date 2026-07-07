@@ -1,6 +1,7 @@
 import { CardGrid, Card, CardLink } from "@/components/docs/content/card-grid";
 import { Flow, FlowNode, FlowArrow } from "@/components/docs/content/flow";
 import type { PageMeta } from "@/lib/content/types";
+import { Ban, CheckCircle2, Compass, DoorOpen, NotebookText, RefreshCw, Repeat, XCircle } from "lucide-react";
 
 export const meta: PageMeta = {
   eyebrow: "Core concepts",
@@ -105,22 +106,22 @@ export default function SubscriptionLifecycle() {
 
       <h2 id="h-transitions">What triggers each transition</h2>
       <CardGrid cols={2}>
-        <Card icon="✅" title="trialing → active">
+        <Card icon={CheckCircle2} title="trialing → active">
           Trial window ends and the first charge succeeds.
         </Card>
-        <Card icon="❌" title="active → past_due">
+        <Card icon={XCircle} title="active → past_due">
           A billing-cycle charge attempt fails.
         </Card>
-        <Card icon="🔁" title="past_due → grace_period">
+        <Card icon={Repeat} title="past_due → grace_period">
           Recovery orchestration picks up the failure and starts sending recovery messages.
         </Card>
-        <Card icon="🔄" title="grace_period → active">
+        <Card icon={RefreshCw} title="grace_period → active">
           A retried charge succeeds, recovery worked.
         </Card>
-        <Card icon="⛔" title="grace_period → suspended">
+        <Card icon={Ban} title="grace_period → suspended">
           The grace period lapses with no successful retry.
         </Card>
-        <Card icon="🚪" title="any → cancelled">
+        <Card icon={DoorOpen} title="any → cancelled">
           Subscriber cancels from the portal, or a merchant cancels on their behalf.
         </Card>
       </CardGrid>
@@ -139,13 +140,13 @@ export default function SubscriptionLifecycle() {
       <CardGrid cols={2}>
         <CardLink
           href="/concepts/event-store"
-          icon="📒"
+          icon={NotebookText}
           title="The event store"
           description="Where every one of these transitions actually lands."
         />
         <CardLink
           href="/concepts/recovery-orchestration"
-          icon="🧭"
+          icon={Compass}
           title="Recovery orchestration"
           description="What happens during grace_period, specifically."
         />

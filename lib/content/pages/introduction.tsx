@@ -1,5 +1,6 @@
 import { CardGrid, Card, CardLink } from "@/components/docs/content/card-grid";
 import type { PageMeta } from "@/lib/content/types";
+import { ArrowRight, Bell, Code2, Mail, MessageCircle, Monitor, Phone, Store, UserCheck, Zap } from "lucide-react";
 
 export const meta: PageMeta = {
   eyebrow: "Get started",
@@ -65,15 +66,15 @@ export default function Introduction() {
       <h2 id="h-connects">What Nomba Subscriptions connects</h2>
       <p>Three sides. One event store underneath all of them.</p>
       <CardGrid cols={3}>
-        <Card icon="🏬" title="Merchants">
+        <Card icon={Store} title="Merchants">
           The businesses running subscriptions, from a solo creator to a multi-seat operations team. They get plans,
           invoicing, recovery, and analytics without building any of it themselves.
         </Card>
-        <Card icon="🧑‍💻" title="Downstream developers">
+        <Card icon={Code2} title="Downstream developers">
           Engineers integrating the API into a merchant&apos;s product, or building on top of it. They get
           documented resources, signed webhooks, and reliable replay.
         </Card>
-        <Card icon="🙋" title="Subscribers">
+        <Card icon={UserCheck} title="Subscribers">
           The merchant&apos;s own customers. They get a portal to manage their subscription and a recovery flow that
           reaches them on the channel they actually use, web, email, WhatsApp, SMS, or USSD.
         </Card>
@@ -97,28 +98,28 @@ export default function Introduction() {
 
       <h2 id="h-channels">Five channels, one API underneath</h2>
       <CardGrid cols={2}>
-        <CardLink href="/channels/web" icon="🖥️" title="Web" description="The API, the merchant dashboard, and the customer portal." />
+        <CardLink href="/channels/web" icon={Monitor} title="Web" description="The API, the merchant dashboard, and the customer portal." />
         <CardLink
           href="/channels/email"
-          icon="✉️"
+          icon={Mail}
           title="Email"
           description="The always-on baseline. Fires on every recovery attempt, no exceptions."
         />
         <CardLink
           href="/channels/whatsapp"
-          icon="💬"
+          icon={MessageCircle}
           title="WhatsApp"
           description="Retry Now, Pause, or Downgrade, right inside a failed-charge message."
         />
         <CardLink
           href="/channels/sms"
-          icon="✉️"
+          icon={Mail}
           title="SMS"
           description="Reply YES to retry. Works on any phone, any network."
         />
         <CardLink
           href="/channels/ussd"
-          icon="☎️"
+          icon={Phone}
           title="USSD"
           description="Check status, pause, or cancel, no data connection needed."
         />
@@ -128,25 +129,25 @@ export default function Introduction() {
       <CardGrid cols={2}>
         <CardLink
           href="/how-it-works"
-          icon="→"
+          icon={ArrowRight}
           title="How it works"
           description="Walk through the whole arc, end to end, in one page."
         />
         <CardLink
           href="/quick-start"
-          icon="⚡"
+          icon={Zap}
           title="Quick start"
           description="Three ways to feel the engine in five minutes."
         />
         <CardLink
           href="/merchants/overview"
-          icon="🏬"
+          icon={Store}
           title="For merchants"
           description="Plans, customers, invoices, and analytics."
         />
         <CardLink
           href="/developer/webhooks"
-          icon="🔔"
+          icon={Bell}
           title="Webhooks"
           description="Subscribe once, receive every domain event forever."
         />

@@ -2,6 +2,7 @@ import { CardGrid, CardLink } from "@/components/docs/content/card-grid";
 import { CodeBlock } from "@/components/docs/code-block";
 import { Steps, Step } from "@/components/docs/content/steps";
 import type { PageMeta } from "@/lib/content/types";
+import { Bell, Link2 } from "lucide-react";
 
 export const meta: PageMeta = {
   eyebrow: "Customer portal",
@@ -152,13 +153,13 @@ export default function ApiSetup() {
       <CardGrid cols={2}>
         <CardLink
           href="/merchants/customer-portal/deep-links-and-flows"
-          icon="🔗"
+          icon={Link2}
           title="Deep links and flows"
           description="Scope a link to exactly one action instead of the general portal."
         />
         <CardLink
           href="/developer/webhooks"
-          icon="🔔"
+          icon={Bell}
           title="Webhooks"
           description="The full event catalogue, retry, and replay."
         />

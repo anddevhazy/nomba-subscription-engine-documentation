@@ -1,6 +1,7 @@
 import { Callout } from "@/components/docs/content/callout";
 import { CardGrid, CardLink } from "@/components/docs/content/card-grid";
 import type { PageMeta } from "@/lib/content/types";
+import { DoorOpen, Link2 } from "lucide-react";
 
 export const meta: PageMeta = {
   eyebrow: "Customer portal",
@@ -76,13 +77,13 @@ export default function CancellationPage() {
       <CardGrid cols={2}>
         <CardLink
           href="/merchants/customer-portal/deep-links-and-flows"
-          icon="🔗"
+          icon={Link2}
           title="Deep links and flows"
           description="Send a subscriber straight to the cancellation screen, reason prompt included."
         />
         <CardLink
           href="/merchants/customer-portal/overview"
-          icon="🚪"
+          icon={DoorOpen}
           title="Customer portal overview"
           description="Back to the start of this subsection."
         />

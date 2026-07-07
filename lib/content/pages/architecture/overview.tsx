@@ -2,6 +2,7 @@ import { CardGrid, CardLink } from "@/components/docs/content/card-grid";
 import { CodeBlock } from "@/components/docs/code-block";
 import { Flow, FlowArrow, FlowNode } from "@/components/docs/content/flow";
 import type { PageMeta } from "@/lib/content/types";
+import { Blocks, Plug, Puzzle, RefreshCw } from "lucide-react";
 
 export const meta: PageMeta = {
   eyebrow: "Architecture",
@@ -133,25 +134,25 @@ export default function ArchitectureOverview() {
       <CardGrid cols={2}>
         <CardLink
           href="/architecture/modules"
-          icon="🧩"
+          icon={Puzzle}
           title="Modules"
           description="What each of the sixteen modules owns."
         />
         <CardLink
           href="/architecture/nomba-integration"
-          icon="🔌"
+          icon={Plug}
           title="Nomba integration"
           description="The four payment surfaces this is built on."
         />
         <CardLink
           href="/architecture/data-flow"
-          icon="🔄"
+          icon={RefreshCw}
           title="Data flow"
           description="How one event reaches three consumers."
         />
         <CardLink
           href="/architecture/resilience"
-          icon="🧱"
+          icon={Blocks}
           title="Resilience & scale"
           description="Async by default, retried with backoff."
         />

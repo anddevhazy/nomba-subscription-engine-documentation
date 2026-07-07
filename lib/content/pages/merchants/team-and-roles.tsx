@@ -1,6 +1,7 @@
 import { Card, CardGrid, CardLink } from "@/components/docs/content/card-grid";
 import { Steps, Step } from "@/components/docs/content/steps";
 import type { PageMeta } from "@/lib/content/types";
+import { BarChart3, Briefcase, Crown, KeyRound } from "lucide-react";
 
 export const meta: PageMeta = {
   eyebrow: "For merchants",
@@ -18,11 +19,11 @@ export default function TeamAndRoles() {
 
       <h2 id="h-roles">The two roles</h2>
       <CardGrid cols={2}>
-        <Card icon="👑" title="Owner">
+        <Card icon={Crown} title="Owner">
           Everything a Team Member can do, plus API key management, webhook configuration, and team membership,
           inviting, removing, and changing roles.
         </Card>
-        <Card icon="🧑‍💼" title="Team Member">
+        <Card icon={Briefcase} title="Team Member">
           Day-to-day subscription and customer operations, plans, customers, invoices, manual retries, analytics. No
           account-level access.
         </Card>
@@ -67,13 +68,13 @@ export default function TeamAndRoles() {
       <CardGrid cols={2}>
         <CardLink
           href="/developer/authentication"
-          icon="🔑"
+          icon={KeyRound}
           title="Authentication"
           description="API keys are Owner-only, here's how they work."
         />
         <CardLink
           href="/merchants/analytics"
-          icon="📊"
+          icon={BarChart3}
           title="Analytics"
           description="What both roles see on the dashboard."
         />

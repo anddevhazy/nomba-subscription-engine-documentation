@@ -1,5 +1,6 @@
 import { CardGrid, CardLink } from "@/components/docs/content/card-grid";
 import type { PageMeta } from "@/lib/content/types";
+import { Repeat, Settings } from "lucide-react";
 
 export const meta: PageMeta = {
   eyebrow: "For subscribers",
@@ -20,13 +21,13 @@ export default function SubscribersOverview() {
       <CardGrid cols={2}>
         <CardLink
           href="/subscribers/manage-your-subscription"
-          icon="⚙️"
+          icon={Settings}
           title="Manage your subscription"
           description="View your plan, pause, resume, cancel, or update your payment method, from the portal, on your own time."
         />
         <CardLink
           href="/subscribers/when-a-payment-fails"
-          icon="🔁"
+          icon={Repeat}
           title="When a payment fails"
           description="What happens the moment a charge doesn't go through, and how to fix it in one reply."
         />

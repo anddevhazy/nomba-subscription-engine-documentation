@@ -1,5 +1,6 @@
 import { CardGrid, Card, CardLink } from "@/components/docs/content/card-grid";
 import type { PageMeta } from "@/lib/content/types";
+import { Bell, Building2, Compass, Construction, Divide, DoorOpen, FileText, Puzzle, RefreshCw, Repeat, UserCheck } from "lucide-react";
 
 export const meta: PageMeta = {
   eyebrow: "Get started",
@@ -48,40 +49,40 @@ export default function Mission() {
       </p>
 
       <CardGrid cols={2}>
-        <Card icon="📝" title="Plan management">
+        <Card icon={FileText} title="Plan management">
           <p>
             Name, price, interval, and optional trial, created through the API or the merchant dashboard, live the
             moment they&apos;re submitted. See <a href="/merchants/create-a-plan">Create a plan</a>.
           </p>
         </Card>
-        <Card icon="🔄" title="Billing cycles">
+        <Card icon={RefreshCw} title="Billing cycles">
           <p>
             Monthly, quarterly, yearly, and custom intervals, with trial support built into the subscription
             lifecycle rather than bolted on as a flag. See{" "}
             <a href="/concepts/subscription-lifecycle">Subscription lifecycle</a>.
           </p>
         </Card>
-        <Card icon="➗" title="Proration">
+        <Card icon={Divide} title="Proration">
           <p>
             A mid-cycle upgrade credits the unused portion of the old plan and charges the prorated remainder of the
             new one, in the same motion. See <a href="/merchants/billing-and-invoicing">Billing &amp; invoicing</a>.
           </p>
         </Card>
-        <Card icon="🔁" title="Dunning & failed-payment recovery">
+        <Card icon={Repeat} title="Dunning & failed-payment recovery">
           <p>
             A failed charge starts a recovery sequence on email, WhatsApp, SMS, and USSD within minutes, not a daily
             batch job that catches it a day late. See{" "}
             <a href="/concepts/recovery-orchestration">Recovery orchestration</a>.
           </p>
         </Card>
-        <Card icon="🙋" title="Customer self-service portal">
+        <Card icon={UserCheck} title="Customer self-service portal">
           <p>
             View, pause, resume, cancel, and update a payment method, authenticated separately from the
             merchant&apos;s own account. See{" "}
             <a href="/subscribers/manage-your-subscription">Manage your subscription</a>.
           </p>
         </Card>
-        <Card icon="🔔" title="Webhooks for downstream systems">
+        <Card icon={Bell} title="Webhooks for downstream systems">
           <p>
             Every domain event, signed, retried with backoff, dead-lettered on exhaustion, and replayable by
             subscription ID or time range. See <a href="/developer/webhooks">Webhooks</a>.
@@ -139,7 +140,7 @@ export default function Mission() {
       <p>The catalogue names four things this track is judged on. Here&apos;s where each one lives.</p>
 
       <CardGrid cols={2}>
-        <Card icon="🧭" title="State-machine completeness">
+        <Card icon={Compass} title="State-machine completeness">
           <p>
             Eight explicit states, not a boolean and a hope: pending, trialing, active, past_due, grace_period,
             suspended, cancelled, expired. Every transition writes an immutable domain event rather than being
@@ -147,7 +148,7 @@ export default function Mission() {
             <a href="/concepts/subscription-lifecycle">Subscription lifecycle</a>.
           </p>
         </Card>
-        <Card icon="🔁" title="Dunning sophistication">
+        <Card icon={Repeat} title="Dunning sophistication">
           <p>
             Not a single retry-and-forget email. A centralized recovery-orchestration component sends email as the
             always-on baseline, reaches for WhatsApp first when a phone&apos;s on file with three inline actions,
@@ -156,7 +157,7 @@ export default function Mission() {
             <a href="/concepts/recovery-orchestration">Recovery orchestration</a>.
           </p>
         </Card>
-        <Card icon="🏢" title="Multi-tenant cleanliness">
+        <Card icon={Building2} title="Multi-tenant cleanliness">
           <p>
             Every business entity below the merchant carries a merchantId, enforced at the data-access layer, not
             only in application-level checks. Owner and Team Member roles keep account-level actions, API keys,
@@ -164,7 +165,7 @@ export default function Mission() {
             <a href="/architecture/overview">Architecture</a>.
           </p>
         </Card>
-        <Card icon="🧩" title="API ergonomics for downstream developers">
+        <Card icon={Puzzle} title="API ergonomics for downstream developers">
           <p>
             A documented resource model, signed and replayable webhooks, idempotency keys on writes, and an
             interactive Swagger reference served straight from the API. A developer should be able to integrate from
@@ -323,25 +324,25 @@ export default function Mission() {
       <CardGrid cols={2}>
         <CardLink
           href="/introduction"
-          icon="🚪"
+          icon={DoorOpen}
           title="Introduction"
           description="Adaeze's story. The thesis. The four channels."
         />
         <CardLink
           href="/how-it-works"
-          icon="🧭"
+          icon={Compass}
           title="How it works"
           description="A merchant creates a plan. A customer subscribes. A charge fails. Recovery closes the loop."
         />
         <CardLink
           href="/architecture/overview"
-          icon="🏗️"
+          icon={Construction}
           title="Architecture"
           description="The stack, the module boundaries, the deliberate choices."
         />
         <CardLink
           href="/developer/webhooks"
-          icon="🔔"
+          icon={Bell}
           title="Webhooks"
           description="The API ergonomics story, for the downstream developer reading this."
         />

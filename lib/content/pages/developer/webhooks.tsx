@@ -1,6 +1,7 @@
 import { CardGrid, CardLink } from "@/components/docs/content/card-grid";
 import { CodeBlock } from "@/components/docs/code-block";
 import type { PageMeta } from "@/lib/content/types";
+import { Check, Timer } from "lucide-react";
 
 export const meta: PageMeta = {
   eyebrow: "Developer",
@@ -184,13 +185,13 @@ export default function DeveloperWebhooks() {
       <CardGrid cols={2}>
         <CardLink
           href="/security/webhook-verification"
-          icon="✔️"
+          icon={Check}
           title="Signature verification"
           description="How to confirm a delivery actually came from us."
         />
         <CardLink
           href="/developer/rate-limits"
-          icon="⏱️"
+          icon={Timer}
           title="Rate limits"
           description="Throughput on the API side, for when you're not just receiving."
         />

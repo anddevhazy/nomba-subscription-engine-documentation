@@ -2,6 +2,7 @@ import { CardGrid, CardLink } from "@/components/docs/content/card-grid";
 import { CodeBlock } from "@/components/docs/code-block";
 import { Steps, Step } from "@/components/docs/content/steps";
 import type { PageMeta } from "@/lib/content/types";
+import { Bell, CheckCircle2, Lock } from "lucide-react";
 
 export const meta: PageMeta = {
   eyebrow: "Security & trust",
@@ -106,27 +107,39 @@ def verify(raw_body, header, secret):
       />
 
       <h2 id="h-checklist">Checklist</h2>
-      <ul>
-        <li>✅ Verify the signature on every request. Reject on mismatch.</li>
-        <li>✅ Reject events older than 5 minutes.</li>
+      <ul className="[&>li]:flex [&>li]:items-start [&>li]:gap-2 [&_svg]:mt-[3px] [&_svg]:shrink-0 [&_svg]:text-green-dark">
         <li>
-          ✅ Check idempotency using the event <code className="inline">id</code>, deliveries are at-least-once.
+          <CheckCircle2 className="size-4" strokeWidth={2} /> Verify the signature on every request. Reject on
+          mismatch.
         </li>
-        <li>✅ Return 2xx quickly. Push heavy processing to your own queue instead of doing it inline.</li>
-        <li>✅ Keep your webhook URL stable, update the subscription before changing DNS, not after.</li>
+        <li>
+          <CheckCircle2 className="size-4" strokeWidth={2} /> Reject events older than 5 minutes.
+        </li>
+        <li>
+          <CheckCircle2 className="size-4" strokeWidth={2} /> Check idempotency using the event{" "}
+          <code className="inline">id</code>, deliveries are at-least-once.
+        </li>
+        <li>
+          <CheckCircle2 className="size-4" strokeWidth={2} /> Return 2xx quickly. Push heavy processing to your own
+          queue instead of doing it inline.
+        </li>
+        <li>
+          <CheckCircle2 className="size-4" strokeWidth={2} /> Keep your webhook URL stable, update the subscription
+          before changing DNS, not after.
+        </li>
       </ul>
 
       <h2 id="h-next">Next</h2>
       <CardGrid cols={2}>
         <CardLink
           href="/developer/webhooks"
-          icon="🔔"
+          icon={Bell}
           title="Webhooks"
           description="Event types, payload shape, retry behaviour."
         />
         <CardLink
           href="/security/data-protection"
-          icon="🔐"
+          icon={Lock}
           title="Data & encryption posture"
           description="What's encrypted at rest, and why."
         />

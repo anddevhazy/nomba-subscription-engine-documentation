@@ -1,5 +1,6 @@
 import { CardGrid, CardLink } from "@/components/docs/content/card-grid";
 import type { PageMeta } from "@/lib/content/types";
+import { CircleDot, Laptop, Link2, Play, SlidersHorizontal, UserCheck, X } from "lucide-react";
 
 export const meta: PageMeta = {
   eyebrow: "Customer portal",
@@ -19,38 +20,38 @@ export default function CustomerPortalOverview() {
       <CardGrid cols={2}>
         <CardLink
           href="/demo/portal"
-          icon="▶️"
+          icon={Play}
           title="Explore demo"
           description="A live, clickable walkthrough: view a plan, switch plans with real proration, pause, cancel, reactivate."
           external
         />
         <CardLink
           href="/merchants/customer-portal/no-code-setup"
-          icon="🔘"
+          icon={CircleDot}
           title="Create a customer portal"
           description="Create a customer portal to enable your customers to manage their account  and subscription status."
         />
         <CardLink
           href="/merchants/customer-portal/api-setup"
-          icon="💻"
+          icon={Laptop}
           title="Set up the customer portal with the API"
           description="Generate portal links programmatically, listen for the webhooks that matter."
         />
         <CardLink
           href="/merchants/customer-portal/configure"
-          icon="🎛️"
+          icon={SlidersHorizontal}
           title="Configure the customer portal"
           description="Which actions are on, which are off, and what a subscriber can edit."
         />
         <CardLink
           href="/merchants/customer-portal/deep-links-and-flows"
-          icon="🔗"
+          icon={Link2}
           title="Deep links and flows"
           description="A signed, single-use link into one specific action. The same primitive our recovery messages already use."
         />
         <CardLink
           href="/merchants/customer-portal/cancellation-page"
-          icon="✖️"
+          icon={X}
           title="Add a cancellation page"
           description="Collect a reason. Offer Pause or Downgrade first."
         />
@@ -166,13 +167,13 @@ export default function CustomerPortalOverview() {
       <CardGrid cols={2}>
         <CardLink
           href="/merchants/customer-portal/no-code-setup"
-          icon="🔘"
+          icon={CircleDot}
           title="No-code setup"
           description="Nothing to activate. Here's what you configure instead."
         />
         <CardLink
           href="/subscribers/manage-your-subscription"
-          icon="🙋"
+          icon={UserCheck}
           title="Manage your subscription"
           description="The same page, from the subscriber's side."
         />

@@ -1,5 +1,6 @@
 import { CardGrid, CardLink } from "@/components/docs/content/card-grid";
 import type { PageMeta } from "@/lib/content/types";
+import { Compass, MessageCircle } from "lucide-react";
 
 export const meta: PageMeta = {
   eyebrow: "Channels",
@@ -54,13 +55,13 @@ export default function ChannelsEmail() {
       <CardGrid cols={2}>
         <CardLink
           href="/channels/whatsapp"
-          icon="💬"
+          icon={MessageCircle}
           title="WhatsApp"
           description="The richest channel, when a phone's on file."
         />
         <CardLink
           href="/concepts/recovery-orchestration"
-          icon="🧭"
+          icon={Compass}
           title="Recovery orchestration"
           description="How email fits alongside the other three channels."
         />

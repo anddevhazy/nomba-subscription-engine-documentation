@@ -1,6 +1,7 @@
 import { Callout } from "@/components/docs/content/callout";
 import { CardGrid, Card, CardLink } from "@/components/docs/content/card-grid";
 import type { PageMeta } from "@/lib/content/types";
+import { CreditCard, Eye, Hand, Pause, Phone, Play, Repeat } from "lucide-react";
 
 export const meta: PageMeta = {
   eyebrow: "For subscribers",
@@ -19,22 +20,22 @@ export default function ManageYourSubscription() {
 
       <h2 id="h-actions">What you can do</h2>
       <CardGrid cols={2}>
-        <Card icon="👀" title="View your subscription">
+        <Card icon={Eye} title="View your subscription">
           Current plan, price, next billing date, and payment history.
         </Card>
-        <Card icon="⏸️" title="Pause">
+        <Card icon={Pause} title="Pause">
           Stop billing without cancelling outright. Resume whenever you&apos;re ready.
         </Card>
-        <Card icon="▶️" title="Resume">
+        <Card icon={Play} title="Resume">
           Billing picks back up on your original cycle date.
         </Card>
-        <Card icon="✋" title="Cancel">
+        <Card icon={Hand} title="Cancel">
           Ends the subscription. What happens to the current billing period depends on the merchant&apos;s
           cancellation policy.
         </Card>
       </CardGrid>
       <CardGrid cols={1}>
-        <Card icon="💳" title="Update your payment method">
+        <Card icon={CreditCard} title="Update your payment method">
           Your card expired, or you just want to switch which one gets charged. The new card is tokenised the same
           way as at signup, the portal never sees or stores the raw card number.
         </Card>
@@ -65,13 +66,13 @@ export default function ManageYourSubscription() {
       <CardGrid cols={2}>
         <CardLink
           href="/subscribers/when-a-payment-fails"
-          icon="🔁"
+          icon={Repeat}
           title="When a payment fails"
           description="The recovery flow, from your side."
         />
         <CardLink
           href="/channels/ussd"
-          icon="☎️"
+          icon={Phone}
           title="USSD"
           description="Manage your subscription without a data connection."
         />

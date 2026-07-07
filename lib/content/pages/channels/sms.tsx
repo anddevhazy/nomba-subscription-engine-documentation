@@ -1,5 +1,6 @@
 import { CardGrid, CardLink } from "@/components/docs/content/card-grid";
 import type { PageMeta } from "@/lib/content/types";
+import { Mail, Phone, Repeat } from "lucide-react";
 
 export const meta: PageMeta = {
   eyebrow: "Channels",
@@ -63,19 +64,19 @@ export default function ChannelsSms() {
       <CardGrid cols={3}>
         <CardLink
           href="/channels/email"
-          icon="✉️"
+          icon={Mail}
           title="Email"
           description="The channel that fires no matter what happens here."
         />
         <CardLink
           href="/channels/ussd"
-          icon="☎️"
+          icon={Phone}
           title="USSD"
           description="Full self-service, no data connection at all."
         />
         <CardLink
           href="/subscribers/when-a-payment-fails"
-          icon="🔁"
+          icon={Repeat}
           title="When a payment fails"
           description="The recovery flow, from the subscriber's side."
         />

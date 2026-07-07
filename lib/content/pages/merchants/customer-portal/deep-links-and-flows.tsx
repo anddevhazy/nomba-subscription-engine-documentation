@@ -1,6 +1,7 @@
 import { CardGrid, CardLink } from "@/components/docs/content/card-grid";
 import { CodeBlock } from "@/components/docs/code-block";
 import type { PageMeta } from "@/lib/content/types";
+import { Compass, Laptop } from "lucide-react";
 
 export const meta: PageMeta = {
   eyebrow: "Customer portal",
@@ -108,13 +109,13 @@ export default function DeepLinksAndFlows() {
       <CardGrid cols={2}>
         <CardLink
           href="/merchants/customer-portal/api-setup"
-          icon="💻"
+          icon={Laptop}
           title="Set up with the API"
           description="The general-access version of this same link primitive."
         />
         <CardLink
           href="/concepts/recovery-orchestration"
-          icon="🧭"
+          icon={Compass}
           title="Recovery orchestration"
           description="Where this pattern was actually born."
         />

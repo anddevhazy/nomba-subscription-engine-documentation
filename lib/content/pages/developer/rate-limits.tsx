@@ -2,6 +2,7 @@ import { Callout } from "@/components/docs/content/callout";
 import { CardGrid, CardLink } from "@/components/docs/content/card-grid";
 import { CodeBlock } from "@/components/docs/code-block";
 import type { PageMeta } from "@/lib/content/types";
+import { AlertTriangle, KeyRound } from "lucide-react";
 
 export const meta: PageMeta = {
   eyebrow: "Developer",
@@ -110,13 +111,13 @@ X-RateLimit-Remaining: 0
       <CardGrid cols={2}>
         <CardLink
           href="/developer/authentication"
-          icon="🔑"
+          icon={KeyRound}
           title="Authentication"
           description="How a key is scoped in the first place."
         />
         <CardLink
           href="/api-reference/errors"
-          icon="⚠️"
+          icon={AlertTriangle}
           title="Errors"
           description="What every error code, including 429, means for your retry logic."
         />

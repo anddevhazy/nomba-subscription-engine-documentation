@@ -1,5 +1,6 @@
 import { CardGrid, CardLink } from "@/components/docs/content/card-grid";
 import type { PageMeta } from "@/lib/content/types";
+import { Check, KeyRound, Lock } from "lucide-react";
 
 export const meta: PageMeta = {
   eyebrow: "Security & trust",
@@ -16,19 +17,19 @@ export default function SecurityOverview() {
       <CardGrid cols={3}>
         <CardLink
           href="/developer/authentication"
-          icon="🔑"
+          icon={KeyRound}
           title="Authentication"
           description="Bearer keys, hashed at rest, scoped per merchant, rate-limited, revocable instantly."
         />
         <CardLink
           href="/security/webhook-verification"
-          icon="✔️"
+          icon={Check}
           title="Webhook signing"
           description="Every outbound webhook is HMAC-signed. Every signature is independently verifiable by you."
         />
         <CardLink
           href="/security/data-protection"
-          icon="🔐"
+          icon={Lock}
           title="Data at rest"
           description="Sensitive data, including stored payment references, is encrypted with AES-256-GCM."
         />
@@ -60,13 +61,13 @@ export default function SecurityOverview() {
       <CardGrid cols={2}>
         <CardLink
           href="/security/webhook-verification"
-          icon="✔️"
+          icon={Check}
           title="Webhook signature verification"
           description="The exact steps, in five languages."
         />
         <CardLink
           href="/security/data-protection"
-          icon="🔐"
+          icon={Lock}
           title="Data & encryption posture"
           description="What's encrypted, and what deliberately isn't."
         />

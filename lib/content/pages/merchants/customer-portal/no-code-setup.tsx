@@ -1,6 +1,7 @@
 import { CardGrid, CardLink } from "@/components/docs/content/card-grid";
 import { Steps, Step } from "@/components/docs/content/steps";
 import type { PageMeta } from "@/lib/content/types";
+import { Laptop, SlidersHorizontal } from "lucide-react";
 
 export const meta: PageMeta = {
   eyebrow: "Customer portal",
@@ -81,13 +82,13 @@ export default function NoCodeSetup() {
       <CardGrid cols={2}>
         <CardLink
           href="/merchants/customer-portal/configure"
-          icon="🎛️"
+          icon={SlidersHorizontal}
           title="Configure the customer portal"
           description="Every toggle, what it does, and its default."
         />
         <CardLink
           href="/merchants/customer-portal/api-setup"
-          icon="💻"
+          icon={Laptop}
           title="Set up with the API"
           description="For generating portal links and listening to webhooks programmatically."
         />

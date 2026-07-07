@@ -3,6 +3,7 @@ import { CardGrid, CardLink } from "@/components/docs/content/card-grid";
 import { CodeBlock } from "@/components/docs/code-block";
 import { Steps, Step } from "@/components/docs/content/steps";
 import type { PageMeta } from "@/lib/content/types";
+import { Plug, Receipt } from "lucide-react";
 
 export const meta: PageMeta = {
   eyebrow: "For merchants",
@@ -71,13 +72,13 @@ export default function OnboardAndCollectPayment() {
       <CardGrid cols={2}>
         <CardLink
           href="/merchants/billing-and-invoicing"
-          icon="🧾"
+          icon={Receipt}
           title="Billing & invoicing"
           description="What happens on every cycle after onboarding."
         />
         <CardLink
           href="/architecture/nomba-integration"
-          icon="🔌"
+          icon={Plug}
           title="Nomba integration"
           description="Checkout, Tokenised Cards, and the other three surfaces."
         />

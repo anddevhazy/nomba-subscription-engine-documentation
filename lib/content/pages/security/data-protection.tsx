@@ -1,6 +1,7 @@
 import { Callout } from "@/components/docs/content/callout";
 import { CardGrid, CardLink } from "@/components/docs/content/card-grid";
 import type { PageMeta } from "@/lib/content/types";
+import { Check, Plug } from "lucide-react";
 
 export const meta: PageMeta = {
   eyebrow: "Security & trust",
@@ -74,13 +75,13 @@ export default function DataProtection() {
       <CardGrid cols={2}>
         <CardLink
           href="/security/webhook-verification"
-          icon="✔️"
+          icon={Check}
           title="Webhook signature verification"
           description="The other half of the trust story, outbound, not at rest."
         />
         <CardLink
           href="/architecture/nomba-integration"
-          icon="🔌"
+          icon={Plug}
           title="Nomba integration"
           description="Where the tokenised reference actually comes from."
         />

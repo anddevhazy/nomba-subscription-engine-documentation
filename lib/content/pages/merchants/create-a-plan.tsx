@@ -2,6 +2,7 @@ import { CardGrid, CardLink } from "@/components/docs/content/card-grid";
 import { CodeBlock } from "@/components/docs/code-block";
 import { Steps, Step } from "@/components/docs/content/steps";
 import type { PageMeta } from "@/lib/content/types";
+import { CreditCard, RefreshCw } from "lucide-react";
 
 export const meta: PageMeta = {
   eyebrow: "For merchants",
@@ -104,13 +105,13 @@ export default function CreateAPlan() {
       <CardGrid cols={2}>
         <CardLink
           href="/merchants/onboard-and-collect-payment"
-          icon="💳"
+          icon={CreditCard}
           title="Onboard a customer"
           description="Subscribe someone to the plan you just created."
         />
         <CardLink
           href="/concepts/subscription-lifecycle"
-          icon="🔄"
+          icon={RefreshCw}
           title="Subscription lifecycle"
           description="What state a subscription moves through after it's created."
         />
